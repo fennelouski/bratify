@@ -183,6 +183,6 @@ extension DesignCell: Themeable {
         self.dateLabel.textColor = colorModel.textColor
         self.dateLabel.backgroundColor = colorModel.backgroundColor
         self.contentView.backgroundColor = colorModel.tintColor
-        backgroundColor = .yellow
+        backgroundColor = colorModel.backgroundColor
     }
 }
