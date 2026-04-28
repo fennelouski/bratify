@@ -163,15 +163,46 @@ class ViewController: UIViewController {
     }
     
     @objc func handleLongPress(gesture: UILongPressGestureRecognizer) {
-        if gesture.state == .began {
-            let point = gesture.location(in: collectionView)
-            if let indexPath = collectionView.indexPathForItem(at: point) {
-                let designToDelete = designs[indexPath.item]
-                DesignManager.shared.deleteDesign(designToDelete)
-                designs.remove(at: indexPath.item)
-                collectionView.deleteItems(at: [indexPath])
-            }
+        guard gesture.state == .began else { return }
+        let point = gesture.location(in: collectionView)
+        guard let indexPath = collectionView.indexPathForItem(at: point) else { return }
+        let design = designs[indexPath.item]
+
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+        alert.addAction(UIAlertAction(
+            title: NSLocalizedString("duplicate", comment: "Action to duplicate a design"),
+            style: .default
+        ) { [weak self] _ in
+            guard let self else { return }
+            let duplicate = DesignManager.shared.duplicateDesign(design)
+            let newIndex = indexPath.item + 1
+            designs.insert(duplicate, at: newIndex)
+            collectionView.insertItems(at: [IndexPath(item: newIndex, section: 0)])
+        })
+
+        alert.addAction(UIAlertAction(
+            title: NSLocalizedString("delete", comment: "Action to delete a design"),
+            style: .destructive
+        ) { [weak self] _ in
+            guard let self else { return }
+            DesignManager.shared.deleteDesign(design)
+            designs.remove(at: indexPath.item)
+            collectionView.deleteItems(at: [indexPath])
+        })
+
+        alert.addAction(UIAlertAction(
+            title: NSLocalizedString("cancel", comment: "Cancel action"),
+            style: .cancel
+        ))
+
+        if let popover = alert.popoverPresentationController,
+           let cell = collectionView.cellForItem(at: indexPath) {
+            popover.sourceView = cell
+            popover.sourceRect = cell.bounds
         }
+
+        present(alert, animated: true)
     }
 }
 

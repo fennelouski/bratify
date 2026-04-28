@@ -1,6 +1,39 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "cancel" : {
+      "comment" : "Cancel action",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "cancel"
+          }
+        }
+      }
+    },
+    "delete" : {
+      "comment" : "Action to delete a design",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "delete"
+          }
+        }
+      }
+    },
+    "duplicate" : {
+      "comment" : "Action to duplicate a design",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "duplicate"
+          }
+        }
+      }
+    },
     "failed_to_save_design" : {
       "comment" : "Toast shown when a design fails to save to disk",
       "localizations" : {

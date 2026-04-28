@@ -31,6 +31,20 @@ class DesignManager {
             saveDesigns(designs)
         }
     }
+
+    @discardableResult
+    func duplicateDesign(_ design: Design) -> Design {
+        var duplicate = design
+        duplicate.id = UUID()
+        duplicate.creationDate = Date()
+        if let index = designs.firstIndex(where: { $0.id == design.id }) {
+            designs.insert(duplicate, at: index + 1)
+        } else {
+            designs.append(duplicate)
+        }
+        saveDesigns(designs)
+        return duplicate
+    }
     
     func getAllDesigns() -> [Design] {
         return designs
