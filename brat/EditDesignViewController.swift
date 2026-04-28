@@ -660,10 +660,8 @@ class EditDesignViewController: UIViewController {
     @objc func selectColor() {
         isPickingTextColor = false
         #if targetEnvironment(macCatalyst)
-        MacColorPicker.shared.showColorPicker(initialColor: view.backgroundColor ?? .white) { selectedColor in
-            self.view.backgroundColor = selectedColor
-            self.backgroundColor = selectedColor
-            self.updateDesignImage()
+        MacColorPicker.shared.showColorPicker(initialColor: view.backgroundColor ?? .white) { [weak self] selectedColor in
+            self?.applyBackgroundColor(selectedColor)
         }
         #else
         let colorPicker = UIColorPickerViewController()
@@ -671,6 +669,15 @@ class EditDesignViewController: UIViewController {
         colorPicker.delegate = self
         present(colorPicker, animated: true, completion: nil)
         #endif
+    }
+
+    private func applyBackgroundColor(_ color: UIColor) {
+        view.backgroundColor = color
+        backgroundColor = color
+        textView.backgroundColor = .clear
+        settingsManager.addRecentBackgroundColor(color)
+        keyboardOptionsView.update(with: currentDesign)
+        updateDesignImage()
     }
 
     @objc func selectTextColor() {
@@ -844,8 +851,7 @@ extension EditDesignViewController: UIColorPickerViewControllerDelegate {
             textColor = viewController.selectedColor
             settingsManager.textColorHex = viewController.selectedColor.toHexString()
         } else {
-            view.backgroundColor = viewController.selectedColor
-            backgroundColor = viewController.selectedColor
+            applyBackgroundColor(viewController.selectedColor)
             settingsManager.backgroundColorHex = viewController.selectedColor.toHexString()
         }
         updateDesignImage()
@@ -1106,6 +1112,10 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
             animated: true,
             completion: nil
         )
+    }
+
+    func didSelectBackgroundColor(_ color: UIColor) {
+        applyBackgroundColor(color)
     }
 }
 

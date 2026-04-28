@@ -12,24 +12,95 @@ protocol KeyboardOptionsViewDelegate: DesignControlsViewControllerDelegate, Desi
     func stretchChanged(to newStretch: CGFloat)
     func blurChanged(to newBlur: CGFloat)
     func selectBackgroundImage()
+    func didSelectBackgroundColor(_ color: UIColor)
 }
 
 class KeyboardOptionsView: UIView {
-    
+
+    private static let presetColors: [UIColor] = [
+        UIColor(hexString: "#36a241"),
+        UIColor(hexString: "#8AE234"),
+        UIColor(hexString: "#000000"),
+        UIColor(hexString: "#FFFFFF"),
+        UIColor(hexString: "#FF69B4"),
+        UIColor(hexString: "#FF00FF"),
+        UIColor(hexString: "#FFFF00"),
+        UIColor(hexString: "#FF6B00"),
+        UIColor(hexString: "#0000FF"),
+        UIColor(hexString: "#FF0000"),
+    ]
+
     weak var delegate: KeyboardOptionsViewDelegate?
     private let settingsManager: SettingsManager
     private var designControlsView: DesignControlsView?
-    
+
+    private let colorSwatchScrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.showsHorizontalScrollIndicator = false
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
+
+    private let colorSwatchStackView: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.spacing = 8
+        stack.alignment = .center
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+
     func update(with design: Design) {
         fontSizeSlider.value = Float(design.fontSize)
         pixelationSlider.value = Float(design.pixelationScale)
         stretchSlider.value = Float(design.stretch)
         blurSlider.value = Float(design.blur)
-        
+
         blurValueLabel.text = "\(Int(blurSlider.value))"
         stretchValueLabel.text = "\(Int(stretchSlider.value * 100))%"
         pixelationValueLabel.text = "\(Int(pixelationSlider.value))"
         fontSizeValueLabel.text = "\(Int(fontSizeSlider.value))"
+        refreshColorSwatches(currentColor: design.backgroundColor)
+    }
+
+    private func refreshColorSwatches(currentColor: UIColor) {
+        colorSwatchStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+
+        let recentHexes = settingsManager.recentBackgroundColors
+        let recentColors = recentHexes.map { UIColor(hexString: $0) }
+        let presetHexes = Set(recentHexes)
+        let additionalPresets = KeyboardOptionsView.presetColors.filter { !presetHexes.contains($0.toHexString()) }
+        let swatchColors = recentColors + additionalPresets
+
+        for color in swatchColors {
+            let swatch = makeSwatchButton(color: color, isCurrent: color.toHexString() == currentColor.toHexString())
+            colorSwatchStackView.addArrangedSubview(swatch)
+        }
+    }
+
+    private func makeSwatchButton(color: UIColor, isCurrent: Bool) -> UIButton {
+        let button = UIButton(type: .custom)
+        button.backgroundColor = color
+        button.layer.cornerRadius = 15
+        button.layer.masksToBounds = true
+        button.layer.borderWidth = isCurrent ? 2.5 : 1
+        button.layer.borderColor = isCurrent ? UIColor.systemBlue.cgColor : UIColor.gray.withAlphaComponent(0.4).cgColor
+        button.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            button.widthAnchor.constraint(equalToConstant: 30),
+            button.heightAnchor.constraint(equalToConstant: 30),
+        ])
+        button.addAction(UIAction { [weak self, weak button] _ in
+            self?.delegate?.didSelectBackgroundColor(color)
+            self?.colorSwatchStackView.arrangedSubviews.forEach { view in
+                guard let btn = view as? UIButton else { return }
+                btn.layer.borderWidth = 1
+                btn.layer.borderColor = UIColor.gray.withAlphaComponent(0.4).cgColor
+            }
+            button?.layer.borderWidth = 2.5
+            button?.layer.borderColor = UIColor.systemBlue.cgColor
+        }, for: .touchUpInside)
+        return button
     }
     
     private let colorButton: UIButton = {
@@ -167,6 +238,8 @@ class KeyboardOptionsView: UIView {
     }
     
     private func setupView() {
+        colorSwatchScrollView.addSubview(colorSwatchStackView)
+        addSubview(colorSwatchScrollView)
         addSubview(colorButton)
         addSubview(textColorButton)
         addSubview(fontButton)
@@ -176,7 +249,7 @@ class KeyboardOptionsView: UIView {
         addSubview(blurSlider)
         addSubview(controlsButton)
         addSubview(backgroundImageButton)
-        
+
         if settingsManager.showLabels {
             addSubview(fontSizeLabel)
             addSubview(fontSizeValueLabel)
@@ -187,7 +260,7 @@ class KeyboardOptionsView: UIView {
             addSubview(blurLabel)
             addSubview(blurValueLabel)
         }
-        
+
         colorButton.translatesAutoresizingMaskIntoConstraints = false
         textColorButton.translatesAutoresizingMaskIntoConstraints = false
         fontButton.translatesAutoresizingMaskIntoConstraints = false
@@ -197,22 +270,33 @@ class KeyboardOptionsView: UIView {
         blurSlider.translatesAutoresizingMaskIntoConstraints = false
         controlsButton.translatesAutoresizingMaskIntoConstraints = false
         backgroundImageButton.translatesAutoresizingMaskIntoConstraints = false
-        
+
         NSLayoutConstraint.activate([
-            colorButton.topAnchor.constraint(equalTo: topAnchor, constant: 20),
+            colorSwatchScrollView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
+            colorSwatchScrollView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+            colorSwatchScrollView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+            colorSwatchScrollView.heightAnchor.constraint(equalToConstant: 38),
+
+            colorSwatchStackView.topAnchor.constraint(equalTo: colorSwatchScrollView.topAnchor, constant: 4),
+            colorSwatchStackView.leadingAnchor.constraint(equalTo: colorSwatchScrollView.leadingAnchor),
+            colorSwatchStackView.trailingAnchor.constraint(equalTo: colorSwatchScrollView.trailingAnchor),
+            colorSwatchStackView.bottomAnchor.constraint(equalTo: colorSwatchScrollView.bottomAnchor, constant: -4),
+            colorSwatchStackView.heightAnchor.constraint(equalTo: colorSwatchScrollView.heightAnchor, constant: -8),
+
+            colorButton.topAnchor.constraint(equalTo: colorSwatchScrollView.bottomAnchor, constant: 12),
             colorButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
             colorButton.widthAnchor.constraint(equalTo: colorButton.heightAnchor),
-            
+
             fontButton.topAnchor.constraint(equalTo: colorButton.bottomAnchor, constant: 20),
             fontButton.leadingAnchor.constraint(equalTo: colorButton.leadingAnchor),
             fontButton.trailingAnchor.constraint(equalTo: colorButton.trailingAnchor),
             fontButton.heightAnchor.constraint(equalTo: colorButton.heightAnchor),
-            
+
             controlsButton.topAnchor.constraint(equalTo: fontButton.bottomAnchor, constant: 20),
             controlsButton.leadingAnchor.constraint(equalTo: colorButton.leadingAnchor),
             controlsButton.trailingAnchor.constraint(equalTo: colorButton.trailingAnchor),
             controlsButton.heightAnchor.constraint(equalTo: colorButton.heightAnchor),
-            
+
             backgroundImageButton.topAnchor.constraint(equalTo: controlsButton.bottomAnchor, constant: 20),
             backgroundImageButton.leadingAnchor.constraint(equalTo: colorButton.leadingAnchor),
             backgroundImageButton.trailingAnchor.constraint(equalTo: colorButton.trailingAnchor),
@@ -224,7 +308,7 @@ class KeyboardOptionsView: UIView {
             textColorButton.heightAnchor.constraint(equalTo: colorButton.heightAnchor),
             textColorButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20),
 
-            fontSizeSlider.topAnchor.constraint(equalTo: topAnchor, constant: 20),
+            fontSizeSlider.topAnchor.constraint(equalTo: colorSwatchScrollView.bottomAnchor, constant: 12),
             
             pixelationSlider.topAnchor.constraint(equalTo: fontSizeSlider.bottomAnchor, constant: 20),
             pixelationSlider.heightAnchor.constraint(equalTo: fontSizeSlider.heightAnchor),
@@ -346,6 +430,10 @@ class KeyboardOptionsView: UIView {
     
     @objc private func selectColor() {
         delegate?.selectColor()
+    }
+
+    @objc private func didSelectBackgroundColor(_ color: UIColor) {
+        delegate?.didSelectBackgroundColor(color)
     }
 
     @objc private func selectTextColor() {

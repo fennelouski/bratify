@@ -51,6 +51,7 @@ class SettingsManager {
         case backgroundFlipVertical
         case backgroundBlur
         case backgroundAlpha
+        case recentBackgroundColors
     }
     
     // Properties with default values and persistence
@@ -555,6 +556,26 @@ class SettingsManager {
                 UserDefaults.standard.set(Double(newValue), forKey: UserDefaultsKeys.backgroundAlpha.rawValue)
             }
         }
+    }
+
+    var recentBackgroundColors: [String] {
+        get {
+            queue.sync {
+                UserDefaults.standard.stringArray(forKey: UserDefaultsKeys.recentBackgroundColors.rawValue) ?? []
+            }
+        }
+        set {
+            queue.async(flags: .barrier) {
+                UserDefaults.standard.set(newValue, forKey: UserDefaultsKeys.recentBackgroundColors.rawValue)
+            }
+        }
+    }
+
+    func addRecentBackgroundColor(_ color: UIColor) {
+        let hex = color.toHexString()
+        var recents = recentBackgroundColors.filter { $0 != hex }
+        recents.insert(hex, at: 0)
+        recentBackgroundColors = Array(recents.prefix(8))
     }
 
     var saveWithoutTitle: Bool {
