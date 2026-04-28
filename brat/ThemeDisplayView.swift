@@ -25,10 +25,10 @@ class ThemeDisplayView: UIView, Themeable {
         // Remove all existing subviews
         subviews.forEach { $0.removeFromSuperview() }
 
-        nameLabel.text = themeModel.name
+        nameLabel.text = themeModel.name.localizedLowercase
         nameLabel.textAlignment = .center
         nameLabel.numberOfLines = 0
-        descriptionLabel.text = themeModel.description
+        descriptionLabel.text = themeModel.description?.localizedLowercase
         descriptionLabel.textAlignment = .center
         descriptionLabel.numberOfLines = 0
         
@@ -39,15 +39,21 @@ class ThemeDisplayView: UIView, Themeable {
 
         // Configure Light Mode Views
         let lightModeLabel: UILabel = .body
-        lightModeLabel.text = "Light Mode"
+        lightModeLabel.text = NSLocalizedString(
+            "Light Mode",
+            comment: "Label indicating light mode"
+        ).localizedLowercase
         lightModeLabel.textAlignment = .center
         lightModeLabel.alpha = 0.7
-
+        
         lightPaletteView.colors = themeModel.lightModeColors
-
+        
         // Configure Dark Mode Views
         let darkModeLabel: UILabel = .body
-        darkModeLabel.text = "Dark Mode"
+        darkModeLabel.text = NSLocalizedString(
+            "Dark Mode",
+            comment: "Label indicating dark mode"
+        ).localizedLowercase
         darkModeLabel.textAlignment = .center
         darkModeLabel.alpha = 0.8
 

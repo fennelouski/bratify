@@ -34,6 +34,17 @@
         }
       }
     },
+    "background_image_load_failed" : {
+      "comment" : "Toast shown when a design's background image cannot be loaded from disk",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "couldn't load background image"
+          }
+        }
+      }
+    },
     "failed_to_save_design" : {
       "comment" : "Toast shown when a design fails to save to disk",
       "localizations" : {

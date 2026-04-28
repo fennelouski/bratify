@@ -64,7 +64,7 @@ class FontsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Choose Font"
+        title = "Choose Font".localizedLowercase
         setupTableView()
         setupFonts()
     }
@@ -142,7 +142,7 @@ class FontsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         )
 
         // Set the text of the header label
-        header?.textLabel?.text = localizedSelectedFontLabel
+        header?.textLabel?.text = localizedSelectedFontLabel.localizedLowercase
         header?.textLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
         return header
     }

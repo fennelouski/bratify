@@ -41,7 +41,7 @@ class ColorContextView: UIView {
 
         for (labelText, color) in labels {
             let label: UILabel = .subtitle
-            label.text = "\(labelText): \(sampleText)"
+            label.text = "\(labelText): \(sampleText)".localizedLowercase
             label.backgroundColor = color
             label.textAlignment = .center
             label.textColor = contrastColor(for: color)

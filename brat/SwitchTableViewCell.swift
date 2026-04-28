@@ -46,7 +46,7 @@ class SwitchTableViewCell: UITableViewCell, Themeable {
         isOn: Bool,
         theme: ThemeModel?
     ) {
-        titleLabel.text = text
+        titleLabel.text = text.localizedLowercase
         switchControl.isOn = isOn
         apply(theme)
     }

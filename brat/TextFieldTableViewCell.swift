@@ -64,7 +64,7 @@ class TextFieldTableViewCell: UITableViewCell, Themeable {
         font: UIFont?,
         theme: ThemeModel?
     ) {
-        textField.text = text
+        textField.text = text.localizedLowercase
         textField.font = font
         apply(theme)
         setupViews()

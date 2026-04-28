@@ -73,9 +73,9 @@ class FontCell: UITableViewCell, Themeable {
         fontName: String,
         theme: ThemeModel?
     ) {
-        fontNameLabel.text = fontName
+        fontNameLabel.text = fontName.localizedLowercase
         if traitCollection.horizontalSizeClass == .compact {
-            sampleLabel.text = fontName
+            sampleLabel.text = fontName.localizedLowercase
         } else {
             let localizedFontNameLabel = String(
                 format: NSLocalizedString(
@@ -85,7 +85,7 @@ class FontCell: UITableViewCell, Themeable {
                 fontName
             )
 
-            sampleLabel.text = localizedFontNameLabel
+            sampleLabel.text = localizedFontNameLabel.localizedLowercase
         }
         sampleLabel.font = UIFont(name: fontName, size: .su3)
         apply(theme)

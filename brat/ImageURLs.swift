@@ -115,13 +115,3 @@ extension ImageURLs {
         return false
     }
 }
-
-extension ImageURLs: Selectable {
-    var selectableId: any Hashable {
-        return id
-    }
-    
-    var id: String {
-        return sizesToTry(to: Size.allCases.last).first ?? ""
-    }
-}

@@ -4,7 +4,11 @@ class ImageService {
     private let cacheQueue = DispatchQueue(label: "com.pictureGrid.imageCacheQueue", attributes: .concurrent)
     private let diskManagementQueue = DispatchQueue(label: "com.pictureGrid.diskManagementQueue")
     
-    private var memoryCache = NSCache<NSString, UIImage>()
+    private(set) var memoryCache: NSCache<NSString, UIImage> = {
+        let cache = NSCache<NSString, UIImage>()
+        cache.countLimit = 100
+        return cache
+    }()
     private var ongoingRequests: [AnyHashable: [String: URLSessionDownloadTask]] = [:]
     private var requestContexts: [String: AnyHashable] = [:]
     private var currentDiskCacheSize: UInt64 = 0
@@ -524,7 +528,7 @@ class ImageService {
         assert(fileExists(for: name))
     }
     
-    private func loadImageFromDisk(with name: String?) -> UIImage? {
+    func loadImageFromDisk(with name: String?) -> UIImage? {
         guard let imageName = name?.key else {
             return nil
         }
@@ -556,6 +560,13 @@ class ImageService {
         let modificationDate = [FileAttributeKey.modificationDate: Date()]
         try? FileManager.default.setAttributes(modificationDate,
                                                ofItemAtPath: filePath)
+        
+        if memoryCache.object(forKey: imageName as NSString) == nil {
+            memoryCache.setObject(
+                image,
+                forKey: imageName as NSString
+            )
+        }
         
         return image
     }

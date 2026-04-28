@@ -23,15 +23,15 @@ class ThemeTableViewCell: UITableViewCell, Themeable {
     }()
     
     private let darkModeColorsLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Dark Mode Colors"
+        let label: UILabel = .dynamicTypeLabel
+        label.text = NSLocalizedString("Dark Mode Colors", comment: "Label indicating colors for dark mode").localizedLowercase
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
+
     private let lightModeColorsLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Light Mode Colors"
+        let label: UILabel = .dynamicTypeLabel
+        label.text = NSLocalizedString("Light Mode Colors", comment: "Label indicating colors for light mode").localizedLowercase
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -97,8 +97,8 @@ class ThemeTableViewCell: UITableViewCell, Themeable {
     }
     
     func configure(with theme: ThemeModel) {
-        nameLabel.text = theme.name
-        descriptionLabel.text = theme.description
+        nameLabel.text = theme.name.localizedLowercase
+        descriptionLabel.text = theme.description?.localizedLowercase
         darkModeColorPaletteView.colors = theme.darkModeColors
         lightModeColorPaletteView.colors = theme.lightModeColors
     }

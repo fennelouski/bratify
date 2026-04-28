@@ -22,8 +22,9 @@ class DesignView: UIView {
             updateView()
         }
     }
-    
+
     let imageService: ImageService
+    var onBackgroundImageLoadFailed: (() -> Void)?
     var imageName: String? {
         didSet {
             loadImage { _ in }
@@ -179,7 +180,8 @@ class DesignView: UIView {
                         completion(filteredImage)
                     }
                 } else {
-                    DispatchQueue.main.async {
+                    DispatchQueue.main.async { [weak self] in
+                        self?.onBackgroundImageLoadFailed?()
                         completion(nil)
                     }
                 }

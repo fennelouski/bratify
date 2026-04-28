@@ -38,7 +38,7 @@ class StepperTableViewCell: UITableViewCell, Themeable {
                 guard let self else {
                     return
                 }
-                valueLabel.text = "\(Int(value))"
+                valueLabel.text = "\(Int(value))".localizedLowercase
                 valueChanged?(Double(value))
             }
         } else {
@@ -111,18 +111,18 @@ class StepperTableViewCell: UITableViewCell, Themeable {
         step: Double,
         theme: ThemeModel?
     ) {
-        label.text = text
+        label.text = text.localizedLowercase
         stepper.minimumValue = min
         stepper.maximumValue = max
         stepper.stepValue = value > 40 ? value * step : 1
         stepper.value = value
-        valueLabel.text = "\(Int(value))"
+        valueLabel.text = "\(Int(value))".localizedLowercase
         apply(theme)
     }
     
     @objc private func stepperValueChanged() {
         let value = stepper.value
-        valueLabel.text = "\(Int(value))"
+        valueLabel.text = "\(Int(value))".localizedLowercase
         valueChanged?(value)
     }
     

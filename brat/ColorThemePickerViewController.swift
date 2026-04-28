@@ -54,7 +54,10 @@ class ColorThemePickerViewController: UIViewController {
     override var keyCommands: [UIKeyCommand]? {
         return [
             UIKeyCommand(
-                title: NSLocalizedString("Close", comment: "Title for close key command"),
+                title: NSLocalizedString(
+                    "Close",
+                    comment: "Title for close key command"
+                ),
                 action: #selector(close),
                 input: UIKeyCommand.inputEscape,
                 modifierFlags: [.shift],
@@ -75,7 +78,7 @@ class ColorThemePickerViewController: UIViewController {
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
-        title = NSLocalizedString("Pick A Theme", comment: "Title of the view that allows a user to pick a set of colors with which will paint the entire app.")
+        title = NSLocalizedString("Pick A Theme", comment: "Title of the view that allows a user to pick a set of colors with which will paint the entire app.").localizedLowercase
         updateBackgroundColor()
         collectionView.backgroundColor = .clear
     }

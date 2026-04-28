@@ -721,7 +721,19 @@ class EditDesignViewController: UIViewController {
         }
         lastUpdateDate = Date()
         
-        currentDesign.generateImage(with: imageService) { [weak self] returnedImage, _ in
+        currentDesign.generateImage(
+            with: imageService,
+            onBackgroundImageLoadFailed: { [weak self] in
+                guard let self else { return }
+                ToastView.show(
+                    message: NSLocalizedString(
+                        "background_image_load_failed",
+                        comment: "Toast shown when a design's background image cannot be loaded from disk"
+                    ),
+                    in: view
+                )
+            }
+        ) { [weak self] returnedImage, _ in
             guard let returnedImage,
                     let self else {
                 return

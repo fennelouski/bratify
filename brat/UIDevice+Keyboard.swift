@@ -21,3 +21,17 @@ extension UIDevice {
         return KeyboardObserver.shared.isExternalKeyboardAttached
     }
 }
+
+extension UIDevice {
+    var modelIdentifier: String? {
+        var sysinfo = utsname()
+        uname(&sysinfo)
+        return String(
+            bytes: Data(
+                bytes: &sysinfo.machine,
+                count: Int(_SYS_NAMELEN)
+            ),
+            encoding: .ascii
+        )?.trimmingCharacters(in: .controlCharacters)
+    }
+}

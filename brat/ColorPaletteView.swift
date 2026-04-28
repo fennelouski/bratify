@@ -21,12 +21,48 @@ class ColorPaletteView: UIView {
         subviews.forEach { $0.removeFromSuperview() }
 
         let colors = [
-            ("Text Color", colorModel.textColor),
-            ("Background Color", colorModel.backgroundColor),
-            ("Shadow Color", colorModel.shadowColor),
-            ("Tint Color", colorModel.tintColor),
-            ("Positive Color", colorModel.positiveColor),
-            ("Destructive Color", colorModel.destructiveColor)
+            (
+                NSLocalizedString(
+                    "Text Color",
+                    comment: "Color used for text"
+                ),
+                colorModel.textColor
+            ),
+            (
+                NSLocalizedString(
+                    "Background Color",
+                    comment: "Color used for the background"
+                ),
+                colorModel.backgroundColor
+            ),
+            (
+                NSLocalizedString(
+                    "Shadow Color",
+                    comment: "Color used for shadows"
+                ),
+                colorModel.shadowColor
+            ),
+            (
+                NSLocalizedString(
+                    "Tint Color",
+                    comment: "Color used for tinting elements"
+                ),
+                colorModel.tintColor
+            ),
+            (
+                NSLocalizedString(
+                    "Positive Color",
+                    comment: "Color representing positivity"
+                ),
+                colorModel.positiveColor
+            ),
+            (
+                NSLocalizedString(
+                    "Destructive Color",
+                    comment: "Color representing destructive actions"
+                ),
+                colorModel.destructiveColor
+            )
         ]
 
         let stackView = UIStackView()
@@ -38,7 +74,7 @@ class ColorPaletteView: UIView {
             let colorView = UIView()
             colorView.backgroundColor = color
             let label: UILabel = .body
-            label.text = labelText
+            label.text = labelText.localizedLowercase
             label.textAlignment = .center
             label.textColor = .black
             label.translatesAutoresizingMaskIntoConstraints = false

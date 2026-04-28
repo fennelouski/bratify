@@ -17,6 +17,9 @@ struct ThemeModel: Codable, Hashable, Equatable {
 extension [ThemeModel] {
     static var defaults: [ThemeModel] {
         return [
+            .charliXCXBold,
+            .bratRebel,
+            
             .blandTheme1,
             .blandTheme2,
             
@@ -32,9 +35,9 @@ extension [ThemeModel] {
             
             .newTheme1,
             .newTheme2,
-            .newTheme3,
-            .newTheme4,
-            .newTheme5,
+            .forest,
+            .lavender,
+            .midnight,
             .newTheme6,
             .newTheme7,
             .newTheme8,
@@ -54,10 +57,58 @@ extension [ThemeModel] {
 }
 
 extension ThemeModel {
+    static let charliXCXBold = ThemeModel(
+        name: "90+10",
+        description: NSLocalizedString("Vibrant and edgy", comment: "The name of a color model that uses vibrant colors"),
+        lightModeColors: ColorModel(
+            textColor: UIColor(hexString: "#000000"), // Black
+            backgroundColor: UIColor(hexString: "#8AE234"), // Bright green
+            shadowColor: UIColor(hexString: "#2E2E2E"), // Dark gray
+            tintColor: UIColor(hexString: "#FF00FF"), // Magenta
+            positiveColor: UIColor(hexString: "#FF69B4"), // Hot pink
+            destructiveColor: UIColor(hexString: "#FF4500"), // Orange red
+            onColor: UIColor(hexString: "#00FFFF") // Cyan
+        ),
+        darkModeColors: ColorModel(
+            textColor: UIColor(hexString: "#FFFFFF"), // White
+            backgroundColor: UIColor(hexString: "#121212"), // Almost black
+            shadowColor: UIColor(hexString: "#4B0082"), // Indigo
+            tintColor: UIColor(hexString: "#FF1493"), // Deep pink
+            positiveColor: UIColor(hexString: "#00FF00"), // Lime
+            destructiveColor: UIColor(hexString: "#FF6347"), // Tomato
+            onColor: UIColor(hexString: "#00CED1") // Dark turquoise
+        )
+    )
+
+    static let bratRebel = ThemeModel(
+        name: "brebel",
+        description: NSLocalizedString("Neon and bold", comment: "The name of a color model that uses neon and bold colors"),
+        lightModeColors: ColorModel(
+            textColor: UIColor(hexString: "#292929"), // Charcoal
+            backgroundColor: UIColor(hexString: "#D1FF00"), // Lime green
+            shadowColor: UIColor(hexString: "#3C3C3C"), // Dark gray
+            tintColor: UIColor(hexString: "#FF00FF"), // Magenta
+            positiveColor: UIColor(hexString: "#FF1493"), // Deep pink
+            destructiveColor: UIColor(hexString: "#DC143C"), // Crimson
+            onColor: UIColor(hexString: "#1E90FF") // Dodger blue
+        ),
+        darkModeColors: ColorModel(
+            textColor: UIColor(hexString: "#E5E5E5"), // Very light gray
+            backgroundColor: UIColor(hexString: "#101010"), // Very dark gray
+            shadowColor: UIColor(hexString: "#696969"), // Dim gray
+            tintColor: UIColor(hexString: "#FF69B4"), // Hot pink
+            positiveColor: UIColor(hexString: "#32CD32"), // Lime green
+            destructiveColor: UIColor(hexString: "#FF0000"), // Red
+            onColor: UIColor(hexString: "#00BFFF") // Deep sky blue
+        )
+    )
     // Bland Themes
     static let blandTheme1 = ThemeModel(
         name: "Beige",
-        description: "Subtle and neutral beige",
+        description: NSLocalizedString(
+            "Subtle and neutral beige",
+            comment: "The name of a color model that uses beige, subtle, and neutral colors"
+        ),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#5A5A5A"), // Dark gray
             backgroundColor: UIColor(hexString: "#F5F5DC"), // Beige
@@ -80,7 +131,7 @@ extension ThemeModel {
 
     static let blandTheme2 = ThemeModel(
         name: "Monochromatic",
-        description: "Simple and understated monochromatic",
+        description: NSLocalizedString("Simple and understated monochromatic", comment: "The name of a color model that uses simple monochromatic colors"),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#4B4B4B"), // Dark gray
             backgroundColor: UIColor(hexString: "#DADADA"), // Light gray
@@ -103,7 +154,7 @@ extension ThemeModel {
 
     static let blandTheme3 = ThemeModel(
         name: "Soft Almond",
-        description: "A warm and gentle almond theme.",
+        description: NSLocalizedString("A warm and gentle almond theme.", comment: "The name of a color model that uses a gentle and calming almond color as a base for other colors"),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#6B6B6B"), // Dim gray
             backgroundColor: UIColor(hexString: "#FAEBD7"), // Antique white
@@ -127,7 +178,7 @@ extension ThemeModel {
     // Vibrant Themes
     static let vibrantTheme1 = ThemeModel(
         name: "Vibrant 1",
-        description: "Lively and energetic",
+        description: NSLocalizedString("Lively and energetic", comment: "The name of a color model that uses simple monochromatic colors"),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#FFFFFF"), // White
             backgroundColor: UIColor(hexString: "#FF6347"), // Tomato red
@@ -150,7 +201,7 @@ extension ThemeModel {
 
     static let vibrantTheme2 = ThemeModel(
         name: "Vibrant 2",
-        description: "Bright and cheerful",
+        description: NSLocalizedString("Bright and cheerful", comment: ""),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#FFFFFF"), // White
             backgroundColor: UIColor(hexString: "#4682B4"), // Steel blue
@@ -173,7 +224,7 @@ extension ThemeModel {
 
     static let vibrantTheme3 = ThemeModel(
         name: "Vibrant 3",
-        description: "Bold and dynamic",
+        description: NSLocalizedString("Bold and dynamic", comment: ""),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#000000"), // Black
             backgroundColor: UIColor(hexString: "#FFFF00"), // Yellow
@@ -196,7 +247,7 @@ extension ThemeModel {
 
     static let vibrantTheme4 = ThemeModel(
         name: "Vibrant 4",
-        description: "Colorful and playful",
+        description: NSLocalizedString("Colorful and playful", comment: ""),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#000000"), // Black
             backgroundColor: UIColor(hexString: "#7CFC00"), // Lawn green
@@ -219,7 +270,7 @@ extension ThemeModel {
 
     static let vibrantTheme5 = ThemeModel(
         name: "Vibrant 5",
-        description: "Vivid and striking",
+        description: NSLocalizedString("Vivid and striking", comment: ""),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#FFFFFF"), // White
             backgroundColor: UIColor(hexString: "#800080"), // Purple
@@ -243,7 +294,7 @@ extension ThemeModel {
     // Traditional Themes
     static let traditionalTheme1 = ThemeModel(
         name: "Traditional 1",
-        description: "Classic and timeless",
+        description: NSLocalizedString("Classic and timeless", comment: ""),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#000000"), // Black
             backgroundColor: UIColor(hexString: "#FFFFFF"), // White
@@ -266,7 +317,7 @@ extension ThemeModel {
 
     static let traditionalTheme2 = ThemeModel(
         name: "Traditional 2",
-        description: "Refined and elegant",
+        description: NSLocalizedString("Refined and elegant", comment: ""),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#2F4F4F"), // Dark slate gray
             backgroundColor: UIColor(hexString: "#F5DEB3"), // Wheat
@@ -289,7 +340,7 @@ extension ThemeModel {
 
     static let traditionalTheme3 = ThemeModel(
         name: "Traditional 3",
-        description: "Rich and sophisticated",
+        description: NSLocalizedString("Rich and sophisticated", comment: ""),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#4B0082"), // Indigo
             backgroundColor: UIColor(hexString: "#E6E6FA"), // Lavender
@@ -313,7 +364,7 @@ extension ThemeModel {
     // New Themes
     static let newTheme1 = ThemeModel(
         name: "Ocean Blue",
-        description: "Refreshing ocean blue",
+        description: NSLocalizedString("Refreshing ocean blue", comment: ""),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#FFFFFF"), // White
             backgroundColor: UIColor(hexString: "#1E90FF"), // Dodger blue
@@ -336,7 +387,7 @@ extension ThemeModel {
 
     static let newTheme2 = ThemeModel(
         name: "Sunset",
-        description: "Warm and inviting sunset",
+        description: NSLocalizedString("Warm and inviting sunset", comment: ""),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#FFFFFF"), // White
             backgroundColor: UIColor(hexString: "#FF4500"), // Orange red
@@ -357,9 +408,9 @@ extension ThemeModel {
         )
     )
 
-    static let newTheme3 = ThemeModel(
+    static let forest = ThemeModel(
         name: "Forest",
-        description: "Deep and tranquil forest",
+        description: NSLocalizedString("Deep and tranquil forest", comment: ""),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#000000"), // Black
             backgroundColor: UIColor(hexString: "#228B22"), // Forest green
@@ -380,9 +431,9 @@ extension ThemeModel {
         )
     )
 
-    static let newTheme4 = ThemeModel(
+    static let lavender = ThemeModel(
         name: "Lavender",
-        description: "Soft and calming lavender",
+        description: NSLocalizedString("Soft and calming lavender", comment: ""),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#4B0082"), // Indigo
             backgroundColor: UIColor(hexString: "#E6E6FA"), // Lavender
@@ -403,9 +454,9 @@ extension ThemeModel {
         )
     )
 
-    static let newTheme5 = ThemeModel(
+    static let midnight = ThemeModel(
         name: "Midnight",
-        description: "Mysterious and dark midnight",
+        description: NSLocalizedString("Mysterious and dark midnight", comment: ""),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#FFFFFF"), // White
             backgroundColor: UIColor(hexString: "#2F4F4F"), // Dark slate gray
@@ -428,7 +479,7 @@ extension ThemeModel {
 
     static let newTheme6 = ThemeModel(
         name: "Sunshine",
-        description: "Bright and sunny",
+        description: NSLocalizedString("Bright and sunny", comment: ""),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#000000"), // Black
             backgroundColor: UIColor(hexString: "#FFD700"), // Gold
@@ -451,7 +502,7 @@ extension ThemeModel {
 
     static let newTheme7 = ThemeModel(
         name: "Pastel",
-        description: "Soft and gentle pastel",
+        description: NSLocalizedString("Soft and gentle pastel", comment: ""),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#000000"), // Black
             backgroundColor: UIColor(hexString: "#FFDAB9"), // Peach puff
@@ -474,7 +525,7 @@ extension ThemeModel {
 
     static let newTheme8 = ThemeModel(
         name: "Citrus",
-        description: "Fresh and zesty citrus",
+        description: NSLocalizedString("Fresh and zesty citrus", comment: ""),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#000000"), // Black
             backgroundColor: UIColor(hexString: "#FFD700"), // Gold
@@ -497,7 +548,7 @@ extension ThemeModel {
 
     static let newTheme9 = ThemeModel(
         name: "Berry",
-        description: "Vibrant and juicy berry",
+        description: NSLocalizedString("Vibrant and juicy berry", comment: ""),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#000000"), // Black
             backgroundColor: UIColor(hexString: "#8A2BE2"), // Blue violet
@@ -520,7 +571,7 @@ extension ThemeModel {
 
     static let newTheme10 = ThemeModel(
         name: "Mint",
-        description: "Cool and refreshing mint",
+        description: NSLocalizedString("Cool and refreshing mint", comment: ""),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#000000"), // Black
             backgroundColor: UIColor(hexString: "#98FF98"), // Mint green
@@ -543,7 +594,7 @@ extension ThemeModel {
     
     static let redTheme = ThemeModel(
         name: "Red",
-        description: "Vibrant red monochromatic",
+        description: NSLocalizedString("Vibrant red monochromatic", comment: ""),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#B22222"), // Firebrick
             backgroundColor: UIColor(hexString: "#FF6347"), // Tomato
@@ -566,7 +617,7 @@ extension ThemeModel {
 
     static let orangeTheme = ThemeModel(
         name: "Orange",
-        description: "Bold orange monochromatic",
+        description: NSLocalizedString("Bold orange monochromatic", comment: ""),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#FF8C00"), // Dark Orange
             backgroundColor: UIColor(hexString: "#FFA500"), // Orange
@@ -589,7 +640,7 @@ extension ThemeModel {
 
     static let yellowTheme = ThemeModel(
         name: "Yellow",
-        description: "Bright yellow monochromatic",
+        description: NSLocalizedString("Bright yellow monochromatic", comment: ""),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#FFD700"), // Gold
             backgroundColor: UIColor(hexString: "#FFFFE0"), // Light Yellow
@@ -612,7 +663,7 @@ extension ThemeModel {
 
     static let greenTheme = ThemeModel(
         name: "Green",
-        description: "Refreshing green monochromatic",
+        description: NSLocalizedString("Refreshing green monochromatic", comment: ""),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#006400"), // Dark Green
             backgroundColor: UIColor(hexString: "#90EE90"), // Light Green
@@ -635,7 +686,7 @@ extension ThemeModel {
 
     static let blueTheme = ThemeModel(
         name: "Blue",
-        description: "Cool blue monochromatic",
+        description: NSLocalizedString("Cool blue monochromatic", comment: ""),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#0000FF"), // Blue
             backgroundColor: UIColor(hexString: "#ADD8E6"), // Light Blue
@@ -658,7 +709,7 @@ extension ThemeModel {
 
     static let indigoTheme = ThemeModel(
         name: "Indigo",
-        description: "Deep indigo monochromatic",
+        description: NSLocalizedString("Deep indigo monochromatic", comment: ""),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#4B0082"), // Indigo
             backgroundColor: UIColor(hexString: "#8A2BE2"), // Blue Violet
@@ -681,7 +732,7 @@ extension ThemeModel {
 
     static let violetTheme = ThemeModel(
         name: "Violet",
-        description: "Gentle violet monochromatic",
+        description: NSLocalizedString("Gentle violet monochromatic", comment: ""),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#9400D3"), // Dark Violet
             backgroundColor: UIColor(hexString: "#EE82EE"), // Violet
@@ -704,7 +755,7 @@ extension ThemeModel {
 
     static let pinkTheme = ThemeModel(
         name: "Pink",
-        description: "Sweet pink monochromatic",
+        description: NSLocalizedString("Sweet pink monochromatic", comment: ""),
         lightModeColors: ColorModel(
             textColor: UIColor(hexString: "#FF69B4"), // Hot Pink
             backgroundColor: UIColor(hexString: "#FFB6C1"), // Light Pink

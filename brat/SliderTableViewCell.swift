@@ -120,7 +120,7 @@ class SliderTableViewCell: UITableViewCell, Themeable {
         theme: ThemeModel?
     ) {
         valueChanged = nil
-        label.text = text
+        label.text = text.localizedLowercase
         slider.minimumValue = min
         slider.maximumValue = max
         self.mode = mode
@@ -134,11 +134,11 @@ class SliderTableViewCell: UITableViewCell, Themeable {
         switch mode {
         case .alpha:
             let percentage = Int(sender.value * 100)
-            valueLabel.text = "\(percentage)%"
+            valueLabel.text = "\(percentage)%".localizedLowercase
             valueChanged?(sender.value)
         case .integer:
             let roundedValue = Int(sender.value.rounded())
-            valueLabel.text = "\(roundedValue)"
+            valueLabel.text = "\(roundedValue)".localizedLowercase
             valueChanged?(Float(roundedValue))
         case .unknown:
             break
