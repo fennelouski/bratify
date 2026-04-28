@@ -18,7 +18,9 @@ class DesignManager {
     func addDesign(_ design: Design) {
         // Check if a design with the same ID already exists
         if let index = designs.firstIndex(where: { $0.id == design.id }) {
-            designs[index] = design
+            var updated = design
+            updated.modifiedDate = Date()
+            designs[index] = updated
         } else if !design.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             designs.append(design)
         }

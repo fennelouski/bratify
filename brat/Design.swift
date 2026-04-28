@@ -5,6 +5,7 @@ struct Design: Codable {
     var backgroundColor: UIColor
     var textColor: UIColor = .white
     var creationDate: Date
+    var modifiedDate: Date
     var fontName: String
     var fontSize: CGFloat
     var pixelationScale: CGFloat
@@ -51,6 +52,7 @@ struct Design: Codable {
         case backgroundColor
         case textColor
         case creationDate
+        case modifiedDate
         case fontName
         case fontSize
         case pixelationScale
@@ -96,6 +98,7 @@ struct Design: Codable {
         try container.encode(backgroundColor.toHexString(), forKey: .backgroundColor)
         try container.encode(textColor.toHexString(), forKey: .textColor)
         try container.encode(creationDate, forKey: .creationDate)
+        try container.encode(modifiedDate, forKey: .modifiedDate)
         try container.encode(fontName, forKey: .fontName)
         try container.encode(fontSize, forKey: .fontSize)
         try container.encode(pixelationScale, forKey: .pixelationScale)
@@ -139,6 +142,7 @@ struct Design: Codable {
         backgroundColor: UIColor,
         textColor: UIColor = .white,
         creationDate: Date,
+        modifiedDate: Date? = nil,
         fontName: String,
         fontSize: CGFloat,
         pixelationScale: CGFloat,
@@ -180,6 +184,7 @@ struct Design: Codable {
         self.backgroundColor = backgroundColor
         self.textColor = textColor
         self.creationDate = creationDate
+        self.modifiedDate = modifiedDate ?? creationDate
         self.fontName = fontName
         self.fontSize = fontSize
         self.pixelationScale = pixelationScale
@@ -231,6 +236,7 @@ struct Design: Codable {
         let textColorHex = try container.decodeIfPresent(String.self, forKey: .textColor)
         textColor = textColorHex.map { UIColor(hexString: $0) } ?? .white
         creationDate = try container.decode(Date.self, forKey: .creationDate)
+        modifiedDate = try container.decodeIfPresent(Date.self, forKey: .modifiedDate) ?? creationDate
         fontName = try container.decode(String.self, forKey: .fontName)
         fontSize = try container.decode(CGFloat.self, forKey: .fontSize)
         pixelationScale = try container.decode(CGFloat.self, forKey: .pixelationScale)

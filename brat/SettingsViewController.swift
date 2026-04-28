@@ -1,10 +1,3 @@
-//
-//  SettingsViewController.swift
-//  Speed Reader
-//
-//  Created by Nathan Fennel on 5/13/24.
-//
-
 import UIKit
 
 class SettingsViewController: UITableViewController {
@@ -12,32 +5,28 @@ class SettingsViewController: UITableViewController {
     private let settingsManager: SettingsManager
     
     enum SettingsSection: Int, CaseIterable {
-        case wordsPerMinute
         case preferredFontSize
         case preferredFontName
         case themeSelection
-        case histogramAlpha
-        case neighborWordsAlpha
+        case pixelationScale
+        case autocorrectionEnabled
+        case showLabels
         case saveWithoutTitle
-        case autoSaveOnPaste
-        case autoPasteEnabled
-        case useDummyData
-        
+        case aspectRatio
+        case gallerySortOrder
+
         static var allCases: [SettingsSection] {
-            var baseSet: [SettingsSection] = [
-                .wordsPerMinute,
+            let baseSet: [SettingsSection] = [
                 .preferredFontSize,
                 .preferredFontName,
                 .themeSelection,
-                .histogramAlpha,
-                .neighborWordsAlpha,
+                .pixelationScale,
+//                .aspectRatio,
+                .autocorrectionEnabled,
+                .showLabels,
                 .saveWithoutTitle,
-                .autoSaveOnPaste,
-                .autoPasteEnabled
+                .gallerySortOrder
             ]
-            if UIDevice.current.isAdmin {
-                baseSet.append(.useDummyData)
-            }
             return baseSet
         }
     }
@@ -60,18 +49,30 @@ class SettingsViewController: UITableViewController {
         tableView.register(ThemeTableViewCell.self, forCellReuseIdentifier: "ThemeTableViewCell")
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "DefaultCell")
         
-        navigationItem.title = NSLocalizedString("Settings", comment: "The name of the settings menu.")
+        navigationItem.title = NSLocalizedString(
+            "Settings",
+            comment: "The name of the settings menu."
+        ).localizedLowercase
         navigationItem.largeTitleDisplayMode = .always
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        apply(settingsManager.selectedTheme)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         apply(settingsManager.selectedTheme)
     }
     
     override var keyCommands: [UIKeyCommand]? {
         return [
             UIKeyCommand(
-                title: NSLocalizedString("Close", comment: "Title for close key command"),
+                title: NSLocalizedString(
+                    "Close",
+                    comment: "Title for close key command"
+                ),
                 action: #selector(close),
                 input: UIKeyCommand.inputEscape,
                 modifierFlags: [.shift],
@@ -97,26 +98,13 @@ class SettingsViewController: UITableViewController {
         }
         
         switch section {
-        case .wordsPerMinute:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "SliderTableViewCell", for: indexPath) as! SliderTableViewCell
-            cell.configure(
-                text: NSLocalizedString("Words Per Minute", comment: "A label indicating that the setting the user is going to change affects how many words per minute will be shown on screen."),
-                with: Float(settingsManager.wordsPerMinute),
-                min: 80,
-                max: 900,
-                mode: .integer,
-                thumbImage: .Large.hareCircleFill,
-                theme: settingsManager.selectedTheme
-            )
-            cell.valueChanged = { [weak self] newValue in
-                self?.settingsManager.wordsPerMinute = Int(newValue)
-            }
-            return cell
-            
         case .preferredFontSize:
             let cell = tableView.dequeueReusableCell(withIdentifier: "StepperTableViewCell", for: indexPath) as! StepperTableViewCell
             cell.configure(
-                text: NSLocalizedString("Font Size", comment: "A label for the control that allows the user to change the size of text being shown."),
+                text: NSLocalizedString(
+                    "Font Size",
+                    comment: "A label for the control that allows the user to change the size of text being shown."
+                ),
                 with: settingsManager.preferredFontSize,
                 min: 12,
                 max: 500,
@@ -175,58 +163,58 @@ class SettingsViewController: UITableViewController {
                 cell.textLabel?.text = NSLocalizedString(
                     "Theme Selection",
                     comment: "A label for the control that allows the user to select a theme."
-                )
-                cell.detailTextLabel?.text = settingsManager.selectedTheme?.name ?? NSLocalizedString("Default", comment: "Default theme name.")
+                ).localizedLowercase
+                cell.detailTextLabel?.text = settingsManager.selectedTheme?.name ?? NSLocalizedString("Default", comment: "Default theme name.").localizedLowercase
                 cell.accessoryType = .disclosureIndicator
                 cell.apply(settingsManager.selectedTheme)
                 return cell
             }
             
-        case .histogramAlpha:
+        case .pixelationScale:
             let cell = tableView.dequeueReusableCell(
                 withIdentifier: "SliderTableViewCell",
                 for: indexPath
             ) as! SliderTableViewCell
             cell.configure(
                 text: NSLocalizedString(
-                    "Histogram Alpha",
-                    comment: "A label for the control that allows the user to change the alpha of the histogram."
+                    "Pixelation Scale",
+                    comment: "A label for the control that allows the user to change the scale of the pixelation effect."
                 ),
-                with: Float(settingsManager.histogramAlpha),
-                min: 0,
-                max: 1,
-                mode: .alpha,
-                thumbImage: .Large.chartBarFill,
+                with: Float(settingsManager.pixelationScale),
+                min: 1,
+                max: 20,
+                mode: .integer,
+                thumbImage: .Large.rectangleCheckered,
                 theme: settingsManager.selectedTheme
             )
             cell.valueChanged = { [weak self] newValue in
-                self?.settingsManager.histogramAlpha = Double(newValue)
+                self?.settingsManager.pixelationScale = Double(newValue)
             }
             return cell
             
-        case .neighborWordsAlpha:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "SliderTableViewCell", for: indexPath) as! SliderTableViewCell
-            cell.configure(
-                text: NSLocalizedString(
-                    "Neighbor Words Alpha",
-                    comment: "A label for the control that allows the user to change the alpha of the neighbor words."
-                ),
-                with: Float(settingsManager.neighborWordsAlpha),
-                min: 0,
-                max: 1,
-                mode: .alpha,
-                thumbImage: UIImage.Large.circleDotted,
-                theme: settingsManager.selectedTheme
+        case .aspectRatio:
+            let cell = tableView.dequeueReusableCell(
+                withIdentifier: "DefaultCell",
+                for: indexPath
             )
-            cell.valueChanged = { [weak self] newValue in
-                self?.settingsManager.neighborWordsAlpha = Double(newValue)
-            }
+            let xDimension = min(Int(settingsManager.xDimension), 40)
+            let yDimension = min(Int(settingsManager.yDimension), 40)
+            cell.textLabel?.text = NSLocalizedString(
+                "Aspect Ratio",
+                comment: "A label for the control that allows the user to select the aspect ratio."
+            ).localizedLowercase
+            cell.detailTextLabel?.text = "\(xDimension):\(yDimension)"
+            cell.accessoryType = .disclosureIndicator
+            cell.apply(settingsManager.selectedTheme)
             return cell
-            
+                        
         case .saveWithoutTitle:
             let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchTableViewCell", for: indexPath) as! SwitchTableViewCell
             cell.configure(
-                text: NSLocalizedString("Save Without Title", comment: "A label for the control that allows the user to save without a title."),
+                text: NSLocalizedString(
+                    "Save Without Title",
+                    comment: "A label for the control that allows the user to save without a title."
+                ),
                 isOn: settingsManager.saveWithoutTitle,
                 theme: settingsManager.selectedTheme
             )
@@ -234,42 +222,44 @@ class SettingsViewController: UITableViewController {
                 self?.settingsManager.saveWithoutTitle = newValue
             }
             return cell
-            
-        case .autoSaveOnPaste:
+        case .autocorrectionEnabled:
             let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchTableViewCell", for: indexPath) as! SwitchTableViewCell
             cell.configure(
-                text: NSLocalizedString("Auto Save on Paste", comment: "A label for the control that allows the user to automatically save on paste."),
-                isOn: settingsManager.autoSaveOnPaste,
+                text: NSLocalizedString(
+                    "Autocorrection Enabled",
+                    comment: "A label for the control that allows the user to automatically save on paste."
+                ).localizedLowercase,
+                isOn: settingsManager.autocorrectionEnabled,
                 theme: settingsManager.selectedTheme
             )
             cell.valueChanged = { [weak self] newValue in
-                self?.settingsManager.autoSaveOnPaste = newValue
+                self?.settingsManager.autocorrectionEnabled = newValue
             }
             return cell
-        case .autoPasteEnabled:
+        case .showLabels:
             let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchTableViewCell", for: indexPath) as! SwitchTableViewCell
             cell.configure(
-                text: NSLocalizedString("Auto Paste From Clipboard", comment: "A label for the control that allows the user to automatically paste what's on their clipboard."),
-                isOn: settingsManager.autoPasteEnabled,
+                text: NSLocalizedString(
+                    "Show Labels",
+                    comment: "A label for the control that shows labels for the user if they prefer."
+                ).localizedLowercase,
+                isOn: settingsManager.showLabels,
                 theme: settingsManager.selectedTheme
             )
             cell.valueChanged = { [weak self] newValue in
-                self?.settingsManager.autoPasteEnabled = newValue
+                self?.settingsManager.showLabels = newValue
             }
             return cell
-        case .useDummyData:
-            guard UIDevice.current.isAdmin else {
-                return UITableViewCell()
-            }
-            let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchTableViewCell", for: indexPath) as! SwitchTableViewCell
-            cell.configure(
-                text: NSLocalizedString("Show Sample Articles", comment: "A label for the control that allows the user to see sample articles which shipped with the app."),
-                isOn: settingsManager.useDummyData,
-                theme: settingsManager.selectedTheme
-            )
-            cell.valueChanged = { [weak self] newValue in
-                self?.settingsManager.useDummyData = newValue
-            }
+
+        case .gallerySortOrder:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "DefaultCell", for: indexPath)
+            cell.textLabel?.text = NSLocalizedString(
+                "Sort Order",
+                comment: "A label for the control that sets gallery sort order."
+            ).localizedLowercase
+            cell.detailTextLabel?.text = settingsManager.gallerySortOrder.displayName.localizedLowercase
+            cell.accessoryType = .disclosureIndicator
+            cell.apply(settingsManager.selectedTheme)
             return cell
         }
     }
@@ -290,8 +280,14 @@ class SettingsViewController: UITableViewController {
 
             }
             navigationController?.pushViewController(themePickerVC, animated: true)
+        } else if section == .aspectRatio {
+            let aspectRatioPickerVC = AspectRatioPickerViewController(settingsManager: settingsManager)
+            aspectRatioPickerVC.delegate = self
+            navigationController?.pushViewController(aspectRatioPickerVC, animated: true)
+        } else if section == .gallerySortOrder {
+            showSortOrderPicker(at: indexPath)
         }
-        
+
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
@@ -307,6 +303,33 @@ class SettingsViewController: UITableViewController {
         present(fontViewController)
     }
     
+    private func showSortOrderPicker(at indexPath: IndexPath) {
+        let alert = UIAlertController(
+            title: NSLocalizedString("Sort Order", comment: "Title for sort order picker"),
+            message: nil,
+            preferredStyle: .actionSheet
+        )
+        for order in GallerySortOrder.allCases {
+            let isCurrent = settingsManager.gallerySortOrder == order
+            let title = isCurrent ? "✓ \(order.displayName)" : order.displayName
+            alert.addAction(UIAlertAction(title: title, style: .default) { [weak self] _ in
+                guard let self else { return }
+                settingsManager.gallerySortOrder = order
+                tableView.reloadRows(at: [indexPath], with: .automatic)
+            })
+        }
+        alert.addAction(UIAlertAction(
+            title: NSLocalizedString("Cancel", comment: "Cancel action"),
+            style: .cancel
+        ))
+        if let popover = alert.popoverPresentationController,
+           let cell = tableView.cellForRow(at: indexPath) {
+            popover.sourceView = cell
+            popover.sourceRect = cell.bounds
+        }
+        present(alert, animated: true)
+    }
+
     @objc private func close() {
         dismiss()
     }
@@ -322,5 +345,34 @@ class SettingsViewController: UITableViewController {
             tableView.reloadSections(IndexSet(integer: SettingsSection.themeSelection.rawValue),
                                      with: .fade)
         }))
+    }
+}
+
+extension SettingsViewController: AspectRatioPickerDelegate {
+    func didSelectAspectRatio(width: Int, height: Int) {
+        let maxDimension: CGFloat = 512.0
+        let maxPixels: CGFloat = 500_000.0
+        
+        var newWidth = CGFloat(width)
+        var newHeight = CGFloat(height)
+        
+        // Ensure the aspect ratio is maintained and constraints are applied
+        if newWidth > maxDimension || newHeight > maxDimension || (newWidth * newHeight > maxPixels) {
+            let aspectRatio = newWidth / newHeight
+            
+            if newWidth > newHeight {
+                newWidth = min(maxDimension, sqrt(maxPixels * aspectRatio))
+                newHeight = newWidth / aspectRatio
+            } else {
+                newHeight = min(maxDimension, sqrt(maxPixels / aspectRatio))
+                newWidth = newHeight * aspectRatio
+            }
+        }
+        
+        settingsManager.xDimension = newWidth
+        settingsManager.yDimension = newHeight
+        
+        // Update the aspect ratio display in the settings
+        tableView.reloadRows(at: [IndexPath(row: 0, section: SettingsSection.aspectRatio.rawValue)], with: .automatic)
     }
 }

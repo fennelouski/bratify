@@ -1,5 +1,19 @@
 import UIKit
 
+enum GallerySortOrder: String, CaseIterable {
+    case newestFirst
+    case oldestFirst
+    case lastModified
+
+    var displayName: String {
+        switch self {
+        case .newestFirst: return NSLocalizedString("Newest First", comment: "Sort option: newest designs shown first")
+        case .oldestFirst: return NSLocalizedString("Oldest First", comment: "Sort option: oldest designs shown first")
+        case .lastModified: return NSLocalizedString("Last Modified", comment: "Sort option: recently edited designs shown first")
+        }
+    }
+}
+
 class SettingsManager {
     // Thread-safe access pattern
     private let queue = DispatchQueue(
@@ -52,6 +66,7 @@ class SettingsManager {
         case backgroundBlur
         case backgroundAlpha
         case recentBackgroundColors
+        case gallerySortOrder
     }
     
     // Properties with default values and persistence
@@ -567,6 +582,23 @@ class SettingsManager {
         set {
             queue.async(flags: .barrier) {
                 UserDefaults.standard.set(newValue, forKey: UserDefaultsKeys.recentBackgroundColors.rawValue)
+            }
+        }
+    }
+
+    var gallerySortOrder: GallerySortOrder {
+        get {
+            queue.sync {
+                if let raw = UserDefaults.standard.string(forKey: UserDefaultsKeys.gallerySortOrder.rawValue),
+                   let order = GallerySortOrder(rawValue: raw) {
+                    return order
+                }
+                return .newestFirst
+            }
+        }
+        set {
+            queue.async(flags: .barrier) {
+                UserDefaults.standard.set(newValue.rawValue, forKey: UserDefaultsKeys.gallerySortOrder.rawValue)
             }
         }
     }

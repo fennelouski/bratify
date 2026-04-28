@@ -97,8 +97,9 @@ class ViewController: UIViewController {
             }
 
             DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: DispatchWorkItem(block: { [weak self] in
-                self?.designs = DesignManager.shared.getAllDesigns()
-                self?.collectionView.reloadData()
+                guard let self else { return }
+                designs = sorted(DesignManager.shared.getAllDesigns())
+                collectionView.reloadData()
             }))
         }))
 
@@ -107,7 +108,7 @@ class ViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         apply(settingsManager.selectedTheme)
-        designs = DesignManager.shared.getAllDesigns()
+        designs = sorted(DesignManager.shared.getAllDesigns())
         collectionView.reloadData()
         
         for indexPath in collectionView.indexPathsForVisibleItems {
@@ -145,8 +146,19 @@ class ViewController: UIViewController {
     }
     
     private func loadDesigns() {
-        designs = DesignManager.shared.loadDesigns()
+        designs = sorted(DesignManager.shared.loadDesigns())
         collectionView.reloadData()
+    }
+
+    func sorted(_ designs: [Design]) -> [Design] {
+        switch settingsManager.gallerySortOrder {
+        case .newestFirst:
+            return designs.sorted { $0.creationDate > $1.creationDate }
+        case .oldestFirst:
+            return designs.sorted { $0.creationDate < $1.creationDate }
+        case .lastModified:
+            return designs.sorted { $0.modifiedDate > $1.modifiedDate }
+        }
     }
 
     @objc private func handleDesignSaveFailed() {
