@@ -1,0 +1,1589 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "BackgroundHelp" : {
+      "comment" : "Explain what happens when the user touches the background button/toggle",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يُغيِّر لون الخلفية بين الداكن والفاتح عند تشغيل Torch Touch."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Canvia el color de fons entre fosc i clar quan Torch Touch està activat."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Při zapnutém Torch Touch přepíná barvu pozadí mezi tmavou a světlou."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skift baggrundsfarven mellem mørk og lys, når Torch Touch er tændt."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wechselt die Hintergrundfarbe zwischen dunkel und hell, wenn die Taschenlampe an ist"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Αλλάζει το χρώμα φόντου μεταξύ σκοτεινού και φωτεινού όταν το Torch Touch είναι ενεργοποιημένο."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Switch the background color between dark and light when Torch Touch is on."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Switch the background colour between dark and light when Torch Touch is on."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Switch the background colour between dark and light when Torch Touch is on."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Switch the background colour between dark and light when Torch Touch is on."
+          }
+        },
+        "en-IN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Switch the background colour between dark and light when Torch Touch is on."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cambiar el color de fondo entre oscuro y claro cuando la linterna está encendida"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cambia el color de fondo entre oscuro y claro cuando Torch Touch está encendido."
+          }
+        },
+        "es-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cambia el color de fondo entre oscuro y claro cuando Torch Touch está encendido."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vaihda taustaväri tumman ja vaalean välillä, kun Torch Touch on päällä."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Basculer la couleur de l’arrière-plan entre sombre et clair lorsque la lampe est allumée"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alterner la couleur d’arrière-plan entre foncé et clair lorsque Torch Touch est activé."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מחליף את צבע הרקע בין כהה לבהיר כאשר Torch Touch פעיל."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "जब Torch Touch चालू हो, तब पृष्ठभूमि का रंग अंधेरे और रोशनी के बीच बदलें।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kada je Torch Touch uključen, mijenja pozadinsku boju između tamne i svijetle."
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapcsolja a háttérszínt sötét és világos között, amikor a Torch Touch be van kapcsolva."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mengganti warna latar belakang antara gelap dan terang saat Torch Touch aktif."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cambia il colore di sfondo tra scuro e chiaro quando Torch Touch è attivo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Torch Touchがオンのとき、背景色をダークとライトの間で切り替えます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Torch Touch가 켜져 있을 때 배경색을 어두운 색과 밝은 색으로 전환합니다."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tukar warna latar belakang antara gelap dan cerah apabila Torch Touch dihidupkan."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bytt bakgrunnsfarge mellom mørk og lys når Torch Touch er påslått."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wissel de achtergrondkleur tussen donker en licht wanneer Torch Touch ingeschakeld is."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zmienia kolor tła między ciemnym a jasnym, gdy Torch Touch jest włączony."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Altera a cor de fundo entre escuro e claro quando o Torch Touch está ligado."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Altera a cor de fundo entre escuro e claro quando o Torch Touch está ligado."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Când Torch Touch este activat, schimbă culoarea de fundal între închis și deschis."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "При включённом Torch Touch переключает цвет фона между тёмным и светлым."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pri zapnutom Torch Touch prepína farbu pozadia medzi tmavou a svetlou."
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ko je Torch Touch vklopljen, preklopi barvo ozadja med temno in svetlo."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Växlar bakgrundsfärg mellan mörk och ljus när Torch Touch är aktiverat."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สลับสีพื้นหลังระหว่างโทนเข้มและโทนอ่อนเมื่อ Torch Touch เปิดใช้งานอยู่"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Torch Touch açıkken arka plan rengini koyu ve açık arasında değiştirir."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Під час увімкненого Torch Touch перемикає колір фону між темним і світлим."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chuyển đổi màu nền giữa tối và sáng khi Torch Touch đang bật."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "手电筒开启时，在深色与浅色之间切换背景颜色"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Torch Touch 開啟時，在深色與淺色之間切換背景顏色。"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "當 Torch Touch 開啟時，在深色與淺色之間切換背景顏色。"
+          }
+        }
+      }
+    },
+    "BlackHoleHelp" : {
+      "comment" : "Explain black hole effect",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يعرض رسوماً متحركة لجسيمات تتسارع إلى سرعة الضوء."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostra una animació de partícules que s’acceleren fins a la velocitat de la llum."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zobrazuje animaci částic zrychlujících na rychlost světla."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Viser en animation af partikler, der accelererer til lysets hastighed."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeigt eine Animation von Teilchen, die auf Lichtgeschwindigkeit beschleunigen"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Προβάλλει μια κινούμενη εικόνα σωματιδίων που επιταχύνονται μέχρι την ταχύτητα του φωτός."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show an animation of particles accelerating to light speed."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show an animation of particles accelerating to light speed."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show an animation of particles accelerating to light speed."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show an animation of particles accelerating to light speed."
+          }
+        },
+        "en-IN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show an animation of particles accelerating to light speed."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muestra una animación de partículas acelerando a la velocidad de la luz"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muestra una animación de partículas que se aceleran hasta la velocidad de la luz."
+          }
+        },
+        "es-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muestra una animación de partículas acelerando hasta la velocidad de la luz."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Näytä animaatio hiukkasista, jotka kiihtyvät valonnopeuteen."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher une animation de particules accélérant à la vitesse de la lumière"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher une animation de particules accélérant à la vitesse de la lumière."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מציג אנימציה של חלקיקים המואצים עד מהירות האור."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "कणों को प्रकाश की गति तक तेज़ी से जाते हुए दर्शाने वाली ऐनिमेशन दिखाएँ।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prikazuje animaciju čestica koje se ubrzavaju do brzine svjetlosti."
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Megjeleníti a részecskék animációját, melyek fénysebességre gyorsulnak."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menampilkan animasi partikel yang dipercepat hingga kecepatan cahaya."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostra un’animazione di particelle che accelerano fino alla velocità della luce."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "粒子が光速まで加速するアニメーションを表示します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "입자가 빛의 속도로 가속하는 애니메이션을 표시합니다."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paparkan animasi zarah yang dipercepat sehingga kelajuan cahaya."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Viser en animasjon av partikler som akselererer til lysets hastighet."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toont een animatie van deeltjes die versnellen tot de snelheid van het licht."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyświetla animację cząsteczek przyspieszających do prędkości światła."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exibe uma animação de partículas acelerando até a velocidade da luz."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostra uma animação de partículas a acelerar até à velocidade da luz."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afișează o animație cu particule care accelerează până la viteza luminii."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отображает анимацию ускорения частиц до скорости света."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zobrazuje animáciu častíc zrýchľujúcich na rýchlosť svetla."
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prikaže animacijo delcev, ki pospešijo do hitrosti svetlobe."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visar en animation av partiklar som accelererar till ljushastighet."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "แสดงอนิเมชันของอนุภาคที่เร่งความเร็วถึงความเร็วแสง"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parçacıkların ışık hızına ulaşana kadar hızlandığı bir animasyon gösterir."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Відображає анімацію частинок, які розганяються до швидкості світла."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiển thị hoạt hình các hạt gia tốc đến tốc độ ánh sáng."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示粒子加速至光速的动画"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "顯示粒子加速至光速的動畫。"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "顯示粒子加速至光速的動畫。"
+          }
+        }
+      }
+    },
+    "BrightnessHelp" : {
+      "comment" : "Explain what happens when the user touches the screen brightness button/toggle",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يزيد سطوع الشاشة إلى الحد الأقصى عند تشغيل Torch Touch."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Augmenta la brillantor de la pantalla al màxim quan Torch Touch està activat."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zvýší jas obrazovky na maximum, když je Torch Touch zapnutý."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Øger skærmens lysstyrke til maks, når Torch Touch er tændt."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erhöht die Bildschirmhelligkeit auf das Maximum, wenn die Taschenlampe an ist"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Αυξάνει τη φωτεινότητα της οθόνης στο μέγιστο όταν το Torch Touch είναι ενεργό."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Increase screen brightness to maximum when Torch Touch is on."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Increase screen brightness to maximum when Torch Touch is on."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Increase screen brightness to maximum when Torch Touch is on."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Increase screen brightness to maximum when Torch Touch is on."
+          }
+        },
+        "en-IN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Increase screen brightness to maximum when Torch Touch is on."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aumenta el brillo de la pantalla al máximo cuando la linterna está encendida"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aumenta el brillo de la pantalla al máximo cuando Torch Touch está encendido."
+          }
+        },
+        "es-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aumenta el brillo de la pantalla al máximo cuando Torch Touch está encendido."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lisää näytön kirkkautta maksimiin, kun Torch Touch on päällä."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Augmenter la luminosité de l’écran au maximum lorsque la lampe est allumée"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Augmenter la luminosité de l’écran au maximum lorsque Torch Touch est activé."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מעלה את בהירות המסך למקסימום כאשר Torch Touch פעיל."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "जब Torch Touch चालू हो, तब स्क्रीन की ब्राइटनेस को अधिकतम कर दें।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povećava svjetlinu zaslona na maksimum kada je Torch Touch uključen."
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Növeli a képernyő fényerejét a maximumra, ha a Torch Touch be van kapcsolva."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meningkatkan kecerahan layar ke tingkat maksimum saat Torch Touch aktif."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aumenta la luminosità dello schermo al massimo quando Torch Touch è attivo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Torch Touchがオンのとき、画面の明るさを最大にします。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Torch Touch가 켜져 있을 때 화면 밝기를 최대치로 설정합니다."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tingkatkan kecerahan skrin kepada tahap maksimum apabila Torch Touch dihidupkan."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Øker skjermens lysstyrke til maks når Torch Touch er påslått."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verhoogt de schermhelderheid tot het maximum wanneer Torch Touch is ingeschakeld."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zwiększa jasność ekranu do maksimum, gdy Torch Touch jest włączony."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aumenta o brilho da tela ao máximo quando o Torch Touch está ligado."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aumenta o brilho do ecrã para o máximo quando o Torch Touch está ligado."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crește luminozitatea ecranului la maximum atunci când Torch Touch este activat."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "При включённом Torch Touch увеличивает яркость экрана до максимума."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zvyšuje jas obrazovky na maximum pri zapnutom Torch Touch."
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poveča svetlost zaslona na največ, ko je Torch Touch vklopljen."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ökar skärmens ljusstyrka till max när Torch Touch är aktiverat."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เพิ่มความสว่างของหน้าจอเป็นระดับสูงสุดเมื่อ Torch Touch เปิดใช้งานอยู่"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Torch Touch açıkken ekran parlaklığını maksimuma çıkarır."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Збільшує яскравість екрана до максимуму, коли Torch Touch увімкнено."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tăng độ sáng màn hình lên mức tối đa khi Torch Touch đang bật."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "手电筒开启时，将屏幕亮度提高到最大"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Torch Touch 開啟時，將螢幕亮度提高到最高。"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "當 Torch Touch 開啟時，將螢幕亮度調到最高。"
+          }
+        }
+      }
+    },
+    "LatchOrTouchHelp" : {
+      "comment" : "Explain what happens when the user touches the button/toggle that switches between \"latch\" mode and \"tap\" mode",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اختر بين وضع الإقفال (اضغط للتبديل) أو وضع اللمس (اضغط للتشغيل، ارفع يدك للإيقاف)."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tria entre el mode Latch (toca per activar/desactivar) o el mode Touch (mantén premut per encendre, deixa anar per apagar)."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vyberte si mezi režimem „Latch“ (klepnutím zapnout/vypnout) nebo „Touch“ (podržením zapnout, uvolněním vypnout)."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vælg mellem Latch-tilstand (tryk én gang for tænd/sluk) eller Touch-tilstand (hold nede for tænd, slip for sluk)."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wähle zwischen Einrastmodus (antippen zum Ein-/Ausschalten) oder Touchmodus (gedrückt halten und loslassen)"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Επιλέξτε μεταξύ λειτουργίας Latch (πάτημα για εναλλαγή) ή λειτουργίας Touch (πατήστε για ενεργοποίηση, αφήστε για απενεργοποίηση)."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose between Latch mode (tap to toggle) or Touch mode (press on, release off)."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose between Latch mode (tap to toggle) or Touch mode (press on, release off)."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose between Latch mode (tap to toggle) or Touch mode (press on, release off)."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose between Latch mode (tap to toggle) or Touch mode (press on, release off)."
+          }
+        },
+        "en-IN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose between Latch mode (tap to toggle) or Touch mode (press on, release off)."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige entre el modo Fijar (toque para activar/desactivar) o el modo Tocar (mantener y soltar)"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige entre el modo Latch (tocar para encender/apagar) o el modo Touch (mantener presionado para encender, soltar para apagar)."
+          }
+        },
+        "es-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige entre el modo Latch (tocar para encender/apagar) o el modo Touch (mantener presionado para encender, soltar para apagar)."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Valitse Latch-tila (napauta vaihtaaksesi) tai Touch-tila (paina käynnistääksesi, vapauta sammuttaaksesi)."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisir entre le mode Verrouillage (appuyer pour basculer) ou le mode Toucher (appuyer et relâcher)"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisir entre le mode Verrou (appuyer pour activer/désactiver) ou le mode Toucher (appuyer pour allumer, relâcher pour éteindre)."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "בחר בין מצב Latch (הקשה כדי להדליק/לכבות) או מצב Touch (לחץ כדי להדליק, הרפה כדי לכבות)."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Latch मोड (टैप करके ऑन/ऑफ) या Touch मोड (दबाकर रखें तो ऑन, छोड़ें तो ऑफ) में से चुनें।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odaberi način Latch (dodirni za uključivanje/isključivanje) ili Touch (drži pritisnuto za uključivanje, pusti za isključivanje)."
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Válassz a „Latch” (érintés a be-/kikapcsoláshoz) és a „Touch” (nyomva tartás bekapcsol, felengedés kikapcsol) módok között."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pilih antara mode Latch (ketuk untuk mengaktifkan/nonaktifkan) atau mode Touch (tekan untuk menyalakan, lepas untuk mematikan)."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scegli tra modalità Latch (tocca per attivare/disattivare) o modalità Touch (premi per accendere, rilascia per spegnere)."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ラッチモード（タップでオン/オフ切り替え）かタッチモード（押すとオン、離すとオフ）を選択します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "래치 모드(한 번 탭하여 켜고 끄기)와 터치 모드(누르면 켜지고 떼면 꺼짐) 중에서 선택합니다."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pilih antara mod Latch (ketik untuk hidup/mati) atau mod Sentuh (tekan untuk hidup, lepas untuk mati)."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Velg mellom Latch-modus (trykk for å slå på/av) eller Touch-modus (hold nede for å slå på, slipp for å slå av)."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kies tussen Latch-modus (tik om aan/uit te zetten) of Touch-modus (ingedrukt houden om aan te zetten, loslaten om uit te zetten)."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wybierz między trybem „Latch” (dotknij, aby włączyć/wyłączyć) a trybem „Touch” (przytrzymaj, aby włączyć, puść, aby wyłączyć)."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escolha entre o modo Trava (toque para ligar/desligar) ou o modo Toque (pressione para ligar, solte para desligar)."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escolhe entre o modo Latch (tocar para ligar/desligar) ou o modo Toque (manter pressionado para ligar, soltar para desligar)."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alege între modul Latch (atinge pentru a porni/opri) sau modul Touch (ține apăsat pentru a porni, eliberează pentru a opri)."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выберите режим «Latch» (нажать для переключения) или «Touch» (нажать — включить, отпустить — выключить)."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vyberte medzi režimom Latch (klepnutím zapnúť/vypnúť) alebo režimom Touch (podržaním zapnúť, uvoľnením vypnúť)."
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izberite med načinom Latch (tapnite za vklop/izklop) ali načinom Touch (pritisnite za vklop, spustite za izklop)."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Välj mellan Latch-läge (tryck för att slå på/av) eller Touch-läge (håll nere för att tända, släpp för att släcka)."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เลือกระหว่างโหมด Latch (แตะเพื่อเปิด/ปิด) หรือโหมด Touch (กดค้างเพื่อเปิด ปล่อยเพื่อปิด)"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Latch mod (dokunarak aç/kapa) veya Touch mod (basılı tutunca açılır, bırakınca kapanır) arasında seçim yapın."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Оберіть між режимом Latch (натиснути для вмикання/вимикання) або режимом Touch (натиснути й тримати, відпустити щоб вимкнути)."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chọn giữa chế độ Latch (chạm để bật/tắt) hoặc chế độ Touch (nhấn để bật, nhả để tắt)."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在锁定模式（点击以切换）或触摸模式（按住即开，松开即关）之间进行选择"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選擇「鎖定模式」（點擊切換）或「觸控模式」（按住開啟，鬆開關閉）。"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選擇「鎖定」模式（點擊即開/關）或「按住」模式（按住開、鬆手關）。"
+          }
+        }
+      }
+    },
+    "LoadingSettings" : {
+      "comment" : "The indicator shown while settings are loading from the cloud",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "جاري تحميل الإعدادات…"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carregant configuració…"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Načítání nastavení…"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indlæser indstillinger…"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einstellungen werden geladen…"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Φόρτωση ρυθμίσεων…"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading settings..."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading settings…"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading settings…"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading settings…"
+          }
+        },
+        "en-IN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading settings…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cargando configuración…"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cargando configuraciones…"
+          }
+        },
+        "es-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cargando ajustes…"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ladataan asetuksia…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chargement des paramètres…"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chargement des paramètres…"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "טוען הגדרות…"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "सेटिंग्स लोड हो रही हैं…"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Učitavanje postavki…"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beállítások betöltése…"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memuat pengaturan…"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Caricamento impostazioni…"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定を読み込み中…"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "설정을 불러오는 중…"
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memuatkan tetapan…"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laster innstillinger…"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instellingen worden geladen…"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ładowanie ustawień…"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carregando configurações…"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A carregar definições…"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se încarcă setările…"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Загрузка настроек…"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Načítavajú sa nastavenia…"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nalaganje nastavitev …"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hämtar inställningar…"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "กำลังโหลดการตั้งค่า…"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayarlar yükleniyor…"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Завантаження налаштувань…"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đang tải cài đặt…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在加载设置…"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在載入設定…"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在載入設定…"
+          }
+        }
+      }
+    },
+    "TorchHelp" : {
+      "comment" : "Explain what happens when the user touches the flashlight button/toggle",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يقوم بالتبديل بين تشغيل وإطفاء مصباح الجهاز عند تشغيل Torch Touch."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activa o desactiva la llanterna del dispositiu quan Torch Touch està activat."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přepíná svítilnu zařízení, když je Torch Touch zapnutý."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Slår enhedens lommelygte til eller fra, når Torch Touch er tændt."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schaltet die Taschenlampe des Geräts ein oder aus, wenn sie eingeschaltet ist"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ενεργοποιεί ή απενεργοποιεί τον φακό της συσκευής όταν το Torch Touch είναι ενεργό."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toggle the device flashlight when Torch Touch is on."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toggle the device’s torch when Torch Touch is on."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toggle the device’s flashlight when Torch Touch is on."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toggle the device’s torch when Torch Touch is on."
+          }
+        },
+        "en-IN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toggle the device’s flashlight when Torch Touch is on."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alterna la linterna del dispositivo cuando está encendida"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activa o desactiva la linterna del dispositivo cuando Torch Touch está encendido."
+          }
+        },
+        "es-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activa o desactiva la linterna del dispositivo cuando Torch Touch está encendido."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kytkee laitteen taskulampun päälle tai pois päältä, kun Torch Touch on päällä."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Basculer la lampe torche de l’appareil lorsqu’elle est allumée"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activer ou désactiver la lampe de l’appareil lorsque Torch Touch est activé."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מדליק או מכבה את פנס המכשיר כאשר Torch Touch פעיל."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "जब Torch Touch चालू हो, तब डिवाइस की टॉर्च को ऑन/ऑफ करें।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uključuje ili isključuje svjetiljku uređaja kada je Torch Touch uključen."
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bekapcsolja vagy kikapcsolja a készülék zseblámpáját, amikor a Torch Touch be van kapcsolva."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mengaktifkan atau menonaktifkan senter perangkat saat Torch Touch aktif."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Attiva o disattiva la torcia del dispositivo quando Torch Touch è attivo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Torch Touchがオンのとき、デバイスのフラッシュライトを切り替えます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Torch Touch가 켜져 있을 때 기기의 플래시를 켜거나 끕니다."
+          }
+        },
+        "ms" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menghidupkan atau mematikan lampu suluh peranti apabila Torch Touch dihidupkan."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Slår enhetens lommelykt av og på når Torch Touch er aktivert."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schakel de zaklamp van het apparaat in of uit wanneer Torch Touch is ingeschakeld."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Przełącza latarkę urządzenia, gdy Torch Touch jest włączony."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ativa ou desativa a lanterna do dispositivo quando o Torch Touch está ligado."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ativa ou desativa a lanterna do dispositivo quando o Torch Touch está ligado."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activează sau dezactivează lanterna dispozitivului când Torch Touch este activat."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "При включённом Torch Touch включает или выключает фонарик устройства."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prepína baterku zariadenia, keď je Torch Touch zapnutý."
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vklopi ali izklopi svetilko naprave, ko je Torch Touch vklopljen."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktiverar eller inaktiverar enhetens ficklampa när Torch Touch är aktiverat."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เปิด/ปิดไฟฉายของอุปกรณ์เมื่อ Torch Touch เปิดใช้งานอยู่"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Torch Touch açıkken cihazın el fenerini açıp kapatır."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Увімкнути або вимкнути ліхтарик пристрою, коли Torch Touch увімкнено."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bật/tắt đèn pin của thiết bị khi Torch Touch đang bật."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "手电筒开启时，切换设备闪光灯"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Torch Touch 開啟時，切換裝置的手電筒。"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "當 Torch Touch 開啟時，切換裝置手電筒。"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
