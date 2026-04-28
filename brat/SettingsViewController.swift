@@ -21,7 +21,7 @@ class SettingsViewController: UITableViewController {
                 .preferredFontName,
                 .themeSelection,
                 .pixelationScale,
-//                .aspectRatio,
+                .aspectRatio,
                 .autocorrectionEnabled,
                 .showLabels,
                 .saveWithoutTitle,
