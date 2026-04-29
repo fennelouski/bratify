@@ -85,8 +85,7 @@ class ViewController: UIViewController {
             "designs",
             comment: "Title for the main screen that shows designs"
         ).localizedLowercase
-        view.backgroundColor = .white
-        
+        apply(settingsManager.selectedTheme)
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewDesign))
         navigationItem.leftBarButtonItem = .settings(self)
         

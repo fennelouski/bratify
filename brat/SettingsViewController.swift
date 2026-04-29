@@ -67,6 +67,7 @@ class SettingsViewController: UITableViewController {
             comment: "The name of the settings menu."
         ).localizedLowercase
         navigationItem.largeTitleDisplayMode = .always
+        apply(settingsManager.selectedTheme)
     }
     
     override func viewWillAppear(_ animated: Bool) {

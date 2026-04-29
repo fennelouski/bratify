@@ -67,9 +67,11 @@ class FontsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         title = "Choose Font".localizedLowercase
         setupTableView()
         setupFonts()
+        apply(settingsManager.selectedTheme)
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         apply(settingsManager.selectedTheme)
     }
     

@@ -50,8 +50,8 @@ class CustomColorPickerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .white
-        collectionView.backgroundColor = .white
+        view.backgroundColor = .systemBackground
+        collectionView.backgroundColor = .systemBackground
         collectionView.delegate = self
         collectionView.dataSource = self
         

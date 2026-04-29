@@ -33,6 +33,7 @@ class AspectRatioPickerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+        apply(settingsManager.selectedTheme)
     }
     
     override func viewWillAppear(_ animated: Bool) {
