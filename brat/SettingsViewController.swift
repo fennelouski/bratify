@@ -15,6 +15,8 @@ class SettingsViewController: UITableViewController {
         case saveWithoutTitle
         case aspectRatio
         case gallerySortOrder
+        case defaultTextColor
+        case defaultBackgroundColor
 
         static var allCases: [SettingsSection] {
             let baseSet: [SettingsSection] = [
@@ -27,11 +29,18 @@ class SettingsViewController: UITableViewController {
                 .forceLowercase,
                 .showLabels,
                 .saveWithoutTitle,
-                .gallerySortOrder
+                .gallerySortOrder,
+                .defaultTextColor,
+                .defaultBackgroundColor
             ]
             return baseSet
         }
     }
+
+    private enum ActiveColorPicker {
+        case textColor, backgroundColor
+    }
+    private var activeColorPicker: ActiveColorPicker?
     
     init(settingsManager: SettingsManager) {
         self.settingsManager = settingsManager
@@ -277,7 +286,38 @@ class SettingsViewController: UITableViewController {
             cell.accessoryType = .disclosureIndicator
             cell.apply(settingsManager.selectedTheme)
             return cell
+
+        case .defaultTextColor:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "DefaultCell", for: indexPath)
+            cell.textLabel?.text = NSLocalizedString(
+                "Default Text Color",
+                comment: "A label for the control that sets the default text color."
+            ).localizedLowercase
+            cell.detailTextLabel?.text = nil
+            cell.accessoryView = colorSwatch(for: UIColor(hexString: settingsManager.textColorHex) ?? .white)
+            cell.apply(settingsManager.selectedTheme)
+            return cell
+
+        case .defaultBackgroundColor:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "DefaultCell", for: indexPath)
+            cell.textLabel?.text = NSLocalizedString(
+                "Default Background Color",
+                comment: "A label for the control that sets the default background color."
+            ).localizedLowercase
+            cell.detailTextLabel?.text = nil
+            cell.accessoryView = colorSwatch(for: UIColor(hexString: settingsManager.backgroundColorHex) ?? .white)
+            cell.apply(settingsManager.selectedTheme)
+            return cell
         }
+    }
+
+    private func colorSwatch(for color: UIColor) -> UIView {
+        let swatch = UIView(frame: CGRect(x: 0, y: 0, width: 28, height: 28))
+        swatch.backgroundColor = color
+        swatch.layer.cornerRadius = 6
+        swatch.layer.borderWidth = 1
+        swatch.layer.borderColor = UIColor.separator.cgColor
+        return swatch
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -302,6 +342,14 @@ class SettingsViewController: UITableViewController {
             navigationController?.pushViewController(aspectRatioPickerVC, animated: true)
         } else if section == .gallerySortOrder {
             showSortOrderPicker(at: indexPath)
+        } else if section == .defaultTextColor {
+            activeColorPicker = .textColor
+            let initial = UIColor(hexString: settingsManager.textColorHex) ?? .white
+            showColorPicker(initialColor: initial, at: indexPath)
+        } else if section == .defaultBackgroundColor {
+            activeColorPicker = .backgroundColor
+            let initial = UIColor(hexString: settingsManager.backgroundColorHex) ?? .white
+            showColorPicker(initialColor: initial, at: indexPath)
         }
 
         tableView.deselectRow(at: indexPath, animated: true)
@@ -346,6 +394,13 @@ class SettingsViewController: UITableViewController {
         present(alert, animated: true)
     }
 
+    private func showColorPicker(initialColor: UIColor, at indexPath: IndexPath) {
+        let colorPicker = UIColorPickerViewController()
+        colorPicker.selectedColor = initialColor
+        colorPicker.delegate = self
+        present(colorPicker, animated: true)
+    }
+
     @objc private func close() {
         dismiss()
     }
@@ -361,6 +416,30 @@ class SettingsViewController: UITableViewController {
             tableView.reloadSections(IndexSet(integer: SettingsSection.themeSelection.rawValue),
                                      with: .fade)
         }))
+    }
+}
+
+extension SettingsViewController: UIColorPickerViewControllerDelegate {
+    func colorPickerViewControllerDidSelectColor(_ viewController: UIColorPickerViewController) {
+        applySelectedColor(viewController.selectedColor)
+    }
+
+    func colorPickerViewControllerDidFinish(_ viewController: UIColorPickerViewController) {
+        applySelectedColor(viewController.selectedColor)
+        activeColorPicker = nil
+    }
+
+    private func applySelectedColor(_ color: UIColor) {
+        switch activeColorPicker {
+        case .textColor:
+            settingsManager.textColorHex = color.toHexString()
+            tableView.reloadRows(at: [IndexPath(row: 0, section: SettingsSection.defaultTextColor.rawValue)], with: .none)
+        case .backgroundColor:
+            settingsManager.backgroundColorHex = color.toHexString()
+            tableView.reloadRows(at: [IndexPath(row: 0, section: SettingsSection.defaultBackgroundColor.rawValue)], with: .none)
+        case nil:
+            break
+        }
     }
 }
 
