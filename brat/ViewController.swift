@@ -230,9 +230,7 @@ class ViewController: UIViewController {
             style: .destructive
         ) { [weak self] _ in
             guard let self else { return }
-            DesignManager.shared.deleteDesign(design)
-            designs.remove(at: indexPath.item)
-            collectionView.deleteItems(at: [indexPath])
+            self.confirmDeleteDesign(design, at: indexPath)
         })
 
         alert.addAction(UIAlertAction(
@@ -247,6 +245,28 @@ class ViewController: UIViewController {
         }
 
         present(alert, animated: true)
+    }
+
+    private func confirmDeleteDesign(_ design: Design, at indexPath: IndexPath) {
+        let confirmation = UIAlertController(
+            title: NSLocalizedString("delete_design_title", comment: "Title of the delete confirmation alert"),
+            message: NSLocalizedString("delete_design_message", comment: "Body of the delete confirmation alert"),
+            preferredStyle: .alert
+        )
+        confirmation.addAction(UIAlertAction(
+            title: NSLocalizedString("delete", comment: "Action to delete a design"),
+            style: .destructive
+        ) { [weak self] _ in
+            guard let self else { return }
+            DesignManager.shared.deleteDesign(design)
+            designs.remove(at: indexPath.item)
+            collectionView.deleteItems(at: [indexPath])
+        })
+        confirmation.addAction(UIAlertAction(
+            title: NSLocalizedString("cancel", comment: "Cancel action"),
+            style: .cancel
+        ))
+        present(confirmation, animated: true)
     }
 }
 
