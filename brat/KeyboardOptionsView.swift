@@ -66,6 +66,8 @@ class KeyboardOptionsView: UIView {
     private func refreshColorSwatches(currentColor: UIColor) {
         colorSwatchStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
 
+        colorIndicatorView.backgroundColor = currentColor
+
         let recentHexes = settingsManager.recentBackgroundColors
         let recentColors = recentHexes.map { UIColor(hexString: $0) }
         let presetHexes = Set(recentHexes)
@@ -105,15 +107,26 @@ class KeyboardOptionsView: UIView {
     
     private let colorButton: UIButton = {
         let button = UIButton()
-        let paintBrushImage = UIImage(systemName: "paintbrush")
+        let paintBrushImage = UIImage(systemName: "paintbrush.fill")
         button.setImage(paintBrushImage, for: .normal)
         button.imageView?.contentMode = .scaleAspectFit
         button.tintColor = .systemBlue
         button.accessibilityLabel = NSLocalizedString(
-            "Color Picker",
-            comment: ""
+            "background color",
+            comment: "Button to change the background color of this design"
         )
         return button
+    }()
+
+    private let colorIndicatorView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 7
+        view.layer.masksToBounds = true
+        view.layer.borderWidth = 1.5
+        view.layer.borderColor = UIColor.gray.withAlphaComponent(0.5).cgColor
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isUserInteractionEnabled = false
+        return view
     }()
 
     private let textColorButton: UIButton = {
@@ -241,6 +254,7 @@ class KeyboardOptionsView: UIView {
         colorSwatchScrollView.addSubview(colorSwatchStackView)
         addSubview(colorSwatchScrollView)
         addSubview(colorButton)
+        addSubview(colorIndicatorView)
         addSubview(textColorButton)
         addSubview(fontButton)
         addSubview(fontSizeSlider)
@@ -286,6 +300,11 @@ class KeyboardOptionsView: UIView {
             colorButton.topAnchor.constraint(equalTo: colorSwatchScrollView.bottomAnchor, constant: 12),
             colorButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
             colorButton.widthAnchor.constraint(equalTo: colorButton.heightAnchor),
+
+            colorIndicatorView.widthAnchor.constraint(equalToConstant: 14),
+            colorIndicatorView.heightAnchor.constraint(equalToConstant: 14),
+            colorIndicatorView.trailingAnchor.constraint(equalTo: colorButton.trailingAnchor, constant: 4),
+            colorIndicatorView.bottomAnchor.constraint(equalTo: colorButton.bottomAnchor, constant: 4),
 
             fontButton.topAnchor.constraint(equalTo: colorButton.bottomAnchor, constant: 20),
             fontButton.leadingAnchor.constraint(equalTo: colorButton.leadingAnchor),
