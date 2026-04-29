@@ -19,12 +19,12 @@ final class ToastView: UIView {
         return iv
     }()
 
-    private init(message: String) {
+    private init(message: String, icon: String = "exclamationmark.triangle.fill") {
         super.init(frame: .zero)
         backgroundColor = UIColor.black.withAlphaComponent(0.80)
         layer.cornerRadius = 12
         layer.masksToBounds = true
-        iconImageView.image = UIImage(systemName: "exclamationmark.triangle.fill")
+        iconImageView.image = UIImage(systemName: icon)
         messageLabel.text = message
 
         let stack = UIStackView(arrangedSubviews: [iconImageView, messageLabel])
@@ -46,8 +46,8 @@ final class ToastView: UIView {
 
     required init?(coder: NSCoder) { fatalError() }
 
-    static func show(message: String, in view: UIView, duration: TimeInterval = 3.0) {
-        let toast = ToastView(message: message)
+    static func show(message: String, icon: String = "exclamationmark.triangle.fill", in view: UIView, duration: TimeInterval = 3.0) {
+        let toast = ToastView(message: message, icon: icon)
         toast.translatesAutoresizingMaskIntoConstraints = false
         toast.alpha = 0
         view.addSubview(toast)

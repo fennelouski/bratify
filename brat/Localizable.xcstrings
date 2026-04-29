@@ -67,6 +67,17 @@
         }
       }
     },
+    "synced_from_icloud" : {
+      "comment" : "Toast shown when designs are updated via iCloud sync",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "synced from iCloud"
+          }
+        }
+      }
+    },
     "failed_to_save_design" : {
       "comment" : "Toast shown when a design fails to save to disk",
       "localizations" : {

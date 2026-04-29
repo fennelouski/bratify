@@ -218,6 +218,15 @@ class ViewController: UIViewController {
             designs = sorted(DesignManager.shared.getAllDesigns())
             collectionView.reloadData()
             updateEmptyState()
+            ToastView.show(
+                message: NSLocalizedString(
+                    "synced_from_icloud",
+                    comment: "Toast shown when designs are updated via iCloud sync"
+                ),
+                icon: "icloud.and.arrow.down",
+                in: view,
+                duration: 2.0
+            )
         }
     }
     
