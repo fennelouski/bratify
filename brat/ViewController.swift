@@ -230,7 +230,13 @@ class ViewController: UIViewController {
             style: .destructive
         ) { [weak self] _ in
             guard let self else { return }
-            self.confirmDeleteDesign(design, at: indexPath)
+            if settingsManager.confirmBeforeDeleting {
+                confirmDeleteDesign(design, at: indexPath)
+            } else {
+                DesignManager.shared.deleteDesign(design)
+                designs.remove(at: indexPath.item)
+                collectionView.deleteItems(at: [indexPath])
+            }
         })
 
         alert.addAction(UIAlertAction(

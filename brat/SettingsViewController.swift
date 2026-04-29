@@ -17,6 +17,7 @@ class SettingsViewController: UITableViewController {
         case gallerySortOrder
         case defaultTextColor
         case defaultBackgroundColor
+        case confirmBeforeDeleting
 
         static var allCases: [SettingsSection] {
             let baseSet: [SettingsSection] = [
@@ -29,6 +30,7 @@ class SettingsViewController: UITableViewController {
                 .forceLowercase,
                 .showLabels,
                 .saveWithoutTitle,
+                .confirmBeforeDeleting,
                 .gallerySortOrder,
                 .defaultTextColor,
                 .defaultBackgroundColor
@@ -307,6 +309,21 @@ class SettingsViewController: UITableViewController {
             cell.detailTextLabel?.text = nil
             cell.accessoryView = colorSwatch(for: UIColor(hexString: settingsManager.backgroundColorHex) ?? .white)
             cell.apply(settingsManager.selectedTheme)
+            return cell
+
+        case .confirmBeforeDeleting:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchTableViewCell", for: indexPath) as! SwitchTableViewCell
+            cell.configure(
+                text: NSLocalizedString(
+                    "Confirm Before Deleting",
+                    comment: "A label for the toggle that requires a confirmation dialog before deleting a design."
+                ).localizedLowercase,
+                isOn: settingsManager.confirmBeforeDeleting,
+                theme: settingsManager.selectedTheme
+            )
+            cell.valueChanged = { [weak self] newValue in
+                self?.settingsManager.confirmBeforeDeleting = newValue
+            }
             return cell
         }
     }

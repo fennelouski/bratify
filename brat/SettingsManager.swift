@@ -68,6 +68,7 @@ class SettingsManager {
         case recentBackgroundColors
         case gallerySortOrder
         case forceLowercase
+        case confirmBeforeDeleting
     }
     
     // Properties with default values and persistence
@@ -636,6 +637,22 @@ class SettingsManager {
         set {
             queue.async(flags: .barrier) {
                 UserDefaults.standard.set(newValue, forKey: UserDefaultsKeys.forceLowercase.rawValue)
+            }
+        }
+    }
+
+    var confirmBeforeDeleting: Bool {
+        get {
+            queue.sync {
+                if UserDefaults.standard.object(forKey: UserDefaultsKeys.confirmBeforeDeleting.rawValue) == nil {
+                    return true
+                }
+                return UserDefaults.standard.bool(forKey: UserDefaultsKeys.confirmBeforeDeleting.rawValue)
+            }
+        }
+        set {
+            queue.async(flags: .barrier) {
+                UserDefaults.standard.set(newValue, forKey: UserDefaultsKeys.confirmBeforeDeleting.rawValue)
             }
         }
     }
