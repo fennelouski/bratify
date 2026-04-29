@@ -129,6 +129,12 @@ class ViewController: UIViewController {
             name: .designSaveFailed,
             object: nil
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleDesignsDidSync),
+            name: .designsDidSync,
+            object: nil
+        )
 
     }
     
@@ -203,6 +209,15 @@ class ViewController: UIViewController {
                 ),
                 in: view
             )
+        }
+    }
+
+    @objc private func handleDesignsDidSync() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            designs = sorted(DesignManager.shared.getAllDesigns())
+            collectionView.reloadData()
+            updateEmptyState()
         }
     }
     
