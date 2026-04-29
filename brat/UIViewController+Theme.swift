@@ -19,8 +19,8 @@ extension UIViewController {
         if let navigationBar = navigationController?.navigationBar {
             navigationBar.tintColor = colorModel.tintColor
             navigationBar.barTintColor = colorModel.backgroundColor
-            navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: colorModel.textColor]
-            navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: colorModel.textColor]
+            navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: colorModel.readableTextColor]
+            navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: colorModel.readableTextColor]
         }
         
         view.backgroundColor = colorModel.backgroundColor

@@ -44,7 +44,7 @@ class ColorContextView: UIView {
             label.text = "\(labelText): \(sampleText)".localizedLowercase
             label.backgroundColor = color
             label.textAlignment = .center
-            label.textColor = contrastColor(for: color)
+            label.textColor = colorModel.textColor.readable(on: color)
             stackView.addArrangedSubview(label)
         }
 
@@ -57,20 +57,5 @@ class ColorContextView: UIView {
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
-    }
-
-    private func contrastColor(for backgroundColor: UIColor) -> UIColor {
-        var red: CGFloat = 0
-        var green: CGFloat = 0
-        var blue: CGFloat = 0
-        var alpha: CGFloat = 0
-
-        backgroundColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-
-        // Calculate brightness
-        let brightness = (red * 299 + green * 587 + blue * 114) / 1000
-
-        // Return black or white depending on brightness
-        return brightness > 0.5 ? .black : .white
     }
 }

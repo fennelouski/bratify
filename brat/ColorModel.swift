@@ -49,6 +49,10 @@ struct ColorModel: Codable, Hashable, Equatable {
         self.onColor = onColor
     }
     
+    var readableTextColor: UIColor {
+        return textColor.readable(on: backgroundColor)
+    }
+
     // Custom decoding to handle UIColor
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)

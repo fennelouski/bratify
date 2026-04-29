@@ -36,19 +36,19 @@ extension UIView {
         }
 
         if let label = self as? UILabel, label.textColor != nil, label.textColor != UIColor.clear {
-            label.textColor = colorModel.textColor
+            label.textColor = colorModel.readableTextColor
         } else if let textField = self as? UITextField, textField.textColor != nil, textField.textColor != UIColor.clear {
-            textField.textColor = colorModel.textColor
+            textField.textColor = colorModel.readableTextColor
             textField.backgroundColor = colorModel.backgroundColor
         } else if let textView = self as? UITextView, textView.textColor != nil, textView.textColor != UIColor.clear {
-            textView.textColor = colorModel.textColor
+            textView.textColor = colorModel.readableTextColor
         } else if let histogramSliderView = self as? HistogramSliderView {
             histogramSliderView.positiveColor = colorModel.positiveColor
             histogramSliderView.negativeColor = colorModel.destructiveColor
         } else if let switchView = self as? UISwitch {
             switchView.tintColor = colorModel.tintColor
             switchView.onTintColor = colorModel.onColor
-            switchView.thumbTintColor = colorModel.textColor
+            switchView.thumbTintColor = colorModel.readableTextColor
             switchView.layer.borderColor = colorModel.shadowColor.cgColor
             if traitCollection.userInterfaceIdiom != .mac {
                 switchView.layer.borderWidth = 2
@@ -66,7 +66,7 @@ extension UIView {
         if let button = self as? UIButton, 
             button.titleColor(for: .normal) != nil,
             button.titleColor(for: .normal) != UIColor.clear {
-            button.setTitleColor(colorModel.textColor, for: .normal)
+            button.setTitleColor(colorModel.readableTextColor, for: .normal)
         }
         
         // Recursively apply colors to subviews
