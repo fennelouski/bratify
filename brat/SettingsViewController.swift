@@ -10,6 +10,7 @@ class SettingsViewController: UITableViewController {
         case themeSelection
         case pixelationScale
         case autocorrectionEnabled
+        case forceLowercase
         case showLabels
         case saveWithoutTitle
         case aspectRatio
@@ -23,6 +24,7 @@ class SettingsViewController: UITableViewController {
                 .pixelationScale,
                 .aspectRatio,
                 .autocorrectionEnabled,
+                .forceLowercase,
                 .showLabels,
                 .saveWithoutTitle,
                 .gallerySortOrder
@@ -234,6 +236,20 @@ class SettingsViewController: UITableViewController {
             )
             cell.valueChanged = { [weak self] newValue in
                 self?.settingsManager.autocorrectionEnabled = newValue
+            }
+            return cell
+        case .forceLowercase:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchTableViewCell", for: indexPath) as! SwitchTableViewCell
+            cell.configure(
+                text: NSLocalizedString(
+                    "Force Lowercase",
+                    comment: "A label for the control that forces text to lowercase."
+                ).localizedLowercase,
+                isOn: settingsManager.forceLowercase,
+                theme: settingsManager.selectedTheme
+            )
+            cell.valueChanged = { [weak self] newValue in
+                self?.settingsManager.forceLowercase = newValue
             }
             return cell
         case .showLabels:

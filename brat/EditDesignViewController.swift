@@ -805,7 +805,9 @@ class EditDesignViewController: UIViewController {
 
 extension EditDesignViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
-        textView.text = textView.text.localizedLowercase
+        if settingsManager.forceLowercase {
+            textView.text = textView.text.localizedLowercase
+        }
         updateDesignImage()
     }
 }

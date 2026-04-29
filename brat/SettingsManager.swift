@@ -67,6 +67,7 @@ class SettingsManager {
         case backgroundAlpha
         case recentBackgroundColors
         case gallerySortOrder
+        case forceLowercase
     }
     
     // Properties with default values and persistence
@@ -623,6 +624,22 @@ class SettingsManager {
         }
     }
     
+    var forceLowercase: Bool {
+        get {
+            queue.sync {
+                if UserDefaults.standard.object(forKey: UserDefaultsKeys.forceLowercase.rawValue) == nil {
+                    return true
+                }
+                return UserDefaults.standard.bool(forKey: UserDefaultsKeys.forceLowercase.rawValue)
+            }
+        }
+        set {
+            queue.async(flags: .barrier) {
+                UserDefaults.standard.set(newValue, forKey: UserDefaultsKeys.forceLowercase.rawValue)
+            }
+        }
+    }
+
     var autocorrectionEnabled: Bool {
         get {
             queue.sync {
