@@ -14,6 +14,30 @@ enum GallerySortOrder: String, CaseIterable {
     }
 }
 
+enum GalleryLayout: String, CaseIterable {
+    case grid
+    case masonry
+
+    var displayName: String {
+        switch self {
+        case .grid: return NSLocalizedString("Grid", comment: "Gallery layout option: uniform grid")
+        case .masonry: return NSLocalizedString("Masonry", comment: "Gallery layout option: staggered masonry")
+        }
+    }
+}
+
+enum GalleryLabel: String, CaseIterable {
+    case time
+    case title
+
+    var displayName: String {
+        switch self {
+        case .time: return NSLocalizedString("Time", comment: "Gallery label option: show creation time")
+        case .title: return NSLocalizedString("Title", comment: "Gallery label option: show design title")
+        }
+    }
+}
+
 class SettingsManager {
     // Thread-safe access pattern
     private let queue = DispatchQueue(
@@ -67,8 +91,13 @@ class SettingsManager {
         case backgroundAlpha
         case recentBackgroundColors
         case gallerySortOrder
+        case galleryLayout
+        case galleryLabel
+        case doubleTapToShare
         case forceLowercase
         case confirmBeforeDeleting
+        case extendedRange
+        case eli5Mode
     }
     
     // Properties with default values and persistence
@@ -605,6 +634,53 @@ class SettingsManager {
         }
     }
 
+    var galleryLayout: GalleryLayout {
+        get {
+            queue.sync {
+                if let raw = UserDefaults.standard.string(forKey: UserDefaultsKeys.galleryLayout.rawValue),
+                   let layout = GalleryLayout(rawValue: raw) {
+                    return layout
+                }
+                return .grid
+            }
+        }
+        set {
+            queue.async(flags: .barrier) {
+                UserDefaults.standard.set(newValue.rawValue, forKey: UserDefaultsKeys.galleryLayout.rawValue)
+            }
+        }
+    }
+
+    var galleryLabel: GalleryLabel {
+        get {
+            queue.sync {
+                if let raw = UserDefaults.standard.string(forKey: UserDefaultsKeys.galleryLabel.rawValue),
+                   let label = GalleryLabel(rawValue: raw) {
+                    return label
+                }
+                return .time
+            }
+        }
+        set {
+            queue.async(flags: .barrier) {
+                UserDefaults.standard.set(newValue.rawValue, forKey: UserDefaultsKeys.galleryLabel.rawValue)
+            }
+        }
+    }
+
+    var doubleTapToShare: Bool {
+        get {
+            queue.sync {
+                UserDefaults.standard.bool(forKey: UserDefaultsKeys.doubleTapToShare.rawValue)
+            }
+        }
+        set {
+            queue.async(flags: .barrier) {
+                UserDefaults.standard.set(newValue, forKey: UserDefaultsKeys.doubleTapToShare.rawValue)
+            }
+        }
+    }
+
     func addRecentBackgroundColor(_ color: UIColor) {
         let hex = color.toHexString()
         var recents = recentBackgroundColors.filter { $0 != hex }
@@ -653,6 +729,38 @@ class SettingsManager {
         set {
             queue.async(flags: .barrier) {
                 UserDefaults.standard.set(newValue, forKey: UserDefaultsKeys.confirmBeforeDeleting.rawValue)
+            }
+        }
+    }
+
+    var extendedRange: Bool {
+        get {
+            queue.sync {
+                UserDefaults.standard.bool(forKey: UserDefaultsKeys.extendedRange.rawValue)
+            }
+        }
+        set {
+            queue.async(flags: .barrier) {
+                UserDefaults.standard.set(newValue, forKey: UserDefaultsKeys.extendedRange.rawValue)
+            }
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .extendedRangeDidChange, object: nil)
+            }
+        }
+    }
+
+    var eli5Mode: Bool {
+        get {
+            queue.sync {
+                UserDefaults.standard.bool(forKey: UserDefaultsKeys.eli5Mode.rawValue)
+            }
+        }
+        set {
+            queue.async(flags: .barrier) {
+                UserDefaults.standard.set(newValue, forKey: UserDefaultsKeys.eli5Mode.rawValue)
+            }
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .eli5ModeDidChange, object: nil)
             }
         }
     }
@@ -723,4 +831,9 @@ class SettingsManager {
             }
         }
     }
+}
+
+extension Notification.Name {
+    static let extendedRangeDidChange = Notification.Name("com.bratify.extendedRangeDidChange")
+    static let eli5ModeDidChange = Notification.Name("com.bratify.eli5ModeDidChange")
 }

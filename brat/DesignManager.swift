@@ -29,6 +29,10 @@ class DesignManager {
 
             DispatchQueue.main.async {
                 self.iCloudDocumentsURL = containerURL
+                if let imagesDir = containerURL?.appendingPathComponent("Images") {
+                    try? FileManager.default.createDirectory(at: imagesDir, withIntermediateDirectories: true)
+                    ImageService.sharedICloudImagesDirectory = imagesDir
+                }
                 self.migrateLocalToiCloudIfNeeded()
                 self.setupiCloudObserver()
             }

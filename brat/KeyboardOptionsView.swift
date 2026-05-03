@@ -4,51 +4,21 @@ protocol KeyboardOptionsViewDelegate: DesignControlsViewControllerDelegate, Desi
     var currentDesign: Design { get }
 
     func updateDesignImage()
-    func selectColor()
-    func selectTextColor()
     func fontSizeChanged(to newFontSize: CGFloat)
-    func selectFont()
     func pixelationScaleChanged(to newPixelationScale: CGFloat)
     func stretchChanged(to newStretch: CGFloat)
     func blurChanged(to newBlur: CGFloat)
-    func selectBackgroundImage()
     func didSelectBackgroundColor(_ color: UIColor)
+    func didSelectTextColorFromSwatch(_ color: UIColor)
+    func keyboardOptionsViewWillShowDesignControls()
+    func keyboardOptionsViewDidDismissDesignControls()
 }
 
 class KeyboardOptionsView: UIView {
 
-    private static let presetColors: [UIColor] = [
-        UIColor(hexString: "#36a241"),
-        UIColor(hexString: "#8AE234"),
-        UIColor(hexString: "#000000"),
-        UIColor(hexString: "#FFFFFF"),
-        UIColor(hexString: "#FF69B4"),
-        UIColor(hexString: "#FF00FF"),
-        UIColor(hexString: "#FFFF00"),
-        UIColor(hexString: "#FF6B00"),
-        UIColor(hexString: "#0000FF"),
-        UIColor(hexString: "#FF0000"),
-    ]
-
     weak var delegate: KeyboardOptionsViewDelegate?
     private let settingsManager: SettingsManager
     private var designControlsView: DesignControlsView?
-
-    private let colorSwatchScrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.showsHorizontalScrollIndicator = false
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        return scrollView
-    }()
-
-    private let colorSwatchStackView: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .horizontal
-        stack.spacing = 8
-        stack.alignment = .center
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        return stack
-    }()
 
     func update(with design: Design) {
         fontSizeSlider.value = Float(design.fontSize)
@@ -60,143 +30,21 @@ class KeyboardOptionsView: UIView {
         stretchValueLabel.text = "\(Int(stretchSlider.value * 100))%"
         pixelationValueLabel.text = "\(Int(pixelationSlider.value))"
         fontSizeValueLabel.text = "\(Int(fontSizeSlider.value))"
-        refreshColorSwatches(currentColor: design.backgroundColor)
+
     }
 
-    private func refreshColorSwatches(currentColor: UIColor) {
-        colorSwatchStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-
-        colorIndicatorView.backgroundColor = currentColor
-
-        let recentHexes = settingsManager.recentBackgroundColors
-        let recentColors = recentHexes.map { UIColor(hexString: $0) }
-        let presetHexes = Set(recentHexes)
-        let additionalPresets = KeyboardOptionsView.presetColors.filter { !presetHexes.contains($0.toHexString()) }
-        let swatchColors = recentColors + additionalPresets
-
-        for color in swatchColors {
-            let swatch = makeSwatchButton(color: color, isCurrent: color.toHexString() == currentColor.toHexString())
-            colorSwatchStackView.addArrangedSubview(swatch)
-        }
-    }
-
-    private func makeSwatchButton(color: UIColor, isCurrent: Bool) -> UIButton {
-        let button = UIButton(type: .custom)
-        button.backgroundColor = color
-        button.layer.cornerRadius = 15
-        button.layer.masksToBounds = true
-        button.layer.borderWidth = isCurrent ? 2.5 : 1
-        button.layer.borderColor = isCurrent ? UIColor.systemBlue.cgColor : UIColor.gray.withAlphaComponent(0.4).cgColor
-        button.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            button.widthAnchor.constraint(equalToConstant: 30),
-            button.heightAnchor.constraint(equalToConstant: 30),
-        ])
-        button.addAction(UIAction { [weak self, weak button] _ in
-            self?.delegate?.didSelectBackgroundColor(color)
-            self?.colorSwatchStackView.arrangedSubviews.forEach { view in
-                guard let btn = view as? UIButton else { return }
-                btn.layer.borderWidth = 1
-                btn.layer.borderColor = UIColor.gray.withAlphaComponent(0.4).cgColor
-            }
-            button?.layer.borderWidth = 2.5
-            button?.layer.borderColor = UIColor.systemBlue.cgColor
-        }, for: .touchUpInside)
-        return button
-    }
-    
-    private let colorButton: UIButton = {
-        let button = UIButton()
-        let paintBrushImage = UIImage(systemName: "paintbrush.fill")
-        button.setImage(paintBrushImage, for: .normal)
-        button.imageView?.contentMode = .scaleAspectFit
-        button.tintColor = .systemBlue
-        button.accessibilityLabel = NSLocalizedString(
-            "background color",
-            comment: "Button to change the background color of this design"
-        )
-        return button
-    }()
-
-    private let colorIndicatorView: UIView = {
-        let view = UIView()
-        view.layer.cornerRadius = 7
-        view.layer.masksToBounds = true
-        view.layer.borderWidth = 1.5
-        view.layer.borderColor = UIColor.gray.withAlphaComponent(0.5).cgColor
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.isUserInteractionEnabled = false
-        return view
-    }()
-
-    private let textColorButton: UIButton = {
-        let button = UIButton()
-        let textColorImage = UIImage(systemName: "character.textbox")
-        button.setImage(textColorImage, for: .normal)
-        button.imageView?.contentMode = .scaleAspectFit
-        button.tintColor = .systemBlue
-        button.accessibilityLabel = NSLocalizedString(
-            "Text Color Picker",
-            comment: ""
-        )
-        return button
-    }()
-    
-    private let fontButton: UIButton = {
-        let button = UIButton()
-        let textFormatImage = UIImage(systemName: "textformat")
-        button.setImage(textFormatImage, for: .normal)
-        button.imageView?.contentMode = .scaleAspectFit
-        button.tintColor = .systemBlue
-        button.accessibilityLabel = NSLocalizedString(
-            "Font Picker",
-            comment: ""
-        )
-        return button
-    }()
-    
-    private let controlsButton: UIButton = {
-        let button = UIButton()
-        let controlsImage = UIImage(systemName: "slider.horizontal.3")
-        button.setImage(controlsImage, for: .normal)
-        button.imageView?.contentMode = .scaleAspectFit
-        button.tintColor = .systemBlue
-        button.accessibilityLabel = NSLocalizedString(
-            "Controls",
-            comment: ""
-        )
-        return button
-    }()
-    
-    private let backgroundImageButton: UIButton = {
-        let button = UIButton()
-        let image = UIImage(systemName: "photo")
-        button.setImage(image, for: .normal)
-        button.imageView?.contentMode = .scaleAspectFit
-        button.tintColor = .systemBlue
-        button.accessibilityLabel = NSLocalizedString(
-            "Background Image",
-            comment: ""
-        )
-        return button
-    }()
-    
     private lazy var fontSizeSlider: UISlider = {
         let slider = UISlider()
-        slider.minimumValue = 20
         slider.value = Float(settingsManager.preferredFontSize)
-        slider.maximumValue = 500
 #if !targetEnvironment(macCatalyst)
         let thumbImage = UIImage(systemName: "textformat.size")
         slider.setThumbImage(thumbImage, for: .normal)
 #endif
         return slider
     }()
-    
-    private let pixelationSlider: UISlider = {
+
+    private lazy var pixelationSlider: UISlider = {
         let slider = UISlider()
-        slider.minimumValue = 1
-        slider.maximumValue = 50
         slider.value = 5
 #if !targetEnvironment(macCatalyst)
         let thumbImage = UIImage(systemName: "rectangle.checkered")
@@ -204,27 +52,21 @@ class KeyboardOptionsView: UIView {
 #endif
         return slider
     }()
-    
-    private let stretchSlider: UISlider = {
+
+    private lazy var stretchSlider: UISlider = {
         let slider = UISlider()
-        slider.minimumValue = -0.8
-        slider.maximumValue = 0.98
         slider.value = 0.2
 #if !targetEnvironment(macCatalyst)
-        slider.maximumValue = 0.5
         let thumbImage = UIImage(systemName: "arrow.left.and.right.righttriangle.left.righttriangle.right")
         slider.setThumbImage(thumbImage, for: .normal)
 #endif
         return slider
     }()
-    
-    private let blurSlider: UISlider = {
+
+    private lazy var blurSlider: UISlider = {
         let slider = UISlider()
-        slider.minimumValue = 0
-        slider.maximumValue = 50
         slider.value = 0
 #if !targetEnvironment(macCatalyst)
-        slider.maximumValue = 10
         let thumbImage = UIImage(systemName: "drop.circle")
         slider.setThumbImage(thumbImage, for: .normal)
 #endif
@@ -240,29 +82,44 @@ class KeyboardOptionsView: UIView {
     private lazy var blurLabel: UILabel = createLabel(withText: NSLocalizedString("blur", comment: "").localizedLowercase)
     private lazy var blurValueLabel: UILabel = createLabel(withText: "")
 
+    private lazy var fontSizeInfoButton: UIButton = createInfoButton(key: "font size")
+    private lazy var pixelationInfoButton: UIButton = createInfoButton(key: "pixelation")
+    private lazy var stretchInfoButton: UIButton = createInfoButton(key: "stretch")
+    private lazy var blurInfoButton: UIButton = createInfoButton(key: "blur")
+
     init(settingsManager: SettingsManager) {
         self.settingsManager = settingsManager
         super.init(frame: .zero)
         setupView()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleExtendedRangeChange),
+            name: .extendedRangeDidChange,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleELI5ModeChange),
+            name: .eli5ModeDidChange,
+            object: nil
+        )
     }
-    
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     private func setupView() {
-        colorSwatchScrollView.addSubview(colorSwatchStackView)
-        addSubview(colorSwatchScrollView)
-        addSubview(colorButton)
-        addSubview(colorIndicatorView)
-        addSubview(textColorButton)
-        addSubview(fontButton)
+        backgroundColor = .clear
+
         addSubview(fontSizeSlider)
         addSubview(pixelationSlider)
         addSubview(stretchSlider)
         addSubview(blurSlider)
-        addSubview(controlsButton)
-        addSubview(backgroundImageButton)
 
         if settingsManager.showLabels {
             addSubview(fontSizeLabel)
@@ -275,71 +132,63 @@ class KeyboardOptionsView: UIView {
             addSubview(blurValueLabel)
         }
 
-        colorButton.translatesAutoresizingMaskIntoConstraints = false
-        textColorButton.translatesAutoresizingMaskIntoConstraints = false
-        fontButton.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(fontSizeInfoButton)
+        addSubview(pixelationInfoButton)
+        addSubview(stretchInfoButton)
+        addSubview(blurInfoButton)
+        updateInfoButtonVisibility()
+
         fontSizeSlider.translatesAutoresizingMaskIntoConstraints = false
         pixelationSlider.translatesAutoresizingMaskIntoConstraints = false
         stretchSlider.translatesAutoresizingMaskIntoConstraints = false
         blurSlider.translatesAutoresizingMaskIntoConstraints = false
-        controlsButton.translatesAutoresizingMaskIntoConstraints = false
-        backgroundImageButton.translatesAutoresizingMaskIntoConstraints = false
+        fontSizeInfoButton.translatesAutoresizingMaskIntoConstraints = false
+        pixelationInfoButton.translatesAutoresizingMaskIntoConstraints = false
+        stretchInfoButton.translatesAutoresizingMaskIntoConstraints = false
+        blurInfoButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            colorSwatchScrollView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            colorSwatchScrollView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
-            colorSwatchScrollView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
-            colorSwatchScrollView.heightAnchor.constraint(equalToConstant: 38),
+            fontSizeSlider.topAnchor.constraint(equalTo: topAnchor, constant: 12),
+            fontSizeSlider.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            fontSizeSlider.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
 
-            colorSwatchStackView.topAnchor.constraint(equalTo: colorSwatchScrollView.topAnchor, constant: 4),
-            colorSwatchStackView.leadingAnchor.constraint(equalTo: colorSwatchScrollView.leadingAnchor),
-            colorSwatchStackView.trailingAnchor.constraint(equalTo: colorSwatchScrollView.trailingAnchor),
-            colorSwatchStackView.bottomAnchor.constraint(equalTo: colorSwatchScrollView.bottomAnchor, constant: -4),
-            colorSwatchStackView.heightAnchor.constraint(equalTo: colorSwatchScrollView.heightAnchor, constant: -8),
-
-            colorButton.topAnchor.constraint(equalTo: colorSwatchScrollView.bottomAnchor, constant: 12),
-            colorButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            colorButton.widthAnchor.constraint(equalTo: colorButton.heightAnchor),
-
-            colorIndicatorView.widthAnchor.constraint(equalToConstant: 14),
-            colorIndicatorView.heightAnchor.constraint(equalToConstant: 14),
-            colorIndicatorView.trailingAnchor.constraint(equalTo: colorButton.trailingAnchor, constant: 4),
-            colorIndicatorView.bottomAnchor.constraint(equalTo: colorButton.bottomAnchor, constant: 4),
-
-            fontButton.topAnchor.constraint(equalTo: colorButton.bottomAnchor, constant: 20),
-            fontButton.leadingAnchor.constraint(equalTo: colorButton.leadingAnchor),
-            fontButton.trailingAnchor.constraint(equalTo: colorButton.trailingAnchor),
-            fontButton.heightAnchor.constraint(equalTo: colorButton.heightAnchor),
-
-            controlsButton.topAnchor.constraint(equalTo: fontButton.bottomAnchor, constant: 20),
-            controlsButton.leadingAnchor.constraint(equalTo: colorButton.leadingAnchor),
-            controlsButton.trailingAnchor.constraint(equalTo: colorButton.trailingAnchor),
-            controlsButton.heightAnchor.constraint(equalTo: colorButton.heightAnchor),
-
-            backgroundImageButton.topAnchor.constraint(equalTo: controlsButton.bottomAnchor, constant: 20),
-            backgroundImageButton.leadingAnchor.constraint(equalTo: colorButton.leadingAnchor),
-            backgroundImageButton.trailingAnchor.constraint(equalTo: colorButton.trailingAnchor),
-            backgroundImageButton.heightAnchor.constraint(equalTo: colorButton.heightAnchor),
-
-            textColorButton.topAnchor.constraint(equalTo: backgroundImageButton.bottomAnchor, constant: 20),
-            textColorButton.leadingAnchor.constraint(equalTo: colorButton.leadingAnchor),
-            textColorButton.trailingAnchor.constraint(equalTo: colorButton.trailingAnchor),
-            textColorButton.heightAnchor.constraint(equalTo: colorButton.heightAnchor),
-            textColorButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20),
-
-            fontSizeSlider.topAnchor.constraint(equalTo: colorSwatchScrollView.bottomAnchor, constant: 12),
-            
             pixelationSlider.topAnchor.constraint(equalTo: fontSizeSlider.bottomAnchor, constant: 20),
+            pixelationSlider.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            pixelationSlider.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
             pixelationSlider.heightAnchor.constraint(equalTo: fontSizeSlider.heightAnchor),
-            
+
             stretchSlider.topAnchor.constraint(equalTo: pixelationSlider.bottomAnchor, constant: 20),
+            stretchSlider.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            stretchSlider.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
             stretchSlider.heightAnchor.constraint(equalTo: fontSizeSlider.heightAnchor),
-            
+
             blurSlider.topAnchor.constraint(equalTo: stretchSlider.bottomAnchor, constant: 20),
+            blurSlider.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            blurSlider.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
             blurSlider.heightAnchor.constraint(equalTo: fontSizeSlider.heightAnchor),
-            blurSlider.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20)
+            blurSlider.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20),
+
+            fontSizeInfoButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -4),
+            fontSizeInfoButton.centerYAnchor.constraint(equalTo: fontSizeSlider.centerYAnchor),
+            fontSizeInfoButton.widthAnchor.constraint(equalToConstant: 28),
+            fontSizeInfoButton.heightAnchor.constraint(equalToConstant: 28),
+
+            pixelationInfoButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -4),
+            pixelationInfoButton.centerYAnchor.constraint(equalTo: pixelationSlider.centerYAnchor),
+            pixelationInfoButton.widthAnchor.constraint(equalToConstant: 28),
+            pixelationInfoButton.heightAnchor.constraint(equalToConstant: 28),
+
+            stretchInfoButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -4),
+            stretchInfoButton.centerYAnchor.constraint(equalTo: stretchSlider.centerYAnchor),
+            stretchInfoButton.widthAnchor.constraint(equalToConstant: 28),
+            stretchInfoButton.heightAnchor.constraint(equalToConstant: 28),
+
+            blurInfoButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -4),
+            blurInfoButton.centerYAnchor.constraint(equalTo: blurSlider.centerYAnchor),
+            blurInfoButton.widthAnchor.constraint(equalToConstant: 28),
+            blurInfoButton.heightAnchor.constraint(equalToConstant: 28),
         ])
-        
+
         if settingsManager.showLabels {
             fontSizeLabel.translatesAutoresizingMaskIntoConstraints = false
             fontSizeValueLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -349,59 +198,71 @@ class KeyboardOptionsView: UIView {
             stretchValueLabel.translatesAutoresizingMaskIntoConstraints = false
             blurLabel.translatesAutoresizingMaskIntoConstraints = false
             blurValueLabel.translatesAutoresizingMaskIntoConstraints = false
-            
+
             NSLayoutConstraint.activate([
                 fontSizeLabel.centerYAnchor.constraint(equalTo: fontSizeSlider.centerYAnchor),
-                fontSizeLabel.leadingAnchor.constraint(equalTo: colorButton.trailingAnchor, constant: 20),
+                fontSizeLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
                 fontSizeSlider.leadingAnchor.constraint(equalTo: fontSizeLabel.trailingAnchor, constant: 10),
                 fontSizeValueLabel.leadingAnchor.constraint(equalTo: fontSizeSlider.trailingAnchor, constant: 20),
                 fontSizeValueLabel.centerYAnchor.constraint(equalTo: fontSizeLabel.centerYAnchor),
                 fontSizeValueLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
 
                 pixelationLabel.centerYAnchor.constraint(equalTo: pixelationSlider.centerYAnchor),
-                pixelationLabel.leadingAnchor.constraint(equalTo: colorButton.trailingAnchor, constant: 20),
+                pixelationLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
                 pixelationSlider.leadingAnchor.constraint(equalTo: pixelationLabel.trailingAnchor, constant: 10),
                 pixelationValueLabel.leadingAnchor.constraint(equalTo: pixelationSlider.trailingAnchor, constant: 20),
                 pixelationValueLabel.centerYAnchor.constraint(equalTo: pixelationSlider.centerYAnchor),
                 pixelationValueLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
 
                 stretchLabel.centerYAnchor.constraint(equalTo: stretchSlider.centerYAnchor),
-                stretchLabel.leadingAnchor.constraint(equalTo: colorButton.trailingAnchor, constant: 20),
+                stretchLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
                 stretchSlider.leadingAnchor.constraint(equalTo: stretchLabel.trailingAnchor, constant: 10),
                 stretchValueLabel.leadingAnchor.constraint(equalTo: stretchSlider.trailingAnchor, constant: 20),
                 stretchValueLabel.centerYAnchor.constraint(equalTo: stretchSlider.centerYAnchor),
                 stretchValueLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
 
                 blurLabel.centerYAnchor.constraint(equalTo: blurSlider.centerYAnchor),
-                blurLabel.leadingAnchor.constraint(equalTo: colorButton.trailingAnchor, constant: 20),
+                blurLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
                 blurSlider.leadingAnchor.constraint(equalTo: blurLabel.trailingAnchor, constant: 10),
                 blurValueLabel.leadingAnchor.constraint(equalTo: blurSlider.trailingAnchor, constant: 20),
                 blurValueLabel.centerYAnchor.constraint(equalTo: blurSlider.centerYAnchor),
-                blurValueLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20)
-            ])
-        } else {
-            NSLayoutConstraint.activate([
-                fontSizeSlider.leadingAnchor.constraint(equalTo: colorButton.trailingAnchor, constant: 20),
-                pixelationSlider.leadingAnchor.constraint(equalTo: colorButton.trailingAnchor, constant: 20),
-                stretchSlider.leadingAnchor.constraint(equalTo: colorButton.trailingAnchor, constant: 20),
-                blurSlider.leadingAnchor.constraint(equalTo: colorButton.trailingAnchor, constant: 20),
-                
-                blurSlider.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-                fontSizeSlider.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-                pixelationSlider.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-                stretchSlider.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+                blurValueLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
             ])
         }
-        
-        colorButton.addTarget(self, action: #selector(selectColor), for: .touchUpInside)
-        textColorButton.addTarget(self, action: #selector(selectTextColor), for: .touchUpInside)
-        fontButton.addTarget(self, action: #selector(selectFont), for: .touchUpInside)
+
         fontSizeSlider.addTarget(self, action: #selector(fontSizeChanged), for: .valueChanged)
         pixelationSlider.addTarget(self, action: #selector(pixelationChanged), for: .valueChanged)
         stretchSlider.addTarget(self, action: #selector(stretchChanged), for: .valueChanged)
         blurSlider.addTarget(self, action: #selector(blurChanged), for: .valueChanged)
-        controlsButton.addTarget(self, action: #selector(showControls), for: .touchUpInside)
-        backgroundImageButton.addTarget(self, action: #selector(selectBackgroundImage), for: .touchUpInside)
+
+        updateSliderRanges()
+    }
+
+    private func updateSliderRanges() {
+        let extended = settingsManager.extendedRange
+        fontSizeSlider.minimumValue = extended ? 1 : 20
+        fontSizeSlider.maximumValue = extended ? 2000 : 500
+        pixelationSlider.minimumValue = 1
+        pixelationSlider.maximumValue = extended ? 200 : 50
+#if targetEnvironment(macCatalyst)
+        stretchSlider.minimumValue = extended ? -4.0 : -0.8
+        stretchSlider.maximumValue = extended ? 4.0 : 0.98
+        blurSlider.minimumValue = 0
+        blurSlider.maximumValue = extended ? 200 : 50
+#else
+        stretchSlider.minimumValue = extended ? -4.0 : -0.8
+        stretchSlider.maximumValue = extended ? 4.0 : 0.5
+        blurSlider.minimumValue = 0
+        blurSlider.maximumValue = extended ? 100 : 10
+#endif
+    }
+
+    @objc private func handleExtendedRangeChange() {
+        updateSliderRanges()
+    }
+
+    @objc private func handleELI5ModeChange() {
+        updateInfoButtonVisibility()
     }
     
     private func createLabel(withText text: String) -> UILabel {
@@ -410,6 +271,28 @@ class KeyboardOptionsView: UIView {
         label.font = UIFont.preferredFont(forTextStyle: .body)
         label.adjustsFontForContentSizeCategory = true
         return label
+    }
+
+    private func createInfoButton(key: String) -> UIButton {
+        let btn = UIButton(type: .system)
+        let config = UIImage.SymbolConfiguration(pointSize: 15, weight: .regular)
+        btn.setImage(UIImage(systemName: "info.circle", withConfiguration: config), for: .normal)
+        btn.tintColor = .secondaryLabel
+        btn.isHidden = true
+        btn.addAction(UIAction { [weak self] _ in
+            guard let self, let window = self.window else { return }
+            let desc = ELI5Descriptions.forDesignControl(key)
+            ToastView.show(message: desc, icon: "info.circle", in: window, duration: 5.0)
+        }, for: .touchUpInside)
+        return btn
+    }
+
+    func updateInfoButtonVisibility() {
+        let show = settingsManager.eli5Mode
+        fontSizeInfoButton.isHidden = !show
+        pixelationInfoButton.isHidden = !show
+        stretchInfoButton.isHidden = !show
+        blurInfoButton.isHidden = !show
     }
     
     private lazy var closeButton = UIButton(type: .system)
@@ -447,22 +330,6 @@ class KeyboardOptionsView: UIView {
 //        addGestureRecognizer(closeGesture)
     }
     
-    @objc private func selectColor() {
-        delegate?.selectColor()
-    }
-
-    @objc private func didSelectBackgroundColor(_ color: UIColor) {
-        delegate?.didSelectBackgroundColor(color)
-    }
-
-    @objc private func selectTextColor() {
-        delegate?.selectTextColor()
-    }
-
-    @objc private func selectFont() {
-        delegate?.selectFont()
-    }
-    
     @objc private func fontSizeChanged() {
         fontSizeValueLabel.text = "\(Int(fontSizeSlider.value))"
         settingsManager.preferredFontSize = Double(fontSizeSlider.value)
@@ -489,7 +356,7 @@ class KeyboardOptionsView: UIView {
         delegate?.updateDesignImage()
     }
     
-    @objc private func showControls() {
+    @objc func showControls() {
         guard let currentDesign = delegate?.currentDesign else {
             return
         }
@@ -545,6 +412,8 @@ class KeyboardOptionsView: UIView {
                 popoverPresentationController.delegate = self
             }
 
+            delegate?.keyboardOptionsViewWillShowDesignControls()
+
             // Present the navigation controller
             viewController?.present(
                 navigationController,
@@ -552,10 +421,6 @@ class KeyboardOptionsView: UIView {
                 completion: nil
             )
         }
-    }
-    
-    @objc private func selectBackgroundImage() {
-        delegate?.selectBackgroundImage()
     }
     
     @objc private func closeDesignControls() {
@@ -572,5 +437,9 @@ class KeyboardOptionsView: UIView {
 extension KeyboardOptionsView: UIPopoverPresentationControllerDelegate {
     func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
         return .none
+    }
+
+    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        delegate?.keyboardOptionsViewDidDismissDesignControls()
     }
 }

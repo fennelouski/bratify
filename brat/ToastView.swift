@@ -77,5 +77,17 @@ final class ToastView: UIView {
                 toast.removeFromSuperview()
             }
         }
+
+        let tap = UITapGestureRecognizer(target: toast, action: #selector(dismiss))
+        toast.addGestureRecognizer(tap)
+        toast.isUserInteractionEnabled = true
+    }
+
+    @objc private func dismiss() {
+        UIView.animate(withDuration: 0.2, animations: {
+            self.alpha = 0
+        }, completion: { _ in
+            self.removeFromSuperview()
+        })
     }
 }

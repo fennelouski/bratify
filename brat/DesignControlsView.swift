@@ -34,7 +34,7 @@ protocol DesignControlsDelegate: AnyObject {
 }
 
 class DesignControlsView: UIView {
-    
+
     weak var delegate: DesignControlsDelegate?
     private var design: Design
     private var tableView: UITableView!
@@ -95,10 +95,24 @@ class DesignControlsView: UIView {
         self.settingsManager = settingsManager
         super.init(frame: .zero)
         setupTableView()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleELI5ModeChange),
+            name: .eli5ModeDidChange,
+            object: nil
+        )
     }
-    
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    @objc private func handleELI5ModeChange() {
+        tableView.reloadData()
     }
     
     private func setupTableView() {
@@ -146,55 +160,27 @@ extension DesignControlsView: UITableViewDelegate, UITableViewDataSource {
     ) -> UITableViewCell {
         let section = Section(rawValue: indexPath.section)!
         
+        let showInfo = settingsManager.eli5Mode
+
         switch section {
         case .mainImage:
             let row = MainImageRow(rawValue: indexPath.row)!
             switch row {
             case .invert:
                 let cell = tableView.dequeueReusableCell(withIdentifier: ControlSwitchTableViewCell.reuseIdentifier, for: indexPath) as! ControlSwitchTableViewCell
+                let text = NSLocalizedString("Invert", comment: "Invert")
                 cell.configure(
-                    text: NSLocalizedString("Invert", comment: "Invert"),
+                    text: text,
                     isOn: delegate?.currentDesign.invert ?? design.invert,
-                    theme: settingsManager.selectedTheme
+                    theme: settingsManager.selectedTheme,
+                    showInfoButton: showInfo
                 )
                 cell.selectionStyle = .none
                 cell.valueChanged = { [weak self] isOn in
                     self?.delegate?.didChangeInvert(isOn)
                 }
-                return cell
-            default:
-                let cell = tableView.dequeueReusableCell(withIdentifier: ControlSliderTableViewCell.reuseIdentifier, for: indexPath) as! ControlSliderTableViewCell
-                let (text, value, min, max, resetValue, mode, thumbImage) = sliderProperties(for: row)
-                cell.configure(
-                    text: text,
-                    with: value,
-                    min: min,
-                    max: max, 
-                    resetValue: resetValue,
-                    mode: mode,
-                    thumbImage: thumbImage,
-                    theme: settingsManager.selectedTheme
-                )
-                cell.selectionStyle = .none
-                cell.valueChanged = { [weak self] newValue in
-                    self?.handleSliderChange(for: row, value: newValue)
-                }
-                return cell
-            }
-        case .backgroundImage:
-            let row = BackgroundImageRow(rawValue: indexPath.row)!
-            switch row {
-            case .flipHorizontal, .flipVertical, .invert:
-                let cell = tableView.dequeueReusableCell(withIdentifier: ControlSwitchTableViewCell.reuseIdentifier, for: indexPath) as! ControlSwitchTableViewCell
-                let (text, isOn) = switchProperties(for: row)
-                cell.configure(
-                    text: text,
-                    isOn: isOn,
-                    theme: settingsManager.selectedTheme
-                )
-                cell.selectionStyle = .none
-                cell.valueChanged = { [weak self] isOn in
-                    self?.handleSwitchChange(for: row, isOn: isOn)
+                cell.infoButtonTapped = { [weak self] in
+                    self?.showELI5Toast(for: text)
                 }
                 return cell
             default:
@@ -208,11 +194,58 @@ extension DesignControlsView: UITableViewDelegate, UITableViewDataSource {
                     resetValue: resetValue,
                     mode: mode,
                     thumbImage: thumbImage,
-                    theme: settingsManager.selectedTheme
+                    theme: settingsManager.selectedTheme,
+                    showInfoButton: showInfo
                 )
                 cell.selectionStyle = .none
                 cell.valueChanged = { [weak self] newValue in
                     self?.handleSliderChange(for: row, value: newValue)
+                }
+                cell.infoButtonTapped = { [weak self] in
+                    self?.showELI5Toast(for: text)
+                }
+                return cell
+            }
+        case .backgroundImage:
+            let row = BackgroundImageRow(rawValue: indexPath.row)!
+            switch row {
+            case .flipHorizontal, .flipVertical, .invert:
+                let cell = tableView.dequeueReusableCell(withIdentifier: ControlSwitchTableViewCell.reuseIdentifier, for: indexPath) as! ControlSwitchTableViewCell
+                let (text, isOn) = switchProperties(for: row)
+                cell.configure(
+                    text: text,
+                    isOn: isOn,
+                    theme: settingsManager.selectedTheme,
+                    showInfoButton: showInfo
+                )
+                cell.selectionStyle = .none
+                cell.valueChanged = { [weak self] isOn in
+                    self?.handleSwitchChange(for: row, isOn: isOn)
+                }
+                cell.infoButtonTapped = { [weak self] in
+                    self?.showELI5Toast(for: text)
+                }
+                return cell
+            default:
+                let cell = tableView.dequeueReusableCell(withIdentifier: ControlSliderTableViewCell.reuseIdentifier, for: indexPath) as! ControlSliderTableViewCell
+                let (text, value, min, max, resetValue, mode, thumbImage) = sliderProperties(for: row)
+                cell.configure(
+                    text: text,
+                    with: value,
+                    min: min,
+                    max: max,
+                    resetValue: resetValue,
+                    mode: mode,
+                    thumbImage: thumbImage,
+                    theme: settingsManager.selectedTheme,
+                    showInfoButton: showInfo
+                )
+                cell.selectionStyle = .none
+                cell.valueChanged = { [weak self] newValue in
+                    self?.handleSliderChange(for: row, value: newValue)
+                }
+                cell.infoButtonTapped = { [weak self] in
+                    self?.showELI5Toast(for: text)
                 }
                 return cell
             }
@@ -506,24 +539,42 @@ extension DesignControlsView: UITableViewDelegate, UITableViewDataSource {
             break
         }
     }
+
+    private func showELI5Toast(for label: String) {
+        guard let window = self.window else { return }
+        let desc = ELI5Descriptions.forDesignControl(label)
+        ToastView.show(message: desc, icon: "info.circle", in: window, duration: 5.0)
+    }
 }
 
 class ControlSliderTableViewCell: UITableViewCell {
-    
+
     static let reuseIdentifier = "ControlSliderTableViewCell"
-    
+
     enum Mode {
         case alpha
         case integer
         case unknown
     }
-    
+
     var label: UILabel!
     var slider: UISlider!
     var valueLabel: UILabel!
     var mode: Mode = .unknown
     var valueChanged: ((Float) -> Void)?
-    
+    var infoButtonTapped: (() -> Void)?
+
+    private let infoButton = UIButton(type: .system)
+    private var infoButtonWidthConstraint: NSLayoutConstraint!
+
+    var showInfoButton: Bool = false {
+        didSet {
+            infoButtonWidthConstraint.constant = showInfoButton ? 28 : 0
+            infoButton.isHidden = !showInfoButton
+            infoButton.isUserInteractionEnabled = showInfoButton
+        }
+    }
+
     private var thumbImage: UIImage? {
         didSet {
             guard oldValue != thumbImage else {
@@ -560,7 +611,16 @@ class ControlSliderTableViewCell: UITableViewCell {
         label.adjustsFontForContentSizeCategory = true
         label.accessibilityLabel = NSLocalizedString("Slider Label", comment: "Slider Label")
         contentView.addSubview(label)
-        
+
+        let config = UIImage.SymbolConfiguration(pointSize: 15, weight: .regular)
+        infoButton.setImage(UIImage(systemName: "info.circle", withConfiguration: config), for: .normal)
+        infoButton.tintColor = .secondaryLabel
+        infoButton.isHidden = true
+        infoButton.isUserInteractionEnabled = false
+        infoButton.translatesAutoresizingMaskIntoConstraints = false
+        infoButton.addTarget(self, action: #selector(infoButtonAction), for: .touchUpInside)
+        contentView.addSubview(infoButton)
+
         slider = UISlider()
         slider.translatesAutoresizingMaskIntoConstraints = false
         slider.addTarget(
@@ -570,14 +630,16 @@ class ControlSliderTableViewCell: UITableViewCell {
         )
         slider.accessibilityLabel = NSLocalizedString("Slider", comment: "Slider")
         contentView.addSubview(slider)
-        
+
         valueLabel = UILabel()
         valueLabel.translatesAutoresizingMaskIntoConstraints = false
         valueLabel.font = UIFont.preferredFont(forTextStyle: .body)
         valueLabel.adjustsFontForContentSizeCategory = true
         valueLabel.accessibilityLabel = NSLocalizedString("Value Label", comment: "Value Label")
         contentView.addSubview(valueLabel)
-        
+
+        infoButtonWidthConstraint = infoButton.widthAnchor.constraint(equalToConstant: 0)
+
         NSLayoutConstraint.activate(
             [
                 label.topAnchor.constraint(
@@ -588,7 +650,16 @@ class ControlSliderTableViewCell: UITableViewCell {
                     equalTo: contentView.leadingAnchor,
                     constant: 8
                 ),
-                
+                label.trailingAnchor.constraint(
+                    lessThanOrEqualTo: infoButton.leadingAnchor,
+                    constant: -4
+                ),
+
+                infoButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+                infoButton.centerYAnchor.constraint(equalTo: label.centerYAnchor),
+                infoButton.heightAnchor.constraint(equalToConstant: 28),
+                infoButtonWidthConstraint,
+
                 slider.topAnchor.constraint(
                     equalTo: label.bottomAnchor,
                     constant: 8
@@ -605,18 +676,22 @@ class ControlSliderTableViewCell: UITableViewCell {
                     equalTo: contentView.bottomAnchor,
                     constant: -8
                 ),
-                
+
                 valueLabel.centerYAnchor.constraint(equalTo: slider.centerYAnchor),
                 valueLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
                 valueLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 40)
             ]
         )
-        
+
         let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap(_:)))
         doubleTapRecognizer.numberOfTapsRequired = 2
         contentView.addGestureRecognizer(doubleTapRecognizer)
     }
-    
+
+    @objc private func infoButtonAction() {
+        infoButtonTapped?()
+    }
+
     func configure(
         text: String,
         with value: Float,
@@ -625,9 +700,12 @@ class ControlSliderTableViewCell: UITableViewCell {
         resetValue: Float,
         mode: Mode,
         thumbImage: UIImage?,
-        theme: ThemeModel?
+        theme: ThemeModel?,
+        showInfoButton: Bool = false
     ) {
         valueChanged = nil
+        infoButtonTapped = nil
+        self.showInfoButton = showInfoButton
         label.text = text.localizedLowercase
         slider.minimumValue = min
         slider.maximumValue = max
@@ -676,14 +754,25 @@ extension ControlSliderTableViewCell: Themeable {
 }
 
 class ControlSwitchTableViewCell: UITableViewCell {
-    
+
     static let reuseIdentifier = "ControlSwitchTableViewCell"
-    
+
     var label: UILabel!
     var switchControl: UISwitch!
     var valueChanged: ((Bool) -> Void)?
-    
+    var infoButtonTapped: (() -> Void)?
+
+    private let infoButton = UIButton(type: .system)
+    private var infoButtonWidthConstraint: NSLayoutConstraint!
     private var previousValue: Bool?
+
+    var showInfoButton: Bool = false {
+        didSet {
+            infoButtonWidthConstraint.constant = showInfoButton ? 28 : 0
+            infoButton.isHidden = !showInfoButton
+            infoButton.isUserInteractionEnabled = showInfoButton
+        }
+    }
     
     override init(
         style: UITableViewCell.CellStyle,
@@ -707,7 +796,16 @@ class ControlSwitchTableViewCell: UITableViewCell {
         label.adjustsFontForContentSizeCategory = true
         label.accessibilityLabel = NSLocalizedString("Switch Label", comment: "Switch Label")
         contentView.addSubview(label)
-        
+
+        let config = UIImage.SymbolConfiguration(pointSize: 15, weight: .regular)
+        infoButton.setImage(UIImage(systemName: "info.circle", withConfiguration: config), for: .normal)
+        infoButton.tintColor = .secondaryLabel
+        infoButton.isHidden = true
+        infoButton.isUserInteractionEnabled = false
+        infoButton.translatesAutoresizingMaskIntoConstraints = false
+        infoButton.addTarget(self, action: #selector(infoButtonAction), for: .touchUpInside)
+        contentView.addSubview(infoButton)
+
         switchControl = UISwitch()
         switchControl.translatesAutoresizingMaskIntoConstraints = false
         switchControl.addTarget(
@@ -717,28 +815,43 @@ class ControlSwitchTableViewCell: UITableViewCell {
         )
         switchControl.accessibilityLabel = NSLocalizedString("Switch", comment: "Switch")
         contentView.addSubview(switchControl)
-        
+
+        infoButtonWidthConstraint = infoButton.widthAnchor.constraint(equalToConstant: 0)
+
         NSLayoutConstraint.activate(
             [
                 label.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
                 label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-                
+                label.trailingAnchor.constraint(lessThanOrEqualTo: infoButton.leadingAnchor, constant: -4),
+
+                infoButton.trailingAnchor.constraint(equalTo: switchControl.leadingAnchor, constant: -8),
+                infoButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+                infoButton.heightAnchor.constraint(equalToConstant: 28),
+                infoButtonWidthConstraint,
+
                 switchControl.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
                 switchControl.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8)
             ]
         )
-        
+
         let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap(_:)))
         doubleTapRecognizer.numberOfTapsRequired = 2
         contentView.addGestureRecognizer(doubleTapRecognizer)
     }
-    
+
+    @objc private func infoButtonAction() {
+        infoButtonTapped?()
+    }
+
     func configure(
         text: String,
         isOn: Bool,
-        theme: ThemeModel?
+        theme: ThemeModel?,
+        showInfoButton: Bool = false
     ) {
         valueChanged = nil
+        infoButtonTapped = nil
+        self.showInfoButton = showInfoButton
         label.text = text.localizedLowercase
         switchControl.isOn = isOn
         apply(theme)

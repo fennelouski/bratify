@@ -26,10 +26,85 @@ class EditDesignViewController: UIViewController {
     private var originalText: String = ""
     private var originalBackgroundColor: UIColor = .white
     private var isPickingTextColor = false
+    private var isPickingCustomColor = false
     internal let settingsManager: SettingsManager
     private let imageService: ImageService
     private var previewImageViewBottomConstraint: NSLayoutConstraint?
+    private var previewImageViewTopSwatchConstraint: NSLayoutConstraint?
+    private var previewImageViewTopSafeAreaConstraint: NSLayoutConstraint?
+    private var previewImageViewAspectRatioConstraint: NSLayoutConstraint?
+    private var isDesignControlsModeActive = false
     private lazy var keyboardOptionsView = KeyboardOptionsView(settingsManager: settingsManager)
+
+    private enum ColorSwatchMode { case tools, backgroundColor, textColor }
+    private var colorSwatchMode: ColorSwatchMode = .tools { didSet { applySwatchMode() } }
+    private var currentTintColor: UIColor = .label
+
+    private let colorSwatchToggleButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "paintpalette"), for: .normal)
+        button.imageView?.contentMode = .scaleAspectFit
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.accessibilityLabel = NSLocalizedString("show color swatches", comment: "")
+        return button
+    }()
+
+    private let colorSwatchIndicatorView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 7
+        view.layer.masksToBounds = true
+        view.layer.borderWidth = 1.5
+        view.layer.borderColor = UIColor.gray.withAlphaComponent(0.5).cgColor
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isUserInteractionEnabled = false
+        return view
+    }()
+
+    private let colorSwatchScrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.showsHorizontalScrollIndicator = false
+        scrollView.clipsToBounds = true
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
+
+    private let colorSwatchStackView: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.spacing = 8
+        stack.alignment = .center
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+
+    private var colorSwatchIsTextMode: Bool { colorSwatchMode == .textColor }
+    private var customPickedColors: [UIColor] = []
+    private var toolsStackWidthConstraint: NSLayoutConstraint?
+    private var scrollViewLeadingNormal: NSLayoutConstraint?
+    private var scrollViewLeadingFull: NSLayoutConstraint?
+
+    // MARK: - Focus mode
+    private enum FocusState { case editing, distractionFree, fullScreen }
+    private var focusState: FocusState = .editing
+    private var distractionFreeTimer: Timer?
+    private var fullScreenTimer: Timer?
+    private var focusOverlayView: UIView?
+    private var focusImageView: UIImageView?
+    private var focusCloseButton: UIButton?
+    private var focusShareButton: UIButton?
+
+    private static let presetColors: [UIColor] = [
+        UIColor(hexString: "#36a241"),
+        UIColor(hexString: "#8AE234"),
+        UIColor(hexString: "#000000"),
+        UIColor(hexString: "#FFFFFF"),
+        UIColor(hexString: "#FF69B4"),
+        UIColor(hexString: "#FF00FF"),
+        UIColor(hexString: "#FFFF00"),
+        UIColor(hexString: "#FF6B00"),
+        UIColor(hexString: "#0000FF"),
+        UIColor(hexString: "#FF0000"),
+    ]
 
     var design: Design? {
         didSet {
@@ -46,7 +121,7 @@ class EditDesignViewController: UIViewController {
         } else if let color = UIColor(hex: settingsManager.backgroundColorHex) {
             return color
         } else {
-            return UIColor(hexString: settingsManager.backgroundColorHex)
+            return .systemBackground
         }
     }()
 
@@ -555,11 +630,56 @@ class EditDesignViewController: UIViewController {
 
         navigationItem.rightBarButtonItems = rightBarButtonItems
 
+        // Setup color swatch row — toggle always visible on left, content scrolls in on right
+        colorSwatchScrollView.addSubview(colorSwatchStackView)
+        view.addSubview(colorSwatchToggleButton)
+        view.addSubview(colorSwatchIndicatorView)
+        view.addSubview(colorSwatchScrollView)
+        colorSwatchToggleButton.addTarget(self, action: #selector(cycleSwatchMode), for: .touchUpInside)
+
+        let leadingNormal = colorSwatchScrollView.leadingAnchor.constraint(equalTo: colorSwatchToggleButton.trailingAnchor, constant: 8)
+        let leadingFull = colorSwatchScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 12)
+        scrollViewLeadingNormal = leadingNormal
+        scrollViewLeadingFull = leadingFull
+        leadingNormal.isActive = true
+
+        NSLayoutConstraint.activate([
+            colorSwatchToggleButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+            colorSwatchToggleButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 12),
+            colorSwatchToggleButton.widthAnchor.constraint(equalToConstant: 30),
+            colorSwatchToggleButton.heightAnchor.constraint(equalToConstant: 30),
+
+            colorSwatchIndicatorView.widthAnchor.constraint(equalToConstant: 14),
+            colorSwatchIndicatorView.heightAnchor.constraint(equalToConstant: 14),
+            colorSwatchIndicatorView.trailingAnchor.constraint(equalTo: colorSwatchToggleButton.trailingAnchor, constant: 4),
+            colorSwatchIndicatorView.bottomAnchor.constraint(equalTo: colorSwatchToggleButton.bottomAnchor, constant: 4),
+
+            colorSwatchScrollView.centerYAnchor.constraint(equalTo: colorSwatchToggleButton.centerYAnchor),
+            colorSwatchScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -12),
+            colorSwatchScrollView.heightAnchor.constraint(equalToConstant: 38),
+
+            colorSwatchStackView.topAnchor.constraint(equalTo: colorSwatchScrollView.topAnchor, constant: 4),
+            colorSwatchStackView.leadingAnchor.constraint(equalTo: colorSwatchScrollView.leadingAnchor),
+            colorSwatchStackView.trailingAnchor.constraint(equalTo: colorSwatchScrollView.trailingAnchor),
+            colorSwatchStackView.bottomAnchor.constraint(equalTo: colorSwatchScrollView.bottomAnchor, constant: -4),
+            colorSwatchStackView.heightAnchor.constraint(equalTo: colorSwatchScrollView.heightAnchor, constant: -8),
+        ])
+
         // Setup preview image view
         view.addSubview(previewImageView)
         previewImageView.translatesAutoresizingMaskIntoConstraints = false
+        let topSwatchConstraint = previewImageView.topAnchor.constraint(
+            equalTo: colorSwatchToggleButton.bottomAnchor,
+            constant: .su2
+        )
+        let topSafeAreaConstraint = previewImageView.topAnchor.constraint(
+            equalTo: view.safeAreaLayoutGuide.topAnchor,
+            constant: -162
+        )
+        previewImageViewTopSwatchConstraint = topSwatchConstraint
+        previewImageViewTopSafeAreaConstraint = topSafeAreaConstraint
         NSLayoutConstraint.activate([
-            previewImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: .su2),
+            topSwatchConstraint,
             previewImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .su2),
             previewImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.su2)
         ])
@@ -568,12 +688,16 @@ class EditDesignViewController: UIViewController {
             constant: -300
         )
         previewImageViewBottomConstraint?.isActive = true
-        
+
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(handlePreviewLongPress(_:)))
+        longPress.minimumPressDuration = 0.01
+        previewImageView.addGestureRecognizer(longPress)
+
         // Setup keyboard options view
         keyboardOptionsView.delegate = self
         view.addSubview(keyboardOptionsView)
         keyboardOptionsView.translatesAutoresizingMaskIntoConstraints = false
-        
+
         let keyboardOptionsViewHeight: CGFloat = {
             if UIDevice.current.userInterfaceIdiom == .phone {
                 return 240
@@ -587,29 +711,35 @@ class EditDesignViewController: UIViewController {
             keyboardOptionsView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             keyboardOptionsView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             keyboardOptionsView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            keyboardOptionsView.heightAnchor.constraint(greaterThanOrEqualToConstant: keyboardOptionsViewHeight)
+            keyboardOptionsView.heightAnchor.constraint(greaterThanOrEqualToConstant: keyboardOptionsViewHeight),
         ])
         
+        view.backgroundColor = .systemBackground
+
         // Load design if exists
         if let design = design {
             textView.text = design.text
-            view.backgroundColor = design.backgroundColor
             originalText = design.text
             originalBackgroundColor = design.backgroundColor
-        } else {
-            view.backgroundColor = UIColor(hex: settingsManager.backgroundColorHex) ?? .white
         }
         
         // Show keyboard
         view.addSubview(textView)
         textView.becomeFirstResponder()
         textView.backgroundColor = .clear
-        
+
+        // Populate the swatch row with tool buttons immediately
+        refreshToolButtons()
+
         updateDesignImage()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         apply(settingsManager.selectedTheme)
+        let isDarkMode = traitCollection.userInterfaceStyle == .dark
+        if let theme = settingsManager.selectedTheme {
+            currentTintColor = isDarkMode ? theme.darkModeColors.tintColor : theme.lightModeColors.tintColor
+        }
         keyboardOptionsView.update(with: currentDesign)
         pixelationScale = pixelationScale + .random(in: 0...0.001)
         updateDesignImage()
@@ -638,7 +768,6 @@ class EditDesignViewController: UIViewController {
         textView.backgroundColor = .clear
         if let design = design {
             textView.text = design.text
-            view.backgroundColor = design.backgroundColor
             originalText = design.text
             originalBackgroundColor = design.backgroundColor
         }
@@ -665,14 +794,13 @@ class EditDesignViewController: UIViewController {
         }
         #else
         let colorPicker = UIColorPickerViewController()
-        colorPicker.selectedColor = view.backgroundColor ?? .white
+        colorPicker.selectedColor = backgroundColor
         colorPicker.delegate = self
         present(colorPicker, animated: true, completion: nil)
         #endif
     }
 
     private func applyBackgroundColor(_ color: UIColor) {
-        view.backgroundColor = color
         backgroundColor = color
         textView.backgroundColor = .clear
         settingsManager.addRecentBackgroundColor(color)
@@ -704,7 +832,7 @@ class EditDesignViewController: UIViewController {
             return
         }
         
-        let backgroundColor = view.backgroundColor ?? .white
+        let backgroundColor = self.backgroundColor
         
         DesignManager.shared.addDesign(currentDesign)
 
@@ -712,19 +840,43 @@ class EditDesignViewController: UIViewController {
         settingsManager.textColorHex = textColor.toHexString()
     }
     
-    private var lastUpdateDate: Date? = nil
+    private var lastUpdateDate: Date?
+    private var pendingImageUpdateWorkItem: DispatchWorkItem?
+    private var previewImageGenerationID: UInt64 = 0
+    private static var backgroundImageLoadFailedKeys = Set<String>()
+
     internal func updateDesignImage() {
         let timeLimit = blur > 1 ? 0.12 : 0.06
         if let lastUpdateDate,
            abs(lastUpdateDate.timeIntervalSinceNow) < timeLimit {
+            pendingImageUpdateWorkItem?.cancel()
+            let work = DispatchWorkItem { [weak self] in
+                self?.performUpdateDesignImage()
+            }
+            pendingImageUpdateWorkItem = work
+            DispatchQueue.main.asyncAfter(deadline: .now() + timeLimit, execute: work)
             return
         }
+        pendingImageUpdateWorkItem?.cancel()
+        pendingImageUpdateWorkItem = nil
+        performUpdateDesignImage()
+    }
+
+    private func performUpdateDesignImage() {
+        pendingImageUpdateWorkItem = nil
         lastUpdateDate = Date()
-        
+        previewImageGenerationID += 1
+        let generationID = previewImageGenerationID
+
+        let failedImageKey = imageName
         currentDesign.generateImage(
             with: imageService,
             onBackgroundImageLoadFailed: { [weak self] in
-                guard let self else { return }
+                guard let self,
+                      generationID == self.previewImageGenerationID,
+                      !failedImageKey.isEmpty,
+                      EditDesignViewController.backgroundImageLoadFailedKeys.insert(failedImageKey).inserted
+                else { return }
                 ToastView.show(
                     message: NSLocalizedString(
                         "background_image_load_failed",
@@ -734,14 +886,16 @@ class EditDesignViewController: UIViewController {
                 )
             }
         ) { [weak self] returnedImage, _ in
-            guard let returnedImage,
-                    let self else {
+            guard let self,
+                  generationID == self.previewImageGenerationID,
+                  let returnedImage else {
                 return
             }
             if Thread.isMainThread {
                 self.previewImageView.image = returnedImage
             } else {
                 DispatchQueue.main.async {
+                    guard generationID == self.previewImageGenerationID else { return }
                     self.previewImageView.image = returnedImage
                 }
             }
@@ -749,6 +903,7 @@ class EditDesignViewController: UIViewController {
     }
     
     @objc private func keyboardWillShow(_ notification: NSNotification) {
+        guard !isDesignControlsModeActive else { return }
         if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
             previewImageViewBottomConstraint?.constant = -keyboardFrame.height
             UIView.animate(withDuration: 0.3) {
@@ -756,8 +911,9 @@ class EditDesignViewController: UIViewController {
             }
         }
     }
-    
+
     @objc private func keyboardWillHide(_ notification: NSNotification) {
+        guard !isDesignControlsModeActive else { return }
         previewImageViewBottomConstraint?.constant = -200
         UIView.animate(withDuration: 0.3) {
             self.view.layoutIfNeeded()
@@ -793,6 +949,290 @@ class EditDesignViewController: UIViewController {
         present(activityViewController, animated: true, completion: nil)
     }
     
+    // MARK: - Focus mode methods
+
+    @objc private func handlePreviewLongPress(_ gesture: UILongPressGestureRecognizer) {
+        switch gesture.state {
+        case .began:
+            distractionFreeTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
+                self?.enterDistractionFreeMode()
+                self?.fullScreenTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
+                    self?.enterFullScreenMode()
+                }
+            }
+        case .ended, .cancelled, .failed:
+            distractionFreeTimer?.invalidate()
+            distractionFreeTimer = nil
+            fullScreenTimer?.invalidate()
+            fullScreenTimer = nil
+            if focusState == .distractionFree {
+                exitDistractionFreeMode(animated: true)
+            } else if focusState == .editing, gesture.state == .ended {
+                toggleKeyboard()
+            }
+        default: break
+        }
+    }
+
+    private func enterDistractionFreeMode() {
+        guard focusState == .editing else { return }
+        focusState = .distractionFree
+        textView.resignFirstResponder()
+        navigationController?.setNavigationBarHidden(true, animated: true)
+        UIView.animate(withDuration: 0.25) {
+            self.colorSwatchToggleButton.alpha = 0
+            self.colorSwatchIndicatorView.alpha = 0
+            self.colorSwatchScrollView.alpha = 0
+            self.keyboardOptionsView.alpha = 0
+        }
+        view.bringSubviewToFront(previewImageView)
+    }
+
+    private func exitDistractionFreeMode(animated: Bool) {
+        guard focusState == .distractionFree else { return }
+        focusState = .editing
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+        UIView.animate(withDuration: animated ? 0.25 : 0) {
+            self.colorSwatchToggleButton.alpha = 1
+            self.colorSwatchIndicatorView.alpha = 1
+            self.colorSwatchScrollView.alpha = 1
+            self.keyboardOptionsView.alpha = 1
+        }
+    }
+
+    private func enterDesignControlsMode() {
+        isDesignControlsModeActive = true
+        textView.resignFirstResponder()
+        navigationController?.setNavigationBarHidden(true, animated: true)
+
+        previewImageViewTopSwatchConstraint?.isActive = false
+        previewImageViewTopSafeAreaConstraint?.isActive = true
+
+        // Lock the image view to the rendered image's aspect ratio so scaleAspectFit has
+        // no room to add blank padding above/below the image.
+        if let image = previewImageView.image, image.size.width > 0 {
+            let ratio = image.size.height / image.size.width
+            let aspectConstraint = previewImageView.heightAnchor.constraint(
+                equalTo: previewImageView.widthAnchor,
+                multiplier: ratio
+            )
+            aspectConstraint.priority = .defaultHigh
+            aspectConstraint.isActive = true
+            previewImageViewAspectRatioConstraint = aspectConstraint
+        }
+
+        // Use <= so the aspect-ratio-sized view can't grow past the modal top.
+        previewImageViewBottomConstraint?.isActive = false
+        previewImageViewBottomConstraint = previewImageView.bottomAnchor.constraint(
+            lessThanOrEqualTo: keyboardOptionsView.topAnchor,
+            constant: -8
+        )
+        previewImageViewBottomConstraint?.isActive = true
+
+        UIView.animate(withDuration: 0.25) {
+            self.colorSwatchToggleButton.alpha = 0
+            self.colorSwatchIndicatorView.alpha = 0
+            self.colorSwatchScrollView.alpha = 0
+            self.view.layoutIfNeeded()
+        }
+    }
+
+    private func exitDesignControlsMode() {
+        isDesignControlsModeActive = false
+        navigationController?.setNavigationBarHidden(false, animated: true)
+
+        previewImageViewTopSafeAreaConstraint?.isActive = false
+        previewImageViewTopSwatchConstraint?.isActive = true
+
+        previewImageViewAspectRatioConstraint?.isActive = false
+        previewImageViewAspectRatioConstraint = nil
+
+        previewImageViewBottomConstraint?.isActive = false
+        previewImageViewBottomConstraint = previewImageView.bottomAnchor.constraint(
+            equalTo: view.bottomAnchor,
+            constant: -300
+        )
+        previewImageViewBottomConstraint?.isActive = true
+
+        UIView.animate(withDuration: 0.25) {
+            self.colorSwatchToggleButton.alpha = 1
+            self.colorSwatchIndicatorView.alpha = 1
+            self.colorSwatchScrollView.alpha = 1
+            self.view.layoutIfNeeded()
+        }
+    }
+
+    private func enterFullScreenMode() {
+        guard focusState == .distractionFree, let window = view.window else { return }
+        focusState = .fullScreen
+
+        let startFrame = previewImageView.convert(previewImageView.bounds, to: window)
+
+        let overlay = UIView(frame: window.bounds)
+        overlay.backgroundColor = .black
+        overlay.alpha = 0
+        window.addSubview(overlay)
+        focusOverlayView = overlay
+
+        let imageView = UIImageView(frame: startFrame)
+        imageView.image = previewImageView.image
+        imageView.contentMode = .scaleAspectFit
+        imageView.backgroundColor = .black
+        imageView.isUserInteractionEnabled = true
+        window.addSubview(imageView)
+        focusImageView = imageView
+
+        let closeButton = UIButton(type: .system)
+        closeButton.setImage(UIImage(systemName: "xmark"), for: .normal)
+        closeButton.tintColor = .white
+        closeButton.backgroundColor = UIColor.black.withAlphaComponent(0.55)
+        closeButton.layer.cornerRadius = 16
+        closeButton.alpha = 0
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+        closeButton.addTarget(self, action: #selector(exitFullScreenMode), for: .touchUpInside)
+        window.addSubview(closeButton)
+        focusCloseButton = closeButton
+        NSLayoutConstraint.activate([
+            closeButton.topAnchor.constraint(equalTo: window.safeAreaLayoutGuide.topAnchor, constant: 12),
+            closeButton.trailingAnchor.constraint(equalTo: window.safeAreaLayoutGuide.trailingAnchor, constant: -12),
+            closeButton.widthAnchor.constraint(equalToConstant: 32),
+            closeButton.heightAnchor.constraint(equalToConstant: 32),
+        ])
+
+        let shareButton = UIButton(type: .system)
+        shareButton.setImage(UIImage(systemName: "square.and.arrow.up"), for: .normal)
+        shareButton.tintColor = .white
+        shareButton.backgroundColor = UIColor.black.withAlphaComponent(0.55)
+        shareButton.layer.cornerRadius = 22
+        shareButton.alpha = 0
+        shareButton.translatesAutoresizingMaskIntoConstraints = false
+        shareButton.addTarget(self, action: #selector(shareFocusedImage), for: .touchUpInside)
+        window.addSubview(shareButton)
+        focusShareButton = shareButton
+        NSLayoutConstraint.activate([
+            shareButton.bottomAnchor.constraint(equalTo: window.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            shareButton.leadingAnchor.constraint(equalTo: window.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            shareButton.widthAnchor.constraint(equalToConstant: 44),
+            shareButton.heightAnchor.constraint(equalToConstant: 44),
+        ])
+
+        let pan = UIPanGestureRecognizer(target: self, action: #selector(handleFocusPan(_:)))
+        imageView.addGestureRecognizer(pan)
+
+        window.layoutIfNeeded()
+        UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.85, initialSpringVelocity: 0.5) {
+            overlay.alpha = 1
+            imageView.frame = window.bounds
+            closeButton.alpha = 1
+        }
+    }
+
+    @objc private func exitFullScreenMode() {
+        guard focusState == .fullScreen, let window = view.window else { return }
+        let targetFrame = previewImageView.convert(previewImageView.bounds, to: window)
+        UIView.animate(withDuration: 0.35, delay: 0, usingSpringWithDamping: 0.85, initialSpringVelocity: 0.5) {
+            self.focusImageView?.frame = targetFrame
+            self.focusOverlayView?.alpha = 0
+            self.focusCloseButton?.alpha = 0
+        } completion: { _ in
+            self.tearDownFullScreenOverlay()
+            self.exitDistractionFreeMode(animated: true)
+        }
+    }
+
+    private func tearDownFullScreenOverlay() {
+        focusImageView?.removeFromSuperview()
+        focusOverlayView?.removeFromSuperview()
+        focusCloseButton?.removeFromSuperview()
+        focusShareButton?.removeFromSuperview()
+        focusImageView = nil
+        focusOverlayView = nil
+        focusCloseButton = nil
+        focusShareButton = nil
+        focusState = .distractionFree
+    }
+
+    @objc private func handleFocusPan(_ gesture: UIPanGestureRecognizer) {
+        guard let window = view.window,
+              let imageView = focusImageView,
+              let overlay = focusOverlayView else { return }
+
+        let translation = gesture.translation(in: window)
+        let velocity = gesture.velocity(in: window)
+
+        switch gesture.state {
+        case .changed:
+            if translation.y > 0 {
+                let progress = min(translation.y / (window.bounds.height * 0.5), 1.0)
+                let targetFrame = previewImageView.convert(previewImageView.bounds, to: window)
+                imageView.frame = interpolateFocusFrame(from: window.bounds, to: targetFrame, progress: progress)
+                overlay.alpha = 1 - progress * 0.9
+                focusCloseButton?.alpha = 1 - progress
+                focusShareButton?.alpha = 0
+            } else if translation.y < 0 {
+                let progress = min(-translation.y / (window.bounds.height * 0.25), 1.0)
+                focusShareButton?.alpha = progress
+                imageView.frame = CGRect(
+                    x: 0,
+                    y: translation.y * 0.08,
+                    width: window.bounds.width,
+                    height: window.bounds.height
+                )
+                focusCloseButton?.alpha = 1
+            }
+
+        case .ended, .cancelled:
+            if translation.y > 0 {
+                let shouldDismiss = translation.y > window.bounds.height * 0.5 * 0.3 || velocity.y > 400
+                if shouldDismiss {
+                    let targetFrame = previewImageView.convert(previewImageView.bounds, to: window)
+                    UIView.animate(withDuration: 0.35, delay: 0,
+                                   usingSpringWithDamping: 0.85, initialSpringVelocity: 0.5) {
+                        imageView.frame = targetFrame
+                        overlay.alpha = 0
+                        self.focusCloseButton?.alpha = 0
+                    } completion: { _ in
+                        self.tearDownFullScreenOverlay()
+                        self.exitDistractionFreeMode(animated: true)
+                    }
+                } else {
+                    snapFocusBackToFullScreen(in: window)
+                }
+            } else if translation.y < 0 {
+                let shouldShare = -translation.y > window.bounds.height * 0.25 * 0.3 || velocity.y < -400
+                snapFocusBackToFullScreen(in: window)
+                if shouldShare {
+                    shareFocusedImage()
+                }
+            }
+
+        default: break
+        }
+    }
+
+    private func interpolateFocusFrame(from: CGRect, to: CGRect, progress: CGFloat) -> CGRect {
+        CGRect(
+            x: from.minX + (to.minX - from.minX) * progress,
+            y: from.minY + (to.minY - from.minY) * progress,
+            width: from.width + (to.width - from.width) * progress,
+            height: from.height + (to.height - from.height) * progress
+        )
+    }
+
+    private func snapFocusBackToFullScreen(in window: UIWindow) {
+        guard let imageView = focusImageView else { return }
+        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.5) {
+            imageView.frame = window.bounds
+            self.focusOverlayView?.alpha = 1
+            self.focusCloseButton?.alpha = 1
+            self.focusShareButton?.alpha = 0
+        }
+    }
+
+    @objc private func shareFocusedImage() {
+        shareButtonTouched()
+    }
+
     private func addTap(to viewToAddTap: UIView) {
         let tap = UITapGestureRecognizer(
             target: self,
@@ -853,7 +1293,6 @@ extension EditDesignViewController: UIColorPickerViewControllerDelegate {
         if isPickingTextColor {
             textColor = viewController.selectedColor
         } else {
-            view.backgroundColor = viewController.selectedColor
             backgroundColor = viewController.selectedColor
             textView.backgroundColor = .clear
         }
@@ -861,12 +1300,20 @@ extension EditDesignViewController: UIColorPickerViewControllerDelegate {
     }
 
     func colorPickerViewControllerDidFinish(_ viewController: UIColorPickerViewController) {
+        let color = viewController.selectedColor
+        if isPickingCustomColor {
+            isPickingCustomColor = false
+            applyCustomColor(color)
+            return
+        }
         if isPickingTextColor {
-            textColor = viewController.selectedColor
-            settingsManager.textColorHex = viewController.selectedColor.toHexString()
+            textColor = color
+            settingsManager.textColorHex = color.toHexString()
+            if colorSwatchMode == .textColor { refreshColorSwatches(currentColor: color) }
         } else {
-            applyBackgroundColor(viewController.selectedColor)
-            settingsManager.backgroundColorHex = viewController.selectedColor.toHexString()
+            applyBackgroundColor(color)
+            settingsManager.backgroundColorHex = color.toHexString()
+            if colorSwatchMode == .backgroundColor { refreshColorSwatches(currentColor: color) }
         }
         updateDesignImage()
     }
@@ -903,6 +1350,190 @@ extension UIColor {
         var a: CGFloat = 0
         getRed(&r, green: &g, blue: &b, alpha: &a)
         return String(format: "#%02lX%02lX%02lX", lroundf(Float(r * 255)), lroundf(Float(g * 255)), lroundf(Float(b * 255)))
+    }
+}
+
+extension EditDesignViewController {
+    @objc private func cycleSwatchMode() {
+        switch colorSwatchMode {
+        case .tools: colorSwatchMode = .backgroundColor
+        case .backgroundColor: colorSwatchMode = .textColor
+        case .textColor: colorSwatchMode = .tools
+        }
+    }
+
+    private func applySwatchMode() {
+        let iconName: String
+        let accessLabel: String
+        switch colorSwatchMode {
+        case .tools:
+            iconName = "ellipsis"
+            accessLabel = NSLocalizedString("show tools", comment: "")
+        case .backgroundColor:
+            iconName = "square.fill"
+            accessLabel = NSLocalizedString("color swatches: background", comment: "")
+        case .textColor:
+            iconName = "character"
+            accessLabel = NSLocalizedString("color swatches: text", comment: "")
+        }
+        colorSwatchToggleButton.setImage(UIImage(systemName: iconName), for: .normal)
+        colorSwatchToggleButton.accessibilityLabel = accessLabel
+        colorSwatchIndicatorView.isHidden = (colorSwatchMode == .tools)
+
+        switch colorSwatchMode {
+        case .tools:
+            refreshToolButtons()
+        case .backgroundColor:
+            colorSwatchIndicatorView.backgroundColor = backgroundColor
+            refreshColorSwatches(currentColor: backgroundColor)
+        case .textColor:
+            colorSwatchIndicatorView.backgroundColor = textColor
+            refreshColorSwatches(currentColor: textColor)
+        }
+    }
+
+    private func refreshToolButtons() {
+        colorSwatchStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+
+        colorSwatchStackView.distribution = .equalSpacing
+        colorSwatchStackView.spacing = 0
+        toolsStackWidthConstraint = colorSwatchStackView.widthAnchor.constraint(equalTo: colorSwatchScrollView.widthAnchor)
+        toolsStackWidthConstraint?.isActive = true
+
+        scrollViewLeadingNormal?.isActive = false
+        scrollViewLeadingFull?.isActive = true
+        colorSwatchToggleButton.isHidden = true
+        colorSwatchIndicatorView.isHidden = true
+
+        let items: [(String, String, Selector)] = [
+            ("paintpalette",        "Color Mode",        #selector(cycleSwatchMode)),
+            ("textformat",          "Font Picker",       #selector(selectFont)),
+            ("slider.horizontal.3", "Controls",          #selector(showControlsFromToolbar)),
+            ("photo",               "Background Image",  #selector(selectBackgroundImage)),
+        ]
+        for (icon, label, action) in items {
+            let button = UIButton(type: .system)
+            button.setImage(UIImage(systemName: icon), for: .normal)
+            button.tintColor = currentTintColor
+            button.accessibilityLabel = NSLocalizedString(label, comment: "")
+            button.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                button.widthAnchor.constraint(equalToConstant: 30),
+                button.heightAnchor.constraint(equalToConstant: 30),
+            ])
+            button.addTarget(self, action: action, for: .touchUpInside)
+            colorSwatchStackView.addArrangedSubview(button)
+        }
+    }
+
+    @objc private func showControlsFromToolbar() {
+        keyboardOptionsView.showControls()
+    }
+
+    private func refreshColorSwatches(currentColor: UIColor) {
+        colorSwatchStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+
+        toolsStackWidthConstraint?.isActive = false
+        toolsStackWidthConstraint = nil
+        colorSwatchStackView.distribution = .fill
+        colorSwatchStackView.spacing = 8
+
+        scrollViewLeadingFull?.isActive = false
+        scrollViewLeadingNormal?.isActive = true
+        colorSwatchToggleButton.isHidden = false
+        colorSwatchIndicatorView.isHidden = false
+
+        for color in Self.presetColors {
+            colorSwatchStackView.addArrangedSubview(
+                makeSwatchButton(color: color, isCurrent: color.toHexString() == currentColor.toHexString())
+            )
+        }
+
+        colorSwatchStackView.addArrangedSubview(makeRainbowPickerButton())
+
+        for color in customPickedColors {
+            colorSwatchStackView.addArrangedSubview(
+                makeSwatchButton(color: color, isCurrent: color.toHexString() == currentColor.toHexString())
+            )
+        }
+    }
+
+    private func makeSwatchButton(color: UIColor, isCurrent: Bool) -> UIButton {
+        let button = UIButton(type: .custom)
+        button.backgroundColor = color
+        button.layer.cornerRadius = 15
+        button.layer.masksToBounds = true
+        button.layer.borderWidth = isCurrent ? 2.5 : 1
+        button.layer.borderColor = isCurrent ? currentTintColor.cgColor : UIColor.gray.withAlphaComponent(0.4).cgColor
+        button.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            button.widthAnchor.constraint(equalToConstant: 30),
+            button.heightAnchor.constraint(equalToConstant: 30),
+        ])
+        button.addAction(UIAction { [weak self, weak button] _ in
+            guard let self else { return }
+            if self.colorSwatchIsTextMode {
+                self.didSelectTextColorFromSwatch(color)
+            } else {
+                self.didSelectBackgroundColor(color)
+            }
+            self.colorSwatchStackView.arrangedSubviews.compactMap { $0 as? UIButton }.forEach {
+                $0.layer.borderWidth = 1
+                $0.layer.borderColor = UIColor.gray.withAlphaComponent(0.4).cgColor
+            }
+            button?.layer.borderWidth = 2.5
+            button?.layer.borderColor = self.currentTintColor.cgColor
+        }, for: .touchUpInside)
+        return button
+    }
+
+    private func makeRainbowPickerButton() -> UIButton {
+        let button = UIButton(type: .custom)
+        button.layer.cornerRadius = 15
+        button.layer.masksToBounds = true
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.gray.withAlphaComponent(0.4).cgColor
+        button.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            button.widthAnchor.constraint(equalToConstant: 30),
+            button.heightAnchor.constraint(equalToConstant: 30),
+        ])
+        let gradient = CAGradientLayer()
+        gradient.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        gradient.colors = [
+            UIColor.systemRed.cgColor, UIColor.systemOrange.cgColor,
+            UIColor.systemYellow.cgColor, UIColor.systemGreen.cgColor,
+            UIColor.systemBlue.cgColor, UIColor.systemPurple.cgColor,
+        ]
+        gradient.startPoint = CGPoint(x: 0, y: 0.5)
+        gradient.endPoint = CGPoint(x: 1, y: 0.5)
+        button.layer.insertSublayer(gradient, at: 0)
+        button.addAction(UIAction { [weak self] _ in
+            guard let self else { return }
+            self.isPickingTextColor = self.colorSwatchIsTextMode
+            self.isPickingCustomColor = true
+            #if targetEnvironment(macCatalyst)
+            let initialColor = self.colorSwatchIsTextMode ? self.textColor : self.backgroundColor
+            MacColorPicker.shared.showColorPicker(initialColor: initialColor) { [weak self] selectedColor in
+                self?.applyCustomColor(selectedColor)
+            }
+            #else
+            let colorPicker = UIColorPickerViewController()
+            colorPicker.selectedColor = self.colorSwatchIsTextMode ? self.textColor : self.backgroundColor
+            colorPicker.delegate = self
+            self.present(colorPicker, animated: true)
+            #endif
+        }, for: .touchUpInside)
+        return button
+    }
+
+    private func applyCustomColor(_ color: UIColor) {
+        customPickedColors.append(color)
+        if colorSwatchIsTextMode {
+            didSelectTextColorFromSwatch(color)
+        } else {
+            didSelectBackgroundColor(color)
+        }
     }
 }
 
@@ -1094,7 +1725,7 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
         fontSize = newFontSize
     }
     
-    func selectFont() {
+    @objc func selectFont() {
         showFontPicker { [weak self] in
             self?.updateDesignImage()
         }
@@ -1130,6 +1761,28 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
 
     func didSelectBackgroundColor(_ color: UIColor) {
         applyBackgroundColor(color)
+        if colorSwatchMode == .backgroundColor {
+            colorSwatchIndicatorView.backgroundColor = color
+            refreshColorSwatches(currentColor: color)
+        }
+    }
+
+    func didSelectTextColorFromSwatch(_ color: UIColor) {
+        textColor = color
+        settingsManager.textColorHex = color.toHexString()
+        updateDesignImage()
+        if colorSwatchMode == .textColor {
+            colorSwatchIndicatorView.backgroundColor = color
+            refreshColorSwatches(currentColor: color)
+        }
+    }
+
+    func keyboardOptionsViewWillShowDesignControls() {
+        enterDesignControlsMode()
+    }
+
+    func keyboardOptionsViewDidDismissDesignControls() {
+        exitDesignControlsMode()
     }
 }
 
@@ -1149,7 +1802,7 @@ extension EditDesignViewController: UIImagePickerControllerDelegate, UINavigatio
         }
         
         let imageName = UUID().uuidString
-        ImageService().saveImageToDisk(
+        imageService.saveImageToDisk(
             selectedImage,
             addToInMemoryCache: true,
             withName: imageName,

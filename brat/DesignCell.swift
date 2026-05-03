@@ -104,16 +104,19 @@ class DesignCell: UICollectionViewCell {
 
     func configure(
         with design: Design,
-        imageService: ImageService
+        imageService: ImageService,
+        galleryLabel: GalleryLabel = .time
     ) {
         currentDesign = design
         self.imageService = imageService
         hideErrorOverlay()
-        // Configure the cell with the design
         imageView.backgroundColor = design.backgroundColor
-        // Here you should set the imageView image to the screenshot of the design using the imageService
-        // For now, we set the background color
-        dateLabel.text = design.creationDate.spelledOutTimeLowercase()
+        switch galleryLabel {
+        case .time:
+            dateLabel.text = design.creationDate.spelledOutTimeLowercase()
+        case .title:
+            dateLabel.text = design.text.isEmpty ? design.creationDate.spelledOutTimeLowercase() : design.text
+        }
         
         // Load image using imageService
         let cacheKey = design.description

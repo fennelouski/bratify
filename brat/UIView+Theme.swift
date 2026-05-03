@@ -9,7 +9,7 @@ import UIKit
 
 extension UIView {
     func apply(_ theme: ThemeModel?) {
-        guard let theme else {
+        guard themingEnabled, let theme else {
             return
         }
         let isDarkMode = traitCollection.userInterfaceStyle == .dark
@@ -27,7 +27,28 @@ extension UIView {
             cell.contentView.backgroundColor = .clear
             cell.backgroundColor = .clear
             return
-        } else if self.backgroundColor != nil, self.backgroundColor != UIColor.clear {
+        }
+
+        // Never modify visual effect views — touching internal subviews corrupts the blur
+        if self is UIVisualEffectView {
+            return
+        }
+
+        if self is UICollectionView || self is UITableView {
+            self.backgroundColor = .clear
+            for subview in subviews { subview.applyColors(from: colorModel) }
+            return
+        }
+
+        // Root views that own the full-screen blur should use systemBackground, not the theme color.
+        // Use a direct subview check (not viewWithTag which recurses) to avoid matching the blur view itself.
+        let blurTag = 99_001
+        if subviews.contains(where: { $0.tag == blurTag }) {
+            for subview in subviews { subview.applyColors(from: colorModel) }
+            return
+        }
+
+        if self.backgroundColor != nil, self.backgroundColor != UIColor.clear {
             self.backgroundColor = colorModel.backgroundColor
         }
         
@@ -57,7 +78,8 @@ extension UIView {
             }
             return
         } else if let slider = self as? UISlider {
-            slider.tintColor = colorModel.tintColor
+            slider.minimumTrackTintColor = colorModel.readableTintColor
+            slider.maximumTrackTintColor = colorModel.readableTextColor.withAlphaComponent(0.5)
         } else if let stepper = self as? UIStepper {
             stepper.tintColor = colorModel.tintColor
             stepper.backgroundColor = colorModel.backgroundColor

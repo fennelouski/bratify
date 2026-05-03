@@ -18,12 +18,15 @@ class ImageService {
     private var isUnderMemoryPressure = false
     private let useDecompression = false
     
+    static var sharedICloudImagesDirectory: URL?
+
     init() {
-        NotificationCenter.default.addObserver(self, 
+        NotificationCenter.default.addObserver(self,
                                                selector: #selector(memoryPressureDetected),
-                                               name: UIApplication.didReceiveMemoryWarningNotification, 
+                                               name: UIApplication.didReceiveMemoryWarningNotification,
                                                object: nil)
         memoryCache.totalCostLimit = Int(maxDiskCacheSize) // Set an approximate cost limit
+        migrateLegacyImageCacheIfNeeded()
     }
     
     deinit {
@@ -439,7 +442,7 @@ class ImageService {
             guard let self = self else {
                 return
             }
-            let cacheDirectory = getCacheDirectory()
+            let cacheDirectory = getLocalImageDirectory()
             let fileManager = FileManager.default
             
             // Attempt to get the directory contents
@@ -513,61 +516,67 @@ class ImageService {
             try data.write(to: filePath, options: .atomic)
             let attributes = try FileManager.default.attributesOfItem(atPath: filePath.path)
             let fileSize = attributes[FileAttributeKey.size] as? UInt64 ?? 0
-            
+
             cacheQueue.async(flags: .barrier) { [weak self] in
-                guard let self else {
-                    return
-                }
+                guard let self else { return }
                 currentDiskCacheSize += fileSize
                 manageDiskCache()
+            }
+
+            if let iCloudDir = ImageService.sharedICloudImagesDirectory {
+                let iCloudPath = iCloudDir.appendingPathComponent(name.key)
+                try? data.write(to: iCloudPath, options: .atomic)
             }
         } catch {
             print("Error saving file to disk: \(error.localizedDescription)")
         }
-        
+
         assert(fileExists(for: name))
     }
     
     func loadImageFromDisk(with name: String?) -> UIImage? {
-        guard let imageName = name?.key else {
-            return nil
-        }
-        
-        let filePath: String? = {
+        guard let imageName = name?.key else { return nil }
+
+        let localFileURL = getFilePath(forImageName: imageName)
+
+        let localPathString: String = {
 #if targetEnvironment(macCatalyst)
-            if #available(macCatalyst 16.0, *) {
-                return getFilePath(forImageName: imageName).path()
-            }
+            if #available(macCatalyst 16.0, *) { return localFileURL.path() }
 #else
-            if #available(iOS 16.0, *) {
-                return getFilePath(forImageName: imageName).path()
-            }
+            if #available(iOS 16.0, *) { return localFileURL.path() }
 #endif
-            
-            let filePath = getFilePath(forImageName: imageName).path
-            guard !filePath.isEmpty else {
+            return localFileURL.path
+        }()
+
+        let image: UIImage?
+        if fileExists(at: localPathString), let localImage = UIImage(contentsOfFile: localPathString) {
+            image = localImage
+        } else if let iCloudDir = ImageService.sharedICloudImagesDirectory {
+            let iCloudURL = iCloudDir.appendingPathComponent(imageName)
+            if FileManager.default.fileExists(atPath: iCloudURL.path),
+               let iCloudImage = UIImage(contentsOfFile: iCloudURL.path) {
+                // Restore to local storage so future loads are fast
+                try? FileManager.default.copyItem(at: iCloudURL, to: localFileURL)
+                image = iCloudImage
+            } else {
                 return nil
             }
-            return filePath
-        }()
-        guard let filePath,
-              fileExists(at: filePath),
-              let image = UIImage(contentsOfFile: filePath) else {
+        } else {
             return nil
         }
-        
+
+        guard let image else { return nil }
+
         // Update file's modification date to support LRU eviction
-        let modificationDate = [FileAttributeKey.modificationDate: Date()]
-        try? FileManager.default.setAttributes(modificationDate,
-                                               ofItemAtPath: filePath)
-        
+        try? FileManager.default.setAttributes(
+            [FileAttributeKey.modificationDate: Date()],
+            ofItemAtPath: localPathString
+        )
+
         if memoryCache.object(forKey: imageName as NSString) == nil {
-            memoryCache.setObject(
-                image,
-                forKey: imageName as NSString
-            )
+            memoryCache.setObject(image, forKey: imageName as NSString)
         }
-        
+
         return image
     }
     
@@ -614,7 +623,7 @@ class ImageService {
     
     private func performDiskCacheManagement() {
         let fileManager = FileManager.default
-        let cacheDirectory = getCacheDirectory()
+        let cacheDirectory = getLocalImageDirectory()
         do {
             let fileURLs = try fileManager.contentsOfDirectory(at: cacheDirectory, includingPropertiesForKeys: nil)
             
@@ -637,17 +646,33 @@ class ImageService {
         }
     }
     
-    private func getCacheDirectory() -> URL {
-        let paths = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
-        let cacheDirectory = paths[0].appendingPathComponent("ImageCache")
-        if !FileManager.default.fileExists(atPath: cacheDirectory.path) {
-            try? FileManager.default.createDirectory(at: cacheDirectory, withIntermediateDirectories: true)
+    private func getLocalImageDirectory() -> URL {
+        let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+        let dir = appSupport.appendingPathComponent("ImageCache")
+        if !FileManager.default.fileExists(atPath: dir.path) {
+            try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         }
-        return cacheDirectory
+        return dir
     }
-    
+
+    private func migrateLegacyImageCacheIfNeeded() {
+        let legacy = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent("ImageCache")
+        guard FileManager.default.fileExists(atPath: legacy.path) else { return }
+        let destination = getLocalImageDirectory()
+        let fm = FileManager.default
+        let files = (try? fm.contentsOfDirectory(at: legacy, includingPropertiesForKeys: nil)) ?? []
+        for file in files {
+            let dest = destination.appendingPathComponent(file.lastPathComponent)
+            if !fm.fileExists(atPath: dest.path) {
+                try? fm.copyItem(at: file, to: dest)
+            }
+        }
+        try? fm.removeItem(at: legacy)
+    }
+
     private func getFilePath(forImageName name: String) -> URL {
-        return getCacheDirectory().appendingPathComponent(name.key)
+        return getLocalImageDirectory().appendingPathComponent(name.key)
     }
     
     private func imageName(fromURL urlString: String) -> String {

@@ -11,6 +11,8 @@
 		807A4F3D2C52DAFD009ED2FD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F3C2C52DAFD009ED2FD /* AppDelegate.swift */; };
 		807A4F3F2C52DAFD009ED2FD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F3E2C52DAFD009ED2FD /* SceneDelegate.swift */; };
 		807A4F412C52DAFD009ED2FD /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F402C52DAFD009ED2FD /* ViewController.swift */; };
+		807A4F432C52DAFD009ED2FD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 807A4F422C52DAFD009ED2FD /* Main.storyboard */; };
+		807A4F482C52DAFE009ED2FD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 807A4F472C52DAFE009ED2FD /* LaunchScreen.storyboard */; };
 		807A4F462C52DAFE009ED2FD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 807A4F452C52DAFE009ED2FD /* Assets.xcassets */; };
 		807A4F542C52DAFE009ED2FD /* bratTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F532C52DAFE009ED2FD /* bratTests.swift */; };
 		807A4F5E2C52DAFE009ED2FD /* bratUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F5D2C52DAFE009ED2FD /* bratUITests.swift */; };
@@ -32,12 +34,16 @@
 		807A4F8F2C52DC09009ED2FD /* ColorContextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F792C52DC09009ED2FD /* ColorContextView.swift */; };
 		807A4F902C52DC09009ED2FD /* FontCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F762C52DC09009ED2FD /* FontCell.swift */; };
 		807A4F912C52DC09009ED2FD /* UIColor+HexString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F822C52DC09009ED2FD /* UIColor+HexString.swift */; };
+		9722DC6688F841DA989ECAB0 /* UIColor+Contrast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E82833F48124901B68E8882 /* UIColor+Contrast.swift */; };
 		807A4F922C52DC09009ED2FD /* UILabel+AppLabels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F7F2C52DC09009ED2FD /* UILabel+AppLabels.swift */; };
 		807A4F932C52DC09009ED2FD /* UIView+Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F782C52DC09009ED2FD /* UIView+Theme.swift */; };
 		807A4F942C52DC09009ED2FD /* UIView+AdaptiveBackgroundColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F842C52DC09009ED2FD /* UIView+AdaptiveBackgroundColor.swift */; };
 		807A4F952C52DC09009ED2FD /* UIFont+AppFonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F772C52DC09009ED2FD /* UIFont+AppFonts.swift */; };
 		807A4F972C52DC28009ED2FD /* HistogramSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F962C52DC28009ED2FD /* HistogramSliderView.swift */; };
 		807A4F992C52DC3F009ED2FD /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F982C52DC3F009ED2FD /* SettingsViewController.swift */; };
+		925F684140994FD3AD3B7D60 /* SettingsCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE14DE7D5E14A4DBE2A0D54 /* SettingsCategoryViewController.swift */; };
+		A1B2C3D4E5F60001A1B2C3D4 /* MasonryLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002A1B2C3D4 /* MasonryLayout.swift */; };
+		70E9CFDFB9C249F8B216EE30 /* TypographyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5543FD1CDB104D3281CAC569 /* TypographyViewController.swift */; };
 		807A4F9B2C52DC58009ED2FD /* StepperTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F9A2C52DC58009ED2FD /* StepperTableViewCell.swift */; };
 		807A4F9D2C52DC6F009ED2FD /* UIDevice+Admin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F9C2C52DC6F009ED2FD /* UIDevice+Admin.swift */; };
 		807A4F9F2C52DC72009ED2FD /* UIDevice+Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F9E2C52DC72009ED2FD /* UIDevice+Keyboard.swift */; };
@@ -138,11 +144,15 @@
 		807A4F802C52DC09009ED2FD /* CGFloat+SpacingUnits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGFloat+SpacingUnits.swift"; sourceTree = "<group>"; };
 		807A4F812C52DC09009ED2FD /* ThemeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTableViewCell.swift; sourceTree = "<group>"; };
 		807A4F822C52DC09009ED2FD /* UIColor+HexString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+HexString.swift"; sourceTree = "<group>"; };
+		5E82833F48124901B68E8882 /* UIColor+Contrast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Contrast.swift"; sourceTree = "<group>"; };
 		807A4F832C52DC09009ED2FD /* ColorPaletteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPaletteView.swift; sourceTree = "<group>"; };
 		807A4F842C52DC09009ED2FD /* UIView+AdaptiveBackgroundColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+AdaptiveBackgroundColor.swift"; sourceTree = "<group>"; };
 		807A4F852C52DC09009ED2FD /* UIViewController+Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Theme.swift"; sourceTree = "<group>"; };
 		807A4F962C52DC28009ED2FD /* HistogramSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistogramSliderView.swift; sourceTree = "<group>"; };
 		807A4F982C52DC3F009ED2FD /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		FEE14DE7D5E14A4DBE2A0D54 /* SettingsCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCategoryViewController.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F60002A1B2C3D4 /* MasonryLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasonryLayout.swift; sourceTree = "<group>"; };
+		5543FD1CDB104D3281CAC569 /* TypographyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypographyViewController.swift; sourceTree = "<group>"; };
 		807A4F9A2C52DC58009ED2FD /* StepperTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepperTableViewCell.swift; sourceTree = "<group>"; };
 		807A4F9C2C52DC6F009ED2FD /* UIDevice+Admin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+Admin.swift"; sourceTree = "<group>"; };
 		807A4F9E2C52DC72009ED2FD /* UIDevice+Keyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+Keyboard.swift"; sourceTree = "<group>"; };
@@ -267,6 +277,7 @@
 				807A4F7C2C52DC09009ED2FD /* ThemeDisplayView.swift */,
 				807A4F812C52DC09009ED2FD /* ThemeTableViewCell.swift */,
 				807A4F822C52DC09009ED2FD /* UIColor+HexString.swift */,
+				5E82833F48124901B68E8882 /* UIColor+Contrast.swift */,
 				807A4F772C52DC09009ED2FD /* UIFont+AppFonts.swift */,
 				807A4F7F2C52DC09009ED2FD /* UILabel+AppLabels.swift */,
 				807A4F842C52DC09009ED2FD /* UIView+AdaptiveBackgroundColor.swift */,
@@ -276,6 +287,9 @@
 				807A4FA02C52DC82009ED2FD /* SliderTableViewCell.swift */,
 				8084C0DE2C5D790D00EA453C /* AspectRatioTableViewCell.swift */,
 				807A4F982C52DC3F009ED2FD /* SettingsViewController.swift */,
+				FEE14DE7D5E14A4DBE2A0D54 /* SettingsCategoryViewController.swift */,
+				5543FD1CDB104D3281CAC569 /* TypographyViewController.swift */,
+				A1B2C3D4E5F60002A1B2C3D4 /* MasonryLayout.swift */,
 				80F4589C2C61E2EB0039C385 /* AspectRatioPickerViewController.swift */,
 				80F4589E2C61EA860039C385 /* AspectRatioCell.swift */,
 				807A4F9A2C52DC58009ED2FD /* StepperTableViewCell.swift */,
@@ -431,6 +445,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				807A4F432C52DAFD009ED2FD /* Main.storyboard in Resources */,
+				807A4F482C52DAFE009ED2FD /* LaunchScreen.storyboard in Resources */,
 				807A4F462C52DAFE009ED2FD /* Assets.xcassets in Resources */,
 				805368BF2D2C804400E78CEF /* Localizable.xcstrings in Resources */,
 			);
@@ -516,7 +532,11 @@
 				807A4FC32C52F8F0009ED2FD /* DesignView.swift in Sources */,
 				807A4FDA2C542AE1009ED2FD /* UILabel+DynamicType.swift in Sources */,
 				807A4F992C52DC3F009ED2FD /* SettingsViewController.swift in Sources */,
+				925F684140994FD3AD3B7D60 /* SettingsCategoryViewController.swift in Sources */,
+				70E9CFDFB9C249F8B216EE30 /* TypographyViewController.swift in Sources */,
+				A1B2C3D4E5F60001A1B2C3D4 /* MasonryLayout.swift in Sources */,
 				807A4F912C52DC09009ED2FD /* UIColor+HexString.swift in Sources */,
+				9722DC6688F841DA989ECAB0 /* UIColor+Contrast.swift in Sources */,
 				807A4F9B2C52DC58009ED2FD /* StepperTableViewCell.swift in Sources */,
 				807A4F3F2C52DAFD009ED2FD /* SceneDelegate.swift in Sources */,
 				80F4589D2C61E2EB0039C385 /* AspectRatioPickerViewController.swift in Sources */,

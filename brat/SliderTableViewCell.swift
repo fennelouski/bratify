@@ -19,6 +19,18 @@ class SliderTableViewCell: UITableViewCell, Themeable {
     var valueLabel: UILabel!
     var mode: Mode = .unknown
     var valueChanged: ((Float) -> Void)?
+    var infoButtonTapped: (() -> Void)?
+
+    private let infoButton = UIButton(type: .system)
+    private var infoButtonWidthConstraint: NSLayoutConstraint!
+
+    var showInfoButton: Bool = false {
+        didSet {
+            infoButtonWidthConstraint.constant = showInfoButton ? 28 : 0
+            infoButton.isHidden = !showInfoButton
+            infoButton.isUserInteractionEnabled = showInfoButton
+        }
+    }
     
     private var thumbImage: UIImage? {
         didSet {
@@ -50,7 +62,16 @@ class SliderTableViewCell: UITableViewCell, Themeable {
         label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(label)
-        
+
+        let config = UIImage.SymbolConfiguration(pointSize: 15, weight: .regular)
+        infoButton.setImage(UIImage(systemName: "info.circle", withConfiguration: config), for: .normal)
+        infoButton.tintColor = .secondaryLabel
+        infoButton.isHidden = true
+        infoButton.isUserInteractionEnabled = false
+        infoButton.translatesAutoresizingMaskIntoConstraints = false
+        infoButton.addTarget(self, action: #selector(infoButtonAction), for: .touchUpInside)
+        contentView.addSubview(infoButton)
+
         slider = UISlider()
         slider.translatesAutoresizingMaskIntoConstraints = false
         slider.addTarget(
@@ -59,11 +80,13 @@ class SliderTableViewCell: UITableViewCell, Themeable {
             for: .valueChanged
         )
         contentView.addSubview(slider)
-        
+
         valueLabel = UILabel()
         valueLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(valueLabel)
-        
+
+        infoButtonWidthConstraint = infoButton.widthAnchor.constraint(equalToConstant: 0)
+
         NSLayoutConstraint.activate(
             [
                 label.topAnchor.constraint(
@@ -75,10 +98,18 @@ class SliderTableViewCell: UITableViewCell, Themeable {
                     constant: .su
                 ),
                 label.trailingAnchor.constraint(
+                    lessThanOrEqualTo: infoButton.leadingAnchor,
+                    constant: -4
+                ),
+
+                infoButton.trailingAnchor.constraint(
                     equalTo: contentView.trailingAnchor,
                     constant: -.su
                 ),
-                
+                infoButton.centerYAnchor.constraint(equalTo: label.centerYAnchor),
+                infoButton.heightAnchor.constraint(equalToConstant: 28),
+                infoButtonWidthConstraint,
+
                 slider.topAnchor.constraint(
                     equalTo: label.bottomAnchor,
                     constant: .su
@@ -91,7 +122,7 @@ class SliderTableViewCell: UITableViewCell, Themeable {
                     equalTo: contentView.bottomAnchor,
                     constant: -.su
                 ),
-                
+
                 valueLabel.topAnchor.constraint(
                     equalTo: slider.topAnchor,
                     constant: .su
@@ -109,6 +140,10 @@ class SliderTableViewCell: UITableViewCell, Themeable {
             ]
         )
     }
+
+    @objc private func infoButtonAction() {
+        infoButtonTapped?()
+    }
     
     func configure(
         text: String,
@@ -117,10 +152,13 @@ class SliderTableViewCell: UITableViewCell, Themeable {
         max: Float,
         mode: Mode,
         thumbImage: UIImage?,
-        theme: ThemeModel?
+        theme: ThemeModel?,
+        showInfoButton: Bool = false
     ) {
         valueChanged = nil
+        infoButtonTapped = nil
         label.text = text.localizedLowercase
+        self.showInfoButton = showInfoButton
         slider.minimumValue = min
         slider.maximumValue = max
         self.mode = mode

@@ -134,7 +134,22 @@ extension ColorThemePickerViewController: UICollectionViewDataSource,
     }
     
     private func updateBackgroundColor() {
-        view.backgroundColor = traitCollection.userInterfaceStyle == .dark ? settingsManager.selectedTheme?.darkModeColors.backgroundColor : settingsManager.selectedTheme?.lightModeColors.backgroundColor
+        guard themingEnabled else { return }
+        let blurTag = 99_001
+        if view.viewWithTag(blurTag) == nil {
+            let fullBlur = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterial))
+            fullBlur.tag = blurTag
+            fullBlur.translatesAutoresizingMaskIntoConstraints = false
+            fullBlur.isUserInteractionEnabled = false
+            view.insertSubview(fullBlur, at: 0)
+            NSLayoutConstraint.activate([
+                fullBlur.topAnchor.constraint(equalTo: view.topAnchor),
+                fullBlur.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                fullBlur.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                fullBlur.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            ])
+        }
+        view.backgroundColor = .systemBackground
     }
     
     override func viewWillTransition(

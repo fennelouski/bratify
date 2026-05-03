@@ -7,8 +7,11 @@
 
 import UIKit
 
+let themingEnabled = false
+
 extension UIViewController {
     func apply(_ theme: ThemeModel?) {
+        guard themingEnabled else { return }
         guard let theme = theme else {
             return
         }
@@ -23,7 +26,21 @@ extension UIViewController {
             navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: colorModel.readableTextColor]
         }
         
-        view.backgroundColor = colorModel.backgroundColor
+        let blurTag = 99_001
+        if view.viewWithTag(blurTag) == nil {
+            let fullBlur = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterial))
+            fullBlur.tag = blurTag
+            fullBlur.translatesAutoresizingMaskIntoConstraints = false
+            fullBlur.isUserInteractionEnabled = false
+            view.insertSubview(fullBlur, at: 0)
+            NSLayoutConstraint.activate([
+                fullBlur.topAnchor.constraint(equalTo: view.topAnchor),
+                fullBlur.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                fullBlur.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                fullBlur.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            ])
+        }
+        view.backgroundColor = .systemBackground
 
         // Apply theme to view
         view.apply(theme)

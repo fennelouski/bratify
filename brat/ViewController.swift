@@ -9,6 +9,9 @@ class ViewController: UIViewController {
     internal let settingsManager = SettingsManager()
     internal let imageService = ImageService()
 
+    private var doubleTapRecognizer: UITapGestureRecognizer?
+    private var singleTapRecognizer: UITapGestureRecognizer?
+
     var designs: [Design] = [] {
         didSet { updateEmptyState() }
     }
@@ -78,6 +81,96 @@ class ViewController: UIViewController {
         collectionView.showsVerticalScrollIndicator = false
         return collectionView
     }()
+
+    private lazy var masonryLayout: MasonryLayout = {
+        let layout = MasonryLayout()
+        layout.delegate = self
+        layout.numberOfColumns = 2
+        layout.cellPadding = 5
+        return layout
+    }()
+
+    private func makeFlowLayout() -> UICollectionViewFlowLayout {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 10
+        layout.minimumInteritemSpacing = 10
+        layout.sectionInsetReference = .fromSafeArea
+        return layout
+    }
+
+    private func applyGalleryLayout() {
+        switch settingsManager.galleryLayout {
+        case .grid:
+            collectionView.setCollectionViewLayout(makeFlowLayout(), animated: false)
+        case .masonry:
+            masonryLayout.invalidateLayout()
+            collectionView.setCollectionViewLayout(masonryLayout, animated: false)
+        }
+    }
+
+    private func configureGalleryGestures() {
+        if let old = singleTapRecognizer { collectionView.removeGestureRecognizer(old) }
+        if let old = doubleTapRecognizer { collectionView.removeGestureRecognizer(old) }
+        singleTapRecognizer = nil
+        doubleTapRecognizer = nil
+
+        if settingsManager.doubleTapToShare {
+            let doubleTap = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap(_:)))
+            doubleTap.numberOfTapsRequired = 2
+            collectionView.addGestureRecognizer(doubleTap)
+            doubleTapRecognizer = doubleTap
+
+            let singleTap = UITapGestureRecognizer(target: self, action: #selector(handleSingleTap(_:)))
+            singleTap.numberOfTapsRequired = 1
+            singleTap.require(toFail: doubleTap)
+            collectionView.addGestureRecognizer(singleTap)
+            singleTapRecognizer = singleTap
+
+            collectionView.allowsSelection = false
+        } else {
+            collectionView.allowsSelection = true
+        }
+    }
+
+    @objc private func handleSingleTap(_ gesture: UITapGestureRecognizer) {
+        let location = gesture.location(in: collectionView)
+        guard let indexPath = collectionView.indexPathForItem(at: location),
+              designs.indices.contains(indexPath.item) else { return }
+        openDesign(at: indexPath)
+    }
+
+    @objc private func handleDoubleTap(_ gesture: UITapGestureRecognizer) {
+        let location = gesture.location(in: collectionView)
+        guard let indexPath = collectionView.indexPathForItem(at: location),
+              designs.indices.contains(indexPath.item) else { return }
+        shareDesign(designs[indexPath.item])
+    }
+
+    private func openDesign(at indexPath: IndexPath) {
+        let selectedDesign = designs[indexPath.item]
+        let editDesignVC = EditDesignViewController(
+            originalText: selectedDesign.text,
+            originalBackgroundColor: selectedDesign.backgroundColor,
+            design: selectedDesign,
+            settingsManager: settingsManager,
+            imageService: imageService
+        )
+        navigationController?.pushViewController(editDesignVC, animated: true)
+    }
+
+    private func shareDesign(_ design: Design) {
+        let cacheKey = design.description
+        let image = imageService.memoryCache.object(forKey: cacheKey as NSString)
+        var items: [Any] = [design.text]
+        if let image { items.insert(image, at: 0) }
+        let activityVC = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        if let popover = activityVC.popoverPresentationController {
+            popover.sourceView = view
+            popover.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)
+            popover.permittedArrowDirections = []
+        }
+        present(activityVC, animated: true)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -85,6 +178,7 @@ class ViewController: UIViewController {
             "designs",
             comment: "Title for the main screen that shows designs"
         ).localizedLowercase
+        view.backgroundColor = .systemBackground
         apply(settingsManager.selectedTheme)
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewDesign))
         navigationItem.leftBarButtonItem = .settings(self)
@@ -120,8 +214,6 @@ class ViewController: UIViewController {
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(gesture:)))
         collectionView.addGestureRecognizer(longPressGesture)
         
-        loadDesigns()
-
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(handleDesignSaveFailed),
@@ -135,11 +227,15 @@ class ViewController: UIViewController {
             object: nil
         )
 
+        loadDesigns()
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         apply(settingsManager.selectedTheme)
+        applyGalleryLayout()
+        configureGalleryGestures()
         designs = sorted(DesignManager.shared.getAllDesigns())
         collectionView.reloadData()
         updateEmptyState()
@@ -307,36 +403,36 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DesignCell", for: indexPath) as! DesignCell
         let design = designs[indexPath.item]
-        cell.configure(with: design, imageService: imageService)
+        cell.configure(with: design, imageService: imageService, galleryLabel: settingsManager.galleryLabel)
         return cell
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        guard settingsManager.galleryLayout == .grid else { return .zero }
         let maxColumnWidth: CGFloat = 240
         let screenWidth = collectionView.bounds.width - 40
         let columns: CGFloat = floor(screenWidth / maxColumnWidth) + 1
         let cellWidth = min(maxColumnWidth, screenWidth / columns)
-        
-        // Randomize the size but keep it consistent for each position
         let randomOffset = CGFloat((indexPath.item % 20))
         let width = cellWidth + randomOffset
         let height = cellWidth + randomOffset
         return CGSize(width: width, height: height)
     }
-    
+
     func collectionView(
         _ collectionView: UICollectionView,
         didSelectItemAt indexPath: IndexPath
     ) {
-        let selectedDesign = designs[indexPath.item]
-        let editDesignVC = EditDesignViewController(
-            originalText: selectedDesign.text,
-            originalBackgroundColor: selectedDesign.backgroundColor,
-            design: selectedDesign,
-            settingsManager: settingsManager,
-            imageService: imageService
-        )
-        navigationController?.pushViewController(editDesignVC, animated: true)
+        openDesign(at: indexPath)
+    }
+}
+
+extension ViewController: MasonryLayoutDelegate {
+    func collectionView(_ collectionView: UICollectionView, aspectRatioForItemAt indexPath: IndexPath) -> CGFloat {
+        guard designs.indices.contains(indexPath.item) else { return 1.0 }
+        let design = designs[indexPath.item]
+        let ratio = design.width / design.height
+        return ratio > 0 ? ratio : 1.0
     }
 }
 
