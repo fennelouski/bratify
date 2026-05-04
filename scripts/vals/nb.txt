@@ -1,0 +1,162 @@
+:
+Et varmt og mykt mandeltema.
+Størrelsesforhold
+Autokorreksjon på
+Bakgrunns gjennomsiktighet
+Bakgrunnsuskarphet
+Lysstyrke bakgrunn
+Bakgrunnsfarge
+Kontrast bakgrunn
+Eksponering bakgrunn
+Speil bakgrunn horisontalt
+Speil bakgrunn vertikalt
+Gamma bakgrunn
+Bakgrunnsbilde
+Kontroller for bakgrunnsbilde
+Inverter bakgrunn
+Monokrom bakgrunn
+Pikselér bakgrunn
+Metning bakgrunn
+Skala bakgrunn
+Sepia bakgrunn
+Skjerpe bakgrunn
+Vignett bakgrunn
+Dynamisk og dristig
+Oransje monokrom dristig
+Lys og munter
+Lys og solrik
+Gul monokrom lys
+Lysstyrke
+Avbryt
+Klassisk og tidløs
+Lukk
+Fargevelger
+Leken og fargerik
+Bekreft før sletting
+Kontrast
+Kontroller
+Mynt som kjøler og forfrisker
+Kald blå monokrom
+Mørk modus
+Farger i mørk modus
+Dyp og rolig skog
+Dyp indigo monokrom
+Standard
+Standard bakgrunnsfarge
+Standard tekstfarge
+Designkontroller
+Destruktiv farge
+Eksponering
+Utvidet område
+Fontvelger
+Skriftstørrelse
+Fontnavn
+Tving små bokstaver
+Frisk sitrus med sting
+Gamma
+Myk fiolett monokrom
+Inverter
+Sist endret
+Siste 30 dager
+Siste 7 dager
+Siste time
+Lys modus
+Farger i lys modus
+Livlig og energisk
+Kontroller for hovedbilde
+Monokrom
+Mystisk mørkenatt
+Neon og dristig
+Nyeste først
+Ingen
+Eldre enn 30 dager
+Eldste først
+P
+Velg et tema
+Pikselering
+Pikseleringsskala
+Positiv farge
+Raffinert og elegant
+Grønn monokrom forfriskende
+Havblå forfriskende
+Rik og sofistikert
+Metning
+Lagre uten tittel
+Velg størrelsesforhold
+Valgt font
+Sepia
+Innstillinger
+Skyggefarge
+Skjerpe
+Vis etiketter
+Diskret monokrom enkel
+Glider
+Glideretikett
+Myk beroligende lavendel
+Myk mild pastell
+Sorteringsrekkefølge
+Diskret nøytral beige
+Rosa monokrom søt
+Bryter
+Bryteretikett
+Tekstfarge
+Temavalg
+Toningsfarge
+I dag
+Verdietikett
+Levende og skarp
+Saftig bær livlig
+Rød monokrom levende
+Vignett
+Sterkt og slående
+Varm og innbydende solnedgang
+I går
+a
+a.m
+a.m
+a.m
+kunne ikke laste bakgrunnsbilde
+uskarphet
+kan
+fargeprøver: bakgrunn
+fargeprøver: tekst
+Lag et design
+slett
+dette kan ikke angres
+slette design?
+designer
+gjør
+dupliser
+åtte
+Lag ditt første design for å komme i gang.
+Ingen designs ennå
+kunne ikke lagre design
+finn ut
+fem
+skriftstørrelse
+fire
+det
+k
+ni
+én
+ut
+p.m
+p.m
+p.m
+p.m
+pikselering
+p.m
+prøv igjen
+syv
+vis fargeprøver
+vis verktøy
+seks
+mellomrom
+strekke
+synkronisert fra iCloud
+tre
+to
+du
+null
+zerØ
+ø

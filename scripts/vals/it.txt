@@ -1,0 +1,162 @@
+:
+Tema mandorla caldo e delicato.
+Proporzione
+Correzione automatica attiva
+Opacità sfondo
+Sfocatura sfondo
+Luminosità sfondo
+Colore sfondo
+Contrasto sfondo
+Esposizione sfondo
+Capovolgi sfondo orizzontalmente
+Capovolgi sfondo verticalmente
+Gamma sfondo
+Immagine di sfondo
+Controlli immagine sfondo
+Inverti sfondo
+Sfondo monocromatico
+Pixela sfondo
+Saturazione sfondo
+Scala sfondo
+Sfondo seppia
+Nitidezza sfondo
+Vignettatura sfondo
+Audace e dinamico
+Arancione monocromatico audace
+Allegra e luminosa
+Soleggiata e brillante
+Giallo monocromatico brillante
+Luminosità
+Annulla
+Classico e senza tempo
+Chiudi
+Selettore colori
+Colorato e giocoso
+Conferma prima di eliminare
+Contrasto
+Controlli
+Menta fresca e rigenerante
+Blu monocromatico freddo
+Modalità scura
+Colori modalità scura
+Foresta profonda e tranquilla
+Indaco monocromatico profondo
+Predefinito
+Colore sfondo predefinito
+Colore testo predefinito
+Controlli progetto
+Colore distruttivo
+Esposizione
+Intervallo esteso
+Selettore font
+Dimensione font
+Nome font
+Forza minuscole
+Agrumi freschi e vivaci
+Gamma
+Viola delicato monocromatico
+Inverti
+Ultima modifica
+Ultimi 30 giorni
+Ultimi 7 giorni
+Ultima ora
+Modalità chiara
+Colori modalità chiara
+Vivace ed energico
+Controlli immagine principale
+Monocromatico
+Mezzanotte misteriosa e scura
+Neon e audace
+Prima i più recenti
+Nessuno
+Più vecchi di 30 giorni
+Prima i più vecchi
+P
+Scegli un tema
+Pixelazione
+Scala pixelazione
+Colore positivo
+Raffinato ed elegante
+Verde monocromatico rigenerante
+Blu oceano rigenerante
+Ricco e sofisticato
+Saturazione
+Salva senza titolo
+Seleziona proporzione
+Font selezionato
+Seppia
+Impostazioni
+Colore ombra
+Nitidezza
+Mostra etichette
+Monocromatico semplice e sobrio
+Slider
+Etichetta slider
+Lavanda morbida e calmante
+Pastello morbido e delicato
+Ordinamento
+Beige neutro e discreto
+Rosa monocromatico dolce
+Interruttore
+Etichetta interruttore
+Colore testo
+Selezione tema
+Colore tinta
+Oggi
+Etichetta valore
+Vivace e tagliente
+Frutti di bosco succosi e vivaci
+Rosso monocromatico vivace
+Vignettatura
+Intenso e d’impatto
+Tramonto caldo e accogliente
+Ieri
+a
+a.m
+a.m
+a.m
+impossibile caricare l’immagine di sfondo
+sfocatura
+puoi
+tavolozza colori: sfondo
+tavolozza colori: testo
+Crea un design
+elimina
+azione irreversibile
+eliminare il design?
+progetti
+fai
+duplica
+otto
+Crea il tuo primo design per iniziare.
+Ancora nessun design
+impossibile salvare il progetto
+capisci
+cinque
+dimensione font
+quattro
+lo
+ok
+nove
+uno
+fuori
+p
+p.m
+p.m
+p.m
+pixelazione
+p.m
+riprova
+sette
+mostra tavolozza colori
+mostra strumenti
+sei
+spazio
+allunga
+sincronizzato da iCloud
+tre
+due
+tu
+zero
+zerØ
+ø

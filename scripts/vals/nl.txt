@@ -1,0 +1,162 @@
+:
+Een warm en zacht amandeltema.
+Beeldverhouding
+Automatische correctie aan
+Achtergrond dekking
+Achtergrond vervaging
+Achtergrond helderheid
+Achtergrondkleur
+Achtergrond contrast
+Achtergrond belichting
+Achtergrond horizontaal spiegelen
+Achtergrond verticaal spiegelen
+Achtergrond gamma
+Achtergrondafbeelding
+Achtergrondafbeeldingbediening
+Achtergrond inverteren
+Achtergrond monochrome
+Achtergrond pixeleren
+Achtergrond verzadiging
+Achtergrond schaal
+Achtergrond sepia
+Achtergrond verscherpen
+Achtergrond vignet
+Stoutmoedig en dynamisch
+Oranje monochrome gedurfd
+Helder en vrolijk
+Zonnig en helder
+Geel monochrome helder
+Helderheid
+Annuleren
+Klassiek en tijdloos
+Sluiten
+Kleurenkiezer
+Kleurrijk en speels
+Bevestigen voor verwijderen
+Contrast
+Bediening
+Verfrissende munt
+Koele blauwe monochrome
+Donkere modus
+Donkere modus kleuren
+Diep rustig bos
+Diepe indigo monochrome
+Standaard
+Standaard achtergrondkleur
+Standaard tekstkleur
+Ontwerpbediening
+Destructieve kleur
+Belichting
+Uitgebreid bereik
+Lettertypekiezer
+Lettergrootte
+Lettertype naam
+Forceer kleine letters
+Frisse citrus met pit
+Gamma
+Zachte violet monochrome
+Omkeren
+Laatst gewijzigd
+Laatste 30 dagen
+Laatste 7 dagen
+Laatste uur
+Lichte modus
+Lichte modus kleuren
+Levendig en energiek
+Hoofdafbeelding bediening
+Monochrome
+Mystieke donkere nacht
+Neon en gedurfd
+Nieuwste eerst
+Geen
+Ouder dan 30 dagen
+Oudste eerst
+P
+Kies een thema
+Pixelatie
+Pixelatieschaal
+Positieve kleur
+Verfijnd en elegant
+Verfrissende groene monochrome
+Verfrissende oceaanblauw
+Rijk en verfijnd
+Verzadiging
+Opslaan zonder titel
+Beeldverhouding kiezen
+Geselecteerd lettertype
+Sepia
+Instellingen
+Schaduwkleur
+Verscherpen
+Labels tonen
+Eenvoudige rustige monochrome
+Schuifregelaar
+Schuifregelaar label
+Zachte kalmerende lavendel
+Zacht pastel
+Sorteervolgorde
+Subtiele neutrale beige
+Zoete roze monochrome
+Schakelaar
+Schakelaar label
+Tekstkleur
+Themakeuze
+Tintkleur
+Vandaag
+Waarde label
+Levendig en scherp
+Sappige bes levendig
+Rood monochrome levendig
+Vignet
+Krachtig en opvallend
+Warme uitnodigende zonsondergang
+Gisteren
+a
+a.m
+a.m
+a.m
+kon achtergrondafbeelding niet laden
+vervaging
+kan
+kleurstalen: achtergrond
+kleurstalen: tekst
+Maak een ontwerp
+verwijderen
+dit kan niet ongedaan worden gemaakt
+ontwerp verwijderen?
+ontwerpen
+doe
+dupliceer
+acht
+Maak je eerste ontwerp om te beginnen.
+Nog geen ontwerpen
+kon ontwerp niet opslaan
+snap het
+vijf
+lettergrootte
+vier
+het
+k
+negen
+één
+uit
+p
+p.m
+p.m
+p.m
+pixelatie
+p.m
+opnieuw
+zeven
+toon kleurstalen
+toon gereedschap
+zes
+spatie
+rekken
+gesynchroniseerd vanuit iCloud
+drie
+twee
+jij
+nul
+zerØ
+ø

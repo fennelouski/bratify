@@ -1,0 +1,20 @@
+{
+  "Background Color": "Background Colour",
+  "BackgroundHelp": "Switch the background colour between dark and light when Torch Touch is on.",
+  "Color Picker": "Colour Picker",
+  "Colorful and playful": "Colourful and playful",
+  "Dark Mode Colors": "Dark Mode Colours",
+  "Default Background Color": "Default Background Colour",
+  "Default Text Color": "Default Text Colour",
+  "Destructive Color": "Destructive Colour",
+  "Light Mode Colors": "Light Mode Colours",
+  "LoadingSettings": "Loading settings…",
+  "Positive Color": "Positive Colour",
+  "Shadow Color": "Shadow Colour",
+  "Text Color": "Text Colour",
+  "Tint Color": "Tint Colour",
+  "TorchHelp": "Toggle the device’s torch when Torch Touch is on.",
+  "color swatches: background": "colour swatches: background",
+  "color swatches: text": "colour swatches: text",
+  "show color swatches": "show colour swatches"
+}

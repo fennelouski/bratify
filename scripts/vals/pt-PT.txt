@@ -1,0 +1,162 @@
+:
+Um tema de amêndoa caloroso e suave.
+Proporção
+Correção automática ativa
+Opacidade do fundo
+Desfoque do fundo
+Brilho do fundo
+Cor de fundo
+Contraste do fundo
+Exposição do fundo
+Espelhar fundo na horizontal
+Espelhar fundo na vertical
+Gama do fundo
+Imagem de fundo
+Controlos da imagem de fundo
+Inverter fundo
+Fundomonocromático
+Pixelizar fundo
+Saturação do fundo
+Escala do fundo
+Fundosépia
+Nitidez do fundo
+Vinheta do fundo
+Arrojado e dinâmico
+Laranja monocromático arrojado
+Alegre e luminoso
+Claro e ensolarado
+Amarelo monocromático límpido
+Brilho
+Cancelar
+Clássico e intemporal
+Fechar
+Selector de cores
+Colorido e divertido
+Confirmar antes de apagar
+Contraste
+Controlos
+Menta fresca e refrescante
+Azul frio monocromático
+Modo escuro
+Cores do modo escuro
+Floresta profunda e tranquila
+Índigo profundo monocromático
+Predefinição
+Cor de fundo predefinida
+Cor do texto predefinida
+Controlos de design
+Cor destrutiva
+Exposição
+Intervalo alargado
+Selector de tipo de letra
+Tamanho do tipo de letra
+Nome do tipo de letra
+Forçar minúsculas
+Citrinos frescos e vivazes
+Gama
+Violeta suave monocromático
+Inverter
+Última modificação
+Últimos 30 dias
+Últimos 7 dias
+Última hora
+Modo claro
+Cores do modo claro
+Vivo e enérgico
+Controlos da imagem principal
+Monocromático
+Meia-noite escura e misteriosa
+Neon e arrojado
+Mais recentes primeiro
+Nenhum
+Mais antigo que 30 dias
+Mais antigos primeiro
+P
+Escolher um tema
+Pixelização
+Escala de pixelização
+Cor positiva
+Refinado e elegante
+Verde monocromático refrescante
+Azul oceânico refrescante
+Rico e sofisticado
+Saturação
+Guardar sem título
+Seleccionar proporção
+Tipo de letra seleccionado
+Sépia
+Definições
+Cor da sombra
+Nitidez
+Mostrar etiquetas
+Monocromático simples e discreto
+Cursor
+Etiqueta do cursor
+Lavanda suave e calmante
+Pastel suave e delicado
+Ordem de ordenação
+Bege neutro subtil
+Rosa monocromático doce
+Interruptor
+Etiqueta do interruptor
+Cor do texto
+Selecção de tema
+Cor de tonalidade
+Hoje
+Etiqueta de valor
+Vibrante e arrojado
+Bagas vivas e sumarentas
+Vermelho monocromático vivo
+Vinheta
+Vívido e marcante
+Pôr do sol quente e acolhedor
+Ontem
+a
+a.m
+a.m
+a.m
+não foi possível carregar a imagem de fundo
+desfoque
+podes
+amostras de cor: fundo
+amostras de cor: texto
+Criar um design
+apagar
+não é possível desfazer
+apagar o design?
+designs
+faz
+duplicar
+oito
+Cria o teu primeiro design para começar.
+Ainda não há designs
+não foi possível guardar o design
+descobre
+cinco
+tamanho do tipo de letra
+quatro
+isso
+ok
+nove
+um
+fora
+p
+p.m
+p.m
+p.m
+pixelização
+p.m
+tentar novamente
+sete
+mostrar amostras de cor
+mostrar ferramentas
+seis
+espaço
+esticar
+sincronizado com o iCloud
+três
+dois
+tu
+zero
+zerØ
+ø

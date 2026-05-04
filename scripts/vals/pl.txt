@@ -1,0 +1,162 @@
+:
+Ciepły i delikatny motyw migdałowy.
+Proporcje ekranu
+Autokorekta włączona
+Przezroczystość tła
+Rozmycie tła
+Jasność tła
+Kolor tła
+Kontrast tła
+Ekspozycja tła
+Odbicie tła poziomo
+Odbicie tła pionowo
+Gamma tła
+Obraz tła
+Sterowanie obrazem tła
+Odwróć kolory tła
+Tło monochromatyczne
+Pikselizacja tła
+Nasycenie tła
+Skala tła
+Sepia tła
+Wyostrzenie tła
+Winietowanie tła
+Śmiały i dynamiczny
+Pomarańcz monochrom śmiały
+Radosny i jasny
+Słoneczny i jasny
+Żółty monochrom jasny
+Jasność
+Anuluj
+Klasyczny i ponadczasowy
+Zamknij
+Selektor kolorów
+Kolorowy i zabawny
+Potwierdź przed usunięciem
+Kontrast
+Sterowanie
+Orzeźwiająca mięta
+Chłodny niebieski monochrom
+Tryb ciemny
+Kolory trybu ciemnego
+Głęboki spokojny las
+Głęboki indygo monochrom
+Domyślny
+Domyślny kolor tła
+Domyślny kolor tekstu
+Sterowanie projektem
+Kolor destrukcyjny
+Ekspozycja
+Rozszerzony zakres
+Selektor czcionki
+Rozmiar czcionki
+Nazwa czcionki
+Wymuszaj małe litery
+Świeże cytrusy z pazurem
+Gamma
+Delikatny fiolet monochrom
+Odwróć
+Ostatnia modyfikacja
+Ostatnie 30 dni
+Ostatnie 7 dni
+Ostatnia godzina
+Tryb jasny
+Kolory trybu jasnego
+Żywy i energiczny
+Sterowanie obrazem głównym
+Monochromatyczny
+Tajemnicza ciemna północ
+Neon i śmiałość
+Najpierw najnowsze
+Brak
+Starsze niż 30 dni
+Najpierw najstarsze
+P
+Wybierz motyw
+Pikselizacja
+Skala pikselizacji
+Kolor pozytywny
+Dopracowany i elegancki
+Orzeźwiająca zieleń monochrom
+Orzeźwiający błękit oceanu
+Bogaty i wyrafinowany
+Nasycenie
+Zapisz bez tytułu
+Wybierz proporcje
+Wybrana czcionka
+Sepia
+Ustawienia
+Kolor cienia
+Wyostrzenie
+Pokaż etykiety
+Prosty stonowany monochrom
+Suwak
+Etykieta suwaka
+Miękka uspokajająca lawenda
+Miękki delikatny pastelowy
+Kolejność sortowania
+Subtelny neutralny beż
+Słodki róż monochrom
+Przełącznik
+Etykieta przełącznika
+Kolor tekstu
+Wybór motywu
+Kolor odcienia
+Dziś
+Etykieta wartości
+Żywy i ostry
+Soczyste jagody żywe
+Czerwień monochrom żywa
+Winietka
+Wyrazisty i mocny
+Ciepły zapraszający zachód słońca
+Wczoraj
+a
+a.m
+a.m
+a.m
+nie można wczytać obrazu tła
+rozmycie
+możesz
+próbki kolorów: tło
+próbki kolorów: tekst
+Utwórz projekt
+usuń
+nie da się cofnąć
+usunąć projekt?
+projekty
+zrób
+duplikuj
+osiem
+Utwórz pierwszy projekt, aby zacząć.
+Brak projektów
+nie można zapisać projektu
+ogarnij
+pięć
+rozmiar czcionki
+cztery
+to
+ok
+dziewięć
+jeden
+na zewnątrz
+p
+p.m
+p.m
+p.m
+pikselacja
+p.m
+spróbuj ponownie
+siedem
+pokaż próbki kolorów
+pokaż narzędzia
+sześć
+spacja
+rozciągnij
+zsynchronizowano z iCloud
+trzy
+dwa
+ty
+zero
+zerØ
+ø

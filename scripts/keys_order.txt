@@ -1,0 +1,162 @@
+:
+A warm and gentle almond theme.
+Aspect Ratio
+Autocorrection Enabled
+Background Alpha
+Background Blur
+Background Brightness
+Background Color
+Background Contrast
+Background Exposure
+Background Flip Horizontal
+Background Flip Vertical
+Background Gamma
+Background Image
+Background Image Controls
+Background Invert
+Background Monochrome
+Background Pixelate
+Background Saturation
+Background Scale
+Background Sepia
+Background Sharpen
+Background Vignette
+Bold and dynamic
+Bold orange monochromatic
+Bright and cheerful
+Bright and sunny
+Bright yellow monochromatic
+Brightness
+Cancel
+Classic and timeless
+Close
+Color Picker
+Colorful and playful
+Confirm Before Deleting
+Contrast
+Controls
+Cool and refreshing mint
+Cool blue monochromatic
+Dark Mode
+Dark Mode Colors
+Deep and tranquil forest
+Deep indigo monochromatic
+Default
+Default Background Color
+Default Text Color
+Design Controls
+Destructive Color
+Exposure
+Extended Range
+Font Picker
+Font Size
+FontNameLabel
+Force Lowercase
+Fresh and zesty citrus
+Gamma
+Gentle violet monochromatic
+Invert
+Last Modified
+Last30Days
+Last7Days
+LastHour
+Light Mode
+Light Mode Colors
+Lively and energetic
+Main Image Controls
+Monochrome
+Mysterious and dark midnight
+Neon and bold
+Newest First
+None
+OlderThan30Days
+Oldest First
+P
+Pick A Theme
+Pixelate
+Pixelation Scale
+Positive Color
+Refined and elegant
+Refreshing green monochromatic
+Refreshing ocean blue
+Rich and sophisticated
+Saturation
+Save Without Title
+Select Aspect Ratio
+SelectedFontLabel
+Sepia
+Settings
+Shadow Color
+Sharpen
+Show Labels
+Simple and understated monochromatic
+Slider
+Slider Label
+Soft and calming lavender
+Soft and gentle pastel
+Sort Order
+Subtle and neutral beige
+Sweet pink monochromatic
+Switch
+Switch Label
+Text Color
+Theme Selection
+Tint Color
+Today
+Value Label
+Vibrant and edgy
+Vibrant and juicy berry
+Vibrant red monochromatic
+Vignette
+Vivid and striking
+Warm and inviting sunset
+Yesterday
+a
+a.m
+a.m.
+am
+background_image_load_failed
+blur
+can
+color swatches: background
+color swatches: text
+create_first_design
+delete
+delete_design_message
+delete_design_title
+designs
+do
+duplicate
+eight
+empty_state_subtitle
+empty_state_title
+failed_to_save_design
+figure
+five
+font size
+four
+it
+k
+nine
+one
+out
+p
+p.
+p.m
+p.m.
+pixelation
+pm
+retry
+seven
+show color swatches
+show tools
+six
+space
+stretch
+synced_from_icloud
+three
+two
+you
+zero
+zerØ
+ø

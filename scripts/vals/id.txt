@@ -1,0 +1,162 @@
+:
+Tema almond yang hangat dan lembut.
+Rasio aspek
+Koreksi otomatis aktif
+Transparansi latar
+Buram latar
+Kecerahan latar
+Warna latar
+Kontras latar
+Paparan latar
+Balik horizontal latar
+Balik vertikal latar
+Gamma latar
+Gambar latar
+Kontrol gambar latar
+Balik warna latar
+Monokrom latar
+Piksel latar
+Saturasi latar
+Skala latar
+Sépia latar
+Pertajam latar
+Vineta latar
+Tegas dan dinamis
+Oranye monokrom tegas
+Ceria dan terang
+Cerah dan cerah
+Kuning monokrom cerah
+Kecerahan
+Batal
+Klasik dan abadi
+Tutup
+Pemilih warna
+Berwarna dan ceria
+Konfirmasi sebelum hapus
+Kontras
+Kontrol
+Menta segar dan sejuk
+Biru monokrom dingin
+Mode gelap
+Warna mode gelap
+Hutan tenang dan dalam
+Indigo monokrom dalam
+Bawaan
+Warna latar bawaan
+Warna teks bawaan
+Kontrol desain
+Warna tindakan merusak
+Paparan
+Rentang diperluas
+Pemilih font
+Ukuran font
+Nama font
+Paksa huruf kecil
+Jeruk segar dan ceria
+Gamma
+Ungu lembut monokrom
+Balik
+Terakhir diubah
+30 hari terakhir
+7 hari terakhir
+Jam terakhir
+Mode terang
+Warna mode terang
+Hidup dan energik
+Kontrol gambar utama
+Monokrom
+Tengah malam misterius
+Neon dan tegas
+Terbaru dulu
+Tidak ada
+Lebih lama dari 30 hari
+Terlama dulu
+P
+Pilih tema
+Pikselation
+Skala pikselation
+Warna positif
+Halus dan elegan
+Hijau monokrom segar
+Biru laut segar
+Kaya dan canggih
+Saturasi
+Simpan tanpa judul
+Pilih rasio aspek
+Font terpilih
+Sépia
+Pengaturan
+Warna bayangan
+Pertajam
+Tampilkan label
+Monokrom sederhana dan tenang
+Penggeser
+Label penggeser
+Lavender lembut menenangkan
+Pastel lembut halus
+Urutan urut
+Beige halus netral
+Merah muda monokrom manis
+Sakelar
+Label sakelar
+Warna teks
+Pilihan tema
+Warna tint
+Hari ini
+Label nilai
+Hidup dan berani
+Berri segar menggigit
+Merah monokrom hidup
+Vineta
+Tajam dan mencolok
+Senja hangat mengundang
+Kemarin
+a.m
+a.m
+a.m
+a.m
+tidak bisa memuat gambar latar
+buram
+bisa
+contoh warna: latar
+contoh warna: teks
+Buat desain
+hapus
+ini tidak bisa dibatalkan
+hapus desain?
+desain
+lakukan
+duplikasi
+delapan
+Buat desain pertama Anda untuk memulai.
+Belum ada desain
+tidak bisa menyimpan desain
+bayangkan
+lima
+ukuran font
+empat
+itu
+oke
+sembilan
+satu
+keluar
+p.m
+p.m
+p.m
+p.m
+pikselation
+p.m
+coba lagi
+tujuh
+tampilkan contoh warna
+tampilkan alat
+enam
+spasi
+regangkan
+disinkron dari iCloud
+tiga
+dua
+kamu
+nol
+zerØ
+ø

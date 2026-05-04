@@ -1,0 +1,162 @@
+:
+Meleg, lágy mandulás téma.
+Képarány
+Automatikus javítás bekapcsolva
+Háttér átlátszóság
+Háttér elmosódás
+Háttér fényerő
+Háttérszín
+Háttér kontraszt
+Háttér expozíció
+Háttér vízszintes tükrözése
+Háttér függőleges tükrözése
+Háttér gamma
+Háttérkép
+Háttérkép vezérlők
+Háttér invertálása
+Háttér monokróm
+Háttér pixelesítése
+Háttér telítettség
+Háttér nagyítása
+Háttér szépia
+Háttér élesítése
+Háttér vignetta
+Merész és dinamikus
+Merész narancs monokróm
+Vidám és ragyogó
+Napos és ragyogó
+Ragyogó sárga monokróm
+Fényerő
+Mégse
+Klasszikus és időtálló
+Bezárás
+Színválasztó
+Színes és játékos
+Megerősítés törlés előtt
+Kontraszt
+Vezérlők
+Hűsítő menta
+Hűvös kék monokróm
+Sötét mód
+Színek sötét módban
+Mély, nyugodt erdő
+Mély indigó monokróm
+Alapértelmezett
+Alapértelmezett háttérszín
+Alapértelmezett szövegszín
+Tervezés vezérlők
+Figyelmeztető szín
+Expozíció
+Bővített tartomány
+Betűtípus választó
+Betűméret
+Betűnév
+Csak kisbetű
+Friss, élénkus citrus
+Gamma
+Lágy ibolya monokróm
+Invertálás
+Utolsó módosítás
+Utolsó 30 nap
+Utolsó 7 nap
+Utolsó óra
+Világos mód
+Színek világos módban
+Életteli és energikus
+Fő kép vezérlők
+Monokróm
+Misztikus éjfél
+Neon és merész
+Legújabb elöl
+Nincs
+Régebbi mint 30 nap
+Legrégebbi elöl
+P
+Válassz témát
+Pixelesítés
+Pixelesítés mértéke
+Pozitív szín
+Finom és elegáns
+Frissítő zöld monokróm
+Frissítő óceánkék
+Gazdag és kifinomult
+Telítettség
+Mentés cím nélkül
+Képarány kiválasztása
+Kiválasztott betűtípus
+Szépia
+Beállítások
+Árnyék színe
+Élesítés
+Címkék megjelenítése
+Egyszerű, visszafogott monokróm
+Csúszka
+Csúszka felirat
+Lágy, nyugtató levendula
+Lágy pasztell
+Rendezés
+Finom, semleges bézs
+Édes rózsaszín monokróm
+Kapcsoló
+Kapcsoló felirat
+Szöveg színe
+Téma kiválasztása
+Árnyalat színe
+Ma
+Érték felirat
+Élénk és merész
+Élénk, zamatos bogyós
+Élénk piros monokróm
+Vignetta
+Élénk és hatásos
+Meleg, hangulatos naplemente
+Tegnap
+de.
+de.
+de.
+de.
+nem sikerült betölteni a háttérképet
+elmosás
+lehet
+színpaletta: háttér
+színpaletta: szöveg
+Terv készítése
+törlés
+ez nem vonható vissza
+törlöd a tervet?
+tervek
+csináld
+másolat
+nyolc
+Készíts egy tervet a kezdéshez.
+Még nincsenek tervek
+nem sikerült menteni a tervet
+kitalálod
+öt
+betűméret
+négy
+azt
+ok
+kilenc
+egy
+ki
+du.
+du.
+du.
+du.
+pixelesítés
+du.
+újra
+hét
+színpaletta megjelenítése
+eszközök megjelenítése
+hat
+szóköz
+nyújtás
+szinkronizálva az iCloudból
+három
+kettő
+te
+nulla
+zerØ
+ø

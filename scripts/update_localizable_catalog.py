@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""One-off maintenance script for Localizable.xcstrings — run from repo root if needed."""
+"""One-off maintenance script for Localizable.xcstrings — run from repo root if needed.
+
+Warning: this script prunes `localizations` to `SHIPPED` only and will delete every other
+locale column. Do not run it against the full shipped String Catalog unless you update
+`SHIPPED` to match project `knownRegions` or remove `prune_localizations`. Prefer
+`scripts/add_catalog_locale_columns.py` to add new locale columns without pruning.
+"""
 
 import json
 from pathlib import Path
