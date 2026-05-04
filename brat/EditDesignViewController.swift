@@ -1426,6 +1426,7 @@ extension EditDesignViewController {
             ("textformat",          "Font Picker",       #selector(selectFont)),
             ("slider.horizontal.3", "Controls",          #selector(showControlsFromToolbar)),
             ("photo",               "Background Image",  #selector(selectBackgroundImage)),
+            ("globe",               "Import from web",   #selector(importBackgroundFromWeb)),
         ]
         for (icon, label, action) in items {
             let button = UIButton(type: .system)
@@ -1773,6 +1774,14 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
             animated: true,
             completion: nil
         )
+    }
+
+    @objc private func importBackgroundFromWeb() {
+        WebImageImportPresenter.present(from: self, imageService: imageService) { [weak self] imageName in
+            guard let self else { return }
+            self.imageName = imageName
+            self.updateDesignImage()
+        }
     }
 
     func didSelectBackgroundColor(_ color: UIColor) {

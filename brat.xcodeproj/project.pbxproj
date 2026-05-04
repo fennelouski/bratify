@@ -82,6 +82,8 @@
 		D70253BCFDB04392B29043BB /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA541FEB83A43E197403C21 /* ToastView.swift */; };
 		80F4589D2C61E2EB0039C385 /* AspectRatioPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F4589C2C61E2EB0039C385 /* AspectRatioPickerViewController.swift */; };
 		80F4589F2C61EA860039C385 /* AspectRatioCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F4589E2C61EA860039C385 /* AspectRatioCell.swift */; };
+		E8F1A1002E5B100012340002 /* WebImageImportPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F1A1002E5B100012340001 /* WebImageImportPresenter.swift */; };
+		E8F1A1002E5B100012340003 /* WebImagePicker in Frameworks */ = {isa = PBXBuildFile; productRef = E8F1A1002E5B100012340005 /* WebImagePicker */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -192,6 +194,7 @@
 		CFA541FEB83A43E197403C21 /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 		80F4589C2C61E2EB0039C385 /* AspectRatioPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectRatioPickerViewController.swift; sourceTree = "<group>"; };
 		80F4589E2C61EA860039C385 /* AspectRatioCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectRatioCell.swift; sourceTree = "<group>"; };
+		E8F1A1002E5B100012340001 /* WebImageImportPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageImportPresenter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -199,6 +202,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E8F1A1002E5B100012340003 /* WebImagePicker in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -312,6 +316,7 @@
 				807A4FC72C52FC10009ED2FD /* ImageFetchResult.swift */,
 				807A4FC42C52FC10009ED2FD /* ImageService.swift */,
 				807A4FC62C52FC10009ED2FD /* ImageURLs.swift */,
+				E8F1A1002E5B100012340001 /* WebImageImportPresenter.swift */,
 				807A4F422C52DAFD009ED2FD /* Main.storyboard */,
 				807A4F452C52DAFE009ED2FD /* Assets.xcassets */,
 				807A4F472C52DAFE009ED2FD /* LaunchScreen.storyboard */,
@@ -353,6 +358,9 @@
 			dependencies = (
 			);
 			name = brat;
+			packageProductDependencies = (
+				E8F1A1002E5B100012340005 /* WebImagePicker */,
+			);
 			productName = brat;
 			productReference = 807A4F392C52DAFD009ED2FD /* bratify.app */;
 			productType = "com.apple.product-type.application";
@@ -493,6 +501,9 @@
 				"zh-Hant",
 			);
 			mainGroup = 807A4F302C52DAFD009ED2FD;
+			packageReferences = (
+				E8F1A1002E5B100012340004 /* XCLocalSwiftPackageReference "Packages/WebImagePicker" */,
+			);
 			productRefGroup = 807A4F3A2C52DAFD009ED2FD /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -605,6 +616,7 @@
 				807A4F3F2C52DAFD009ED2FD /* SceneDelegate.swift in Sources */,
 				80F4589D2C61E2EB0039C385 /* AspectRatioPickerViewController.swift in Sources */,
 				807A4FD82C53F843009ED2FD /* CustomColorPickerViewController.swift in Sources */,
+				E8F1A1002E5B100012340002 /* WebImageImportPresenter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -723,7 +735,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -781,7 +793,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -812,7 +824,7 @@
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -850,7 +862,7 @@
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -979,6 +991,21 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		E8F1A1002E5B100012340004 /* XCLocalSwiftPackageReference "Packages/WebImagePicker" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/WebImagePicker;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E8F1A1002E5B100012340005 /* WebImagePicker */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E8F1A1002E5B100012340004 /* XCLocalSwiftPackageReference "Packages/WebImagePicker" */;
+			productName = WebImagePicker;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 807A4F312C52DAFD009ED2FD /* Project object */;
 }
