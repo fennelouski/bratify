@@ -7,7 +7,9 @@
 
 import UIKit
 
-let themingEnabled = false
+var themingEnabled: Bool {
+    UserDefaults.standard.bool(forKey: "themingEnabled")
+}
 
 extension UIViewController {
     func apply(_ theme: ThemeModel?) {

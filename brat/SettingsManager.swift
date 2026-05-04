@@ -98,6 +98,7 @@ class SettingsManager {
         case confirmBeforeDeleting
         case extendedRange
         case eli5Mode
+        case themingEnabled
     }
     
     // Properties with default values and persistence
@@ -199,6 +200,17 @@ class SettingsManager {
             queue.async(flags: .barrier) {
                 UserDefaults.standard.set(newValue, forKey: UserDefaultsKeys.yDimension.rawValue)
             }
+        }
+    }
+
+    /// Writes both canvas dimensions atomically and notifies observers (e.g. the open editor).
+    func setCanvasDimensions(width: CGFloat, height: CGFloat) {
+        queue.sync(flags: .barrier) {
+            UserDefaults.standard.set(width, forKey: UserDefaultsKeys.xDimension.rawValue)
+            UserDefaults.standard.set(height, forKey: UserDefaultsKeys.yDimension.rawValue)
+        }
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .canvasDimensionsDidChange, object: self)
         }
     }
 
@@ -733,6 +745,22 @@ class SettingsManager {
         }
     }
 
+    var themingEnabled: Bool {
+        get {
+            queue.sync {
+                UserDefaults.standard.bool(forKey: UserDefaultsKeys.themingEnabled.rawValue)
+            }
+        }
+        set {
+            queue.async(flags: .barrier) {
+                UserDefaults.standard.set(newValue, forKey: UserDefaultsKeys.themingEnabled.rawValue)
+            }
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .themingEnabledDidChange, object: nil)
+            }
+        }
+    }
+
     var extendedRange: Bool {
         get {
             queue.sync {
@@ -836,4 +864,6 @@ class SettingsManager {
 extension Notification.Name {
     static let extendedRangeDidChange = Notification.Name("com.bratify.extendedRangeDidChange")
     static let eli5ModeDidChange = Notification.Name("com.bratify.eli5ModeDidChange")
+    static let canvasDimensionsDidChange = Notification.Name("com.bratify.canvasDimensionsDidChange")
+    static let themingEnabledDidChange = Notification.Name("com.bratify.themingEnabledDidChange")
 }

@@ -602,7 +602,13 @@ class EditDesignViewController: UIViewController {
             name: UIResponder.keyboardWillHideNotification,
             object: nil
         )
-        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(canvasDimensionsDidChange),
+            name: .canvasDimensionsDidChange,
+            object: settingsManager
+        )
+
         // Setup navigation bar
         var rightBarButtonItems: [UIBarButtonItem] = [
             .settings(self),
@@ -900,6 +906,16 @@ class EditDesignViewController: UIViewController {
                 }
             }
         }
+    }
+
+    @objc private func canvasDimensionsDidChange() {
+        if var d = design {
+            d.width = settingsManager.xDimension
+            d.height = settingsManager.yDimension
+            design = d
+        }
+        keyboardOptionsView.update(with: currentDesign)
+        updateDesignImage()
     }
     
     @objc private func keyboardWillShow(_ notification: NSNotification) {

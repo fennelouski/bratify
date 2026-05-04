@@ -19,6 +19,7 @@ enum SettingItem: Equatable {
     case doubleTapToShare
     case defaultTextColor
     case defaultBackgroundColor
+    case themingEnabled
 }
 
 class SettingsCategoryViewController: UITableViewController {
@@ -161,6 +162,23 @@ class SettingsCategoryViewController: UITableViewController {
                 if let idx = items.firstIndex(of: .pixelationScale) {
                     tableView.reloadRows(at: [IndexPath(row: 0, section: idx)], with: .automatic)
                 }
+            }
+            cell.infoButtonTapped = { [weak self] in self?.showELI5Toast(for: item) }
+            return cell
+
+        case .themingEnabled:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchTableViewCell", for: indexPath) as! SwitchTableViewCell
+            cell.configure(
+                text: NSLocalizedString("theming", comment: "Toggle to apply the selected color theme across the app's interface.").localizedLowercase,
+                isOn: settingsManager.themingEnabled,
+                theme: settingsManager.selectedTheme,
+                showInfoButton: settingsManager.eli5Mode
+            )
+            cell.valueChanged = { [weak self] newValue in
+                guard let self else { return }
+                settingsManager.themingEnabled = newValue
+                tableView.reloadData()
+                apply(settingsManager.selectedTheme)
             }
             cell.infoButtonTapped = { [weak self] in self?.showELI5Toast(for: item) }
             return cell
@@ -521,8 +539,7 @@ extension SettingsCategoryViewController: AspectRatioPickerDelegate {
             }
         }
 
-        settingsManager.xDimension = newWidth
-        settingsManager.yDimension = newHeight
+        settingsManager.setCanvasDimensions(width: newWidth, height: newHeight)
 
         if let idx = items.firstIndex(of: .aspectRatio) {
             tableView.reloadRows(at: [IndexPath(row: 0, section: idx)], with: .automatic)
@@ -569,6 +586,8 @@ enum ELI5Descriptions {
             return "the color your text starts out as when you create a new design"
         case .defaultBackgroundColor:
             return "the background color your canvas starts out as when you create a new design"
+        case .themingEnabled:
+            return "when on, the app uses your chosen theme colors; when off, it sticks with the system look"
         }
     }
 

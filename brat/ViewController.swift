@@ -359,7 +359,7 @@ class ViewController: UIViewController {
         })
 
         alert.addAction(UIAlertAction(
-            title: NSLocalizedString("cancel", comment: "Cancel action"),
+            title: NSLocalizedString("Cancel", comment: "Cancel action"),
             style: .cancel
         ))
 
@@ -388,7 +388,7 @@ class ViewController: UIViewController {
             collectionView.deleteItems(at: [indexPath])
         })
         confirmation.addAction(UIAlertAction(
-            title: NSLocalizedString("cancel", comment: "Cancel action"),
+            title: NSLocalizedString("Cancel", comment: "Cancel action"),
             style: .cancel
         ))
         present(confirmation, animated: true)

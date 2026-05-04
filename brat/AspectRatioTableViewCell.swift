@@ -120,9 +120,8 @@ class AspectRatioTableViewCell: UITableViewCell {
             height: height,
             aspectRatio: selectedAspectRatio.aspectRatio
         )
-        
-        settingsManager?.xDimension = width
-        settingsManager?.yDimension = height
+
+        settingsManager?.setCanvasDimensions(width: width, height: height)
     }
     
     func configure(
