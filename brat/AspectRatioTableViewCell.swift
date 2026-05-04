@@ -85,7 +85,7 @@ class AspectRatioTableViewCell: UITableViewCell {
         aspectRatios.sort { $0.aspectRatio < $1.aspectRatio }
         
         let symbols = ["rectangle.portrait", "rectangle.portrait.and.arrow.forward", "square", "rectangle", "rectangle.and.arrow.forward"]
-        for (index, aspectRatio) in aspectRatios.enumerated() {
+        for (index, _) in aspectRatios.enumerated() {
             let title = UIImage(systemName: symbols[index])
             segmentControl.insertSegment(with: title, at: index, animated: false)
         }

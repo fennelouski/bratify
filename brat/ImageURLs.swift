@@ -83,32 +83,32 @@ extension ImageURLs {
         }
         
         if let thumbnail,
-           thumbnail == urlToCheck {
+           thumbnail == url {
             return true
         }
         
         if let small,
-           small == urlToCheck {
+           small == url {
             return true
         }
         
         if let medium,
-           medium == urlToCheck {
+           medium == url {
             return true
         }
         
         if let regular,
-           regular == urlToCheck {
+           regular == url {
             return true
         }
         
         if let large,
-           large == urlToCheck {
+           large == url {
             return true
         }
         
         if let raw,
-           raw == urlToCheck {
+           raw == url {
             return true
         }
         
