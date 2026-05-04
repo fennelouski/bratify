@@ -1,0 +1,162 @@
+:
+Temë e ngrohtë dhe e butë bajameje.
+Raporti i aspektit
+Autokorrigjimi aktiv
+Transparenca e sfondit
+Mjegullimi i sfondit
+Ndriçimi i sfondit
+Ngjyra e sfondit
+Kontrasti i sfondit
+Ekspozimi i sfondit
+Pasqyro sfondin horizontalisht
+Pasqyro sfondin vertikalisht
+Gama e sfondit
+Imazhi i sfondit
+Kontrolli i imazhit të sfondit
+Inverto sfondin
+Sfond monokrom
+Pikselizo sfondin
+Ngopja e sfondit
+Shkalla e sfondit
+Sepia e sfondit
+Mprehtësia e sfondit
+Vineta e sfondit
+I guximshëm dhe dinamik
+Monokrom portokalli i guximshëm
+I ndritshëm dhe i gëzuar
+I diellshëm dhe i gjallë
+Monokrom i verdhë i ndritshëm
+Ndriçimi
+Anulo
+Klasik dhe i përjetshëm
+Mbyll
+Zgjedhësi i ngjyrës
+I ngjyrshëm dhe lojëzor
+Konfirmo para fshirjes
+Kontrasti
+Kontrollet
+Mentë e freskët
+Monokrom blu i ftohtë
+Modaliteti i errët
+Ngjyrat e modalitetit të errët
+Pyll i thellë dhe i qetë
+Monokrom indigo i thellë
+Parazgjedhje
+Ngjyra e parazgjedhur e sfondit
+Ngjyra e parazgjedhur e tekstit
+Kontrolli i dizajnit
+Ngjyrë shkatërruese
+Ekspozimi
+Diapazoni i zgjeruar
+Zgjedhësi i shkronjës
+Madhësia e shkronjës
+%@
+Detyro shkronja të vogla
+Agrum i freskët
+Gama
+Monokrom vjollcë i butë
+Inverto
+Ndryshuar së fundi
+30 ditët e fundit
+7 ditët e fundit
+Ora e fundit
+Modaliteti i ndritshëm
+Ngjyrat e modalitetit të ndritshëm
+I gjallë dhe energjik
+Kontrolli i imazhit kryesor
+Monokrom
+Mesnatë e errët misterioze
+Neon dhe i guximshëm
+Së pari më të rinjtë
+Asnjë
+Më të vjetër se 30 ditë
+Së pari më të vjetrit
+P
+Zgjidh një temë
+Pikselizo
+Shkalla e pikselizimit
+Ngjyrë pozitive
+I rafinuar dhe elegant
+Monokrom jeshil freskues
+Blu oqeani
+I pasur dhe sofistikuar
+Ngopja
+Ruaj pa titull
+Zgjidh raportin e aspektit
+%@
+Sepia
+Cilësimet
+Ngjyra e hijes
+Mprehtësia
+Shfaq etiketat
+Monokrom i thjeshtë i përmbajtur
+Rrëshqitësi
+Etiketa e rrëshqitësit
+Lavandë e butë
+Pastel i butë
+Rendi i renditjes
+Bezhë i hollë
+Monokrom rozë i ëmbël
+Çelësi
+Etiketa e çelësit
+Ngjyra e tekstit
+Zgjedhja e temës
+Ngjyra e nuancës
+Sot
+Etiketa e vlerës
+I gjallë dhe i mprehtë
+Monokrom i boronicës së lëngshme
+Monokrom kuq i gjallë
+Vineta
+I gjallë dhe i fortë
+Perëndim dielli i ngrohtë
+Dje
+a
+p.d.
+p.d.
+am
+nuk u ngarkua imazhi i sfondit
+mjegullim
+mund
+mostrat e ngjyrës: sfond
+mostrat e ngjyrës: tekst
+Krijo një dizajn
+fshi
+ky veprim nuk kthehet mbrapsht
+fshi dizajnin?
+dizajne
+bëj
+dyfisho
+tetë
+Krijoni dizajnin tuaj të parë për të filluar.
+Ende nuk ka dizajne
+nuk u ruajt dizajni
+figurë
+pesë
+madhësia e shkronjës
+katër
+ajo
+k
+nëntë
+një
+out
+p
+p.
+m.d.
+m.d.
+pikselizim
+m.d.
+provo përsëri
+shtatë
+shfaq mostrat e ngjyrës
+shfaq mjetet
+gjashtë
+hapësirë
+zgjero
+sinkronizuar nga iCloud
+tre
+dy
+ti
+zero
+zerØ
+ø

@@ -1,0 +1,162 @@
+:
+Teplá jemná mandľová téma.
+Pomer strán
+Automatická korekcia zapnutá
+Priehľadnosť pozadia
+Rozostrenie pozadia
+Jas pozadia
+Farba pozadia
+Kontrast pozadia
+Expozícia pozadia
+Preklopiť pozadie vodorovne
+Preklopiť pozadie zvislo
+Gama pozadia
+Obrázok pozadia
+Ovládanie obrázka pozadia
+Invertovať pozadie
+Monochromatické pozadie
+Pixelizácia pozadia
+Sýtosť pozadia
+Mierka pozadia
+Sépia pozadia
+Zaostrenie pozadia
+Vineta pozadia
+Smelé a dynamické
+Smelá oranžová monochromatická
+Veselé a svetlé
+Slnkom zaliata a jasná
+Jasná žltá monochromatická
+Jas
+Zrušiť
+Klasické a nadčasové
+Zavrieť
+Výber farieb
+Farebné a hravé
+Potvrdiť pred odstránením
+Kontrast
+Ovládanie
+Osviežujúca mäta
+Chladná modrá monochromatická
+Tmavý režim
+Farby tmavého režimu
+Hlboký pokojný les
+Hlboká indigová monochromatická
+Predvolené
+Predvolená farba pozadia
+Predvolená farba textu
+Ovládanie návrhu
+Varovacia farba
+Expozícia
+Rozšírený rozsah
+Výber písma
+Veľkosť písma
+Názov písma
+Vynútiť malé písmená
+Svieže citrusy s iskrou
+Gama
+Jemná fialová monochromatická
+Invertovať
+Naposledy upravené
+Posledných 30 dní
+Posledných 7 dní
+Posledná hodina
+Svetlý režim
+Farby svetlého režimu
+Živé a energické
+Ovládanie hlavného obrázka
+Monochromatické
+Tajomná polnoc
+Neón a smelosť
+Najprv najnovšie
+Žiadne
+Staršie ako 30 dní
+Najprv najstaršie
+P
+Vyberte tému
+Pixelizácia
+Mierka pixelizácie
+Pozitívna farba
+Jemné a elegantné
+Osviežujúca zelená monochromatická
+Osviežujúca oceánska modrá
+Bohaté a sofistikované
+Sýtosť
+Uložiť bez názvu
+Vyberte pomer strán
+Vybrané písmo
+Sépia
+Nastavenia
+Farba tieňa
+Zaostrenie
+Zobraziť štítky
+Jednoduchá tlmená monochromatická
+Posúvač
+Štítok posúvača
+Mäkká upokojujúca levanduľa
+Mäkká jemná pastelová
+Poradie zoradenia
+Jemná neutrálna béžová
+Sladká ružová monochromatická
+Prepínač
+Štítok prepínača
+Farba textu
+Výber témy
+Odtieň
+Dnes
+Štítok hodnoty
+Živé a ostré
+Šťavnaté bobuľové živé
+Živá červená monochromatická
+Vineta
+Výrazné a pútavé
+Teplý vítajúci západ slnka
+Včera
+a
+dop.
+a.m
+a.m
+nepodarilo sa načítať obrázok pozadia
+rozmazanie
+môžeš
+vzorky farieb: pozadie
+vzorky farieb: text
+Vytvoriť návrh
+odstrániť
+toto nie je možné vrátiť späť
+odstrániť návrh?
+návrhy
+urob
+duplikovať
+osem
+Vytvorte prvý návrh a začnite.
+Zatiaľ žiadne návrhy
+nepodarilo sa uložiť návrh
+pochopíš
+päť
+veľkosť písma
+štyri
+to
+ok
+deväť
+jeden
+von
+p
+p.m
+odp.
+p.m
+pixelizácia
+p.m
+skúsiť znova
+sedem
+zobraziť vzorky farieb
+zobraziť nástroje
+šesť
+medzera
+roztiahnuť
+synchronizované z iCloud
+tri
+dva
+ty
+nula
+zerØ
+ø

@@ -1,0 +1,162 @@
+:
+Ett varmt och mjukt mandeltema.
+Bildförhållande
+Autokorrigering på
+Bakgrunds opacitet
+Bakgrunds oskärpa
+Bakgrunds ljusstyrka
+Bakgrundsfärg
+Bakgrunds kontrast
+Bakgrunds exponering
+Spegla bakgrund horisontellt
+Spegla bakgrund vertikalt
+Bakgrunds gamma
+Bakgrundsbild
+Bakgrundsbildskontroller
+Invertera bakgrund
+Monokrom bakgrund
+Pixelera bakgrund
+Bakgrunds mättnad
+Bakgrunds skala
+Sepia bakgrund
+Skärpa bakgrund
+Vinjett bakgrund
+Djärv och dynamisk
+Orange monokrom djärv
+Glad och ljus
+Ljus och solig
+Gul monokrom ljus
+Ljusstyrke
+Avbryt
+Klassisk och tidlös
+Stäng
+Färgväljare
+Färgstark och lekfull
+Bekräfta innan radering
+Kontrast
+Kontroller
+Uppfriskande mynta
+Kall blå monokrom
+Mörkt läge
+Färger i mörkt läge
+Djup lugn skog
+Djup indigo monokrom
+Standard
+Standard bakgrundsfärg
+Standard textfärg
+Designkontroller
+Varningsfärg
+Exponering
+Utökat intervall
+Typsnittsväljare
+Teckenstorlek
+Typsnittsnamn
+Tvinga gemener
+Friska citrus med sting
+Gammakorrektion
+Mjuk violett monokrom
+Invertera
+Senast ändrad
+Senaste 30 dagarna
+Senaste 7 dagarna
+Senaste timmen
+Ljust läge
+Färger i ljust läge
+Livlig och energisk
+Huvudbildskontroller
+Monokrom
+Mystisk midnatt
+Neon och djärv
+Nyast först
+Ingen
+Äldre än 30 dagar
+Äldst först
+P
+Välj ett tema
+Pixelering
+Pixeleringsskala
+Positiv färg
+Förfinad och elegant
+Uppfriskande grön monokrom
+Uppfriskande havsblå
+Rik och sofistikerad
+Mättnad
+Spara utan titel
+Välj bildförhållande
+Valt typsnitt
+Sepiaton
+Inställningar
+Skuggfärg
+Skärpa
+Visa etiketter
+Enkel diskret monokrom
+Reglage
+Reglageetikett
+Mjuk lugnande lavendel
+Mjuk mild pastell
+Sorteringsordning
+Diskret neutral beige
+Söt rosa monokrom
+Strömställare
+Strömställaretikett
+Textfärg
+Temaval
+Nyansfärg
+Idag
+Värdeetikett
+Levande och skarp
+Saftiga bär levande
+Röd monokrom levande
+Vinjett
+Skarpt och slående
+Varm inbjudande solnedgång
+Igår
+a
+f.m.
+a.m
+a.m
+kunde inte läsa in bakgrundsbilden
+oskärpa
+kan
+färgprover: bakgrund
+färgprover: text
+Skapa en design
+radera
+det går inte att ångra
+radera design?
+designer
+gör
+duplicera
+åtta
+Skapa din första design för att börja.
+Inga designs ännu
+kunde inte spara designen
+lista ut
+fem
+teckenstorlek
+fyra
+det
+k
+nio
+ett
+ut
+p
+p.m
+e.m.
+p.m
+pixelering
+p.m
+försök igen
+sju
+visa färgprover
+visa verktyg
+sex
+mellanslag
+dra ut
+synkroniserat från iCloud
+tre
+två
+du
+noll
+zerØ
+ø

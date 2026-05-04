@@ -1,0 +1,162 @@
+:
+Almendra leun eta leun goxoa.
+Aspektu erlazioa
+Zuzenketa automatikoa gaituta
+Atzeko planoaren alfa
+Atzeko planoaren lausotzea
+Atzeko planoaren distira
+Atzeko planoaren kolorea
+Atzeko planoaren kontrastea
+Atzeko planoaren esposizioa
+Atzeko planoa horizontalean iraultzea
+Atzeko planoa bertikalean iraultzea
+Atzeko planoaren gamma
+Atzeko planoko irudia
+Atzeko irudiaren kontrolak
+Atzeko planoa inbertitzea
+Atzeko plano monokromoa
+Atzeko planoa pikselatzea
+Atzeko planoaren saturazioa
+Atzeko planoaren eskala
+Atzeko planoaren sepia
+Atzeko planoaren fokatzea
+Atzeko planoaren bineta
+Bortitz eta dinamikoa
+Laranja monokromo bortitza
+Argitsu eta alai
+Eguzkitsu eta bizkor
+Hori monokromo argitsua
+Distira
+Utzi
+Klasikoa eta iraunkorra
+Itxi
+Kolore hautatzailea
+Koloretsu eta jostalaria
+Ezabatu aurretik berretsi
+Kontrastea
+Kontrolak
+Menta freskagarria
+Urdin monokromo hotza
+Modu iluna
+Modu iluneko koloreak
+Baso sakoneko lasaia
+Indigo monokromo sakona
+Lehenetsia
+Lehenetsitako atzeko kolorea
+Lehenetsitako testu kolorea
+Diseinuaren kontrolak
+Kolore suntsikorra
+Esposizioa
+Barruti hedatua
+Letra hautatzailea
+Letra tamaina
+%@
+Minuskula behartu
+Zitriko freskagarria
+Gamma
+Bioleta monokromo leuna
+Inbertitu
+Azken aldaketa
+Azken 30 egunak
+Azken 7 egunak
+Azken ordua
+Modu argia
+Modu argiko koloreak
+Bizkor eta energetikoa
+Irudi nagusiaren kontrolak
+Monokromoa
+Gau ilun misteriotsua
+Neoi eta bortitza
+Berrienak lehen
+Bat ere ez
+30 egun baino zaharragoak
+Zaharrenak lehen
+P
+Aukeratu gaia
+Pikselatu
+Pikselazio eskala
+Kolore positiboa
+Fin eta elegante
+Berde monokromo freskagarria
+Ozeano urdina
+Aberats eta sofistikatu
+Saturazioa
+Gorde izenbururik gabe
+Aukeratu aspektu erlazioa
+%@
+Sepia
+Ezarpenak
+Itzalen kolorea
+Fokatu
+Erakutsi etiketak
+Monokromo xumea
+Graduatzailea
+Graduatzailearen etiketa
+Lasaigarri lorea
+Pastel leuna
+Ordenatzeko irizpidea
+Beixa xumea
+Arrosa monokromo gozoa
+Etengailua
+Etengailuaren etiketa
+Testu kolorea
+Gaiaren hautaketa
+Tinta kolorea
+Gaur
+Balioaren etiketa
+Bizkor eta ertzitsu
+Baie monokromo mamitsua
+Gorri bizkor monokromoa
+Bineta
+Bizkor eta nabarmena
+Ilunabar beroa
+Atzo
+a
+a.m.
+a.m.
+am
+ezin izan da atzeko irudia kargatu
+lausotzea
+ahal
+kolore laginak: atzekoa
+kolore laginak: testua
+Sortu diseinu bat
+ezabatu
+hau ezin da desegin
+diseinua ezabatu?
+diseinuak
+egin
+bikoiztu
+zortzi
+Sortu zure lehen diseinua hasteko.
+Oraindik ez dago diseinurik
+ezin izan da diseinua gorde
+irudia
+bost
+letra tamaina
+lau
+bera
+k
+bederatzi
+bat
+out
+p
+p.
+p.m.
+p.m.
+pikselazioa
+p.m.
+saiatu berriro
+zazpi
+erakutsi kolore laginak
+erakutsi tresnak
+sei
+zuriunea
+luzatu
+iCloud-etik sinkronizatuta
+hiru
+bi
+zu
+zero
+zerØ
+ø

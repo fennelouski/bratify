@@ -31,7 +31,7 @@ Batal
 Klasik dan kekal
 Tutup
 Pemilih warna
-Berwarna dan playful
+Berwarna dan ceria
 Sahkan sebelum padam
 Kontras
 Kawalan
@@ -53,7 +53,7 @@ Saiz fon
 Nama fon
 Paksa huruf kecil
 Sitrus segar dan menyegarkan
-Gamma
+Nilai gamma
 Ungu lembut monokrom
 Songsang
 Terakhir diubah
@@ -84,7 +84,7 @@ Ketepuan
 Simpan tanpa tajuk
 Pilih nisbah aspek
 Fon dipilih
-Sepia
+Tona sepia
 Tetapan
 Warna bayang
 Ketajaman
@@ -111,10 +111,10 @@ Viniet
 Jelas dan menonjol
 Senja hangat dan mengundang
 Semalam
+a
+pg.
 pagi
-a.m
-a.m
-a.m
+AM
 tidak dapat memuatkan imej latar
 kabur
 boleh
@@ -140,12 +140,12 @@ ok
 sembilan
 satu
 luar
-p.m
-p.m
-p.m
-p.m
+p
+p.
+ptg.
+petang
 pikselan
-p.m
+PM
 cuba lagi
 tujuh
 tunjukkan contoh warna

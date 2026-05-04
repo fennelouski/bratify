@@ -1,0 +1,162 @@
+:
+O temă caldă și blândă de migdală.
+Raport de aspect
+Autocorecție activată
+Transparență fundal
+Estompare fundal
+Luminozitate fundal
+Culoare fundal
+Contrast fundal
+Expunere fundal
+Întoarce fundal pe orizontală
+Întoarce fundal pe verticală
+Gamma fundal
+Imagine fundal
+Controale imagine fundal
+Inversează fundal
+Fundal monocrom
+Pixelare fundal
+Saturație fundal
+Scală fundal
+Fundal sepia
+Ascuțire fundal
+Vinietă fundal
+Îndrăzneț și dinamic
+Portocaliu monocrom îndrăzneț
+Vesel și luminos
+Strălucitor și însorit
+Galben monocrom strălucitor
+Luminozitate
+Anulează
+Clasic și atemporal
+Închide
+Selector de culori
+Colorat și jucăuș
+Confirmă înainte de ștergere
+Contrast imagine
+Controale
+Mentă răcoritoare
+Albastru rece monocrom
+Mod întunecat
+Culori mod întunecat
+Pădure adâncă și liniștită
+Indigo adânc monocrom
+Implicit
+Culoare fundal implicită
+Culoare text implicită
+Controale design
+Culoare distructivă
+Expunere
+Interval extins
+Selector font
+Dimensiune font
+Nume font
+Forțează litere mici
+Citrice proaspete și picante
+Corecție gamma
+Violet blând monocrom
+Inversează
+Ultima modificare
+Ultimele 30 de zile
+Ultimele 7 zile
+Ultima oră
+Mod luminos
+Culori mod luminos
+Plin de viață și energic
+Controale imagine principală
+Monocrom
+Miez de noapte misterios
+Neon și îndrăzneț
+Cele mai noi primele
+Niciunul
+Mai vechi de 30 de zile
+Cele mai vechi primele
+P
+Alege o temă
+Pixelare
+Scală pixelare
+Culoare pozitivă
+Rafinat și elegant
+Verde răcoritor monocrom
+Albastru ocean răcoritor
+Bogat și sofisticat
+Saturație
+Salvează fără titlu
+Selectează raportul de aspect
+Font selectat
+Ton sepia
+Setări
+Culoare umbră
+Ascuțire
+Afișează etichete
+Monocrom simplu și discret
+Glisor
+Etichetă glisor
+Lavandă moale și calmantă
+Pastel moale și delicată
+Ordine sortare
+Bej neutru subtil
+Roz dulce monocrom
+Comutator
+Etichetă comutator
+Culoare text
+Selecție temă
+Culoare tentă
+Astăzi
+Etichetă valoare
+Vibrant și tăios
+Fructe de pădare zemoase vibrante
+Roșu monocrom vibrant
+Vinietă
+Vivid și puternic
+Apus cald și primitor
+Ieri
+a
+AM
+A.M.
+AM
+nu s-a putut încărca imaginea de fundal
+estompare
+poți
+eșantioane culoare: fundal
+eșantioane culoare: text
+Creează un design
+șterge
+acțiunea nu poate fi anulată
+ștergi designul?
+designuri
+fă
+duplică
+opt
+Creează primul tău design ca să începi.
+Încă nu există designuri
+nu s-a putut salva designul
+prinde
+cinci
+dimensiune font
+patru
+asta
+ok
+nouă
+unu
+afară
+p
+p.
+PM
+P.M.
+pixelare
+PM
+încearcă din nou
+șapte
+afișează eșantioane culoare
+afișează unelte
+șase
+spațiu
+întinde
+sincronizat din iCloud
+trei
+doi
+tu
+cifră zero
+zerØ
+ø

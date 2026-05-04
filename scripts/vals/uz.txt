@@ -1,0 +1,162 @@
+:
+Issiq va muloyim bodom mavzusi.
+Nisbat
+Avtotuzatish yoqilgan
+Fon shaffofligi
+Fon xiralashtirish
+Fon yorqinligi
+Fon rangi
+Fon kontrasti
+Fon ekspozitsiyasi
+Fonni gorizontal aylantirish
+Fonni vertikal aylantirish
+Fon gamma
+Fon rasmi
+Fon rasmini boshqarish
+Fonni inversiyalash
+Fon monohrom
+Fonni piksellashtirish
+Fon to‘yinishi
+Fon masshtabi
+Fon sepiyasi
+Fon o‘tkirligi
+Fon vinjetkasi
+Jasur va dinamik
+Jasur apelsin monohrom
+Yorqin va quvnoq
+Quyoshli va jonli
+Yorqin sariq monohrom
+Yorqinlik
+Bekor qilish
+Klassik va abadiy
+Yopish
+Rang tanlash
+Rangdor va o‘yinchan
+O‘chirishdan oldin tasdiqlash
+Kontrast
+Boshqaruvlar
+Salqin yangi nana
+Sovuq ko‘k monohrom
+Qorong‘u rejim
+Qorong‘u rejim ranglari
+Chuqur tinch o‘rmon
+Chuqur indigo monohrom
+Standart
+Standart fon rangi
+Standart matn rangi
+Dizayn boshqaruvi
+Vayronkor rang
+Ekspozitsiya
+Kengaytirilgan diapazon
+Shrift tanlash
+Shrift o‘lchami
+%@
+Kichik harflarni majbur qilish
+Yangitrus
+Gamma
+Muloyim binafsha monohrom
+Inversiyalash
+Oxirgi o‘zgarish
+Oxirgi 30 kun
+Oxirgi 7 kun
+Oxirgi soat
+Yorug‘ rejim
+Yorug‘ rejim ranglari
+Jonli va energik
+Asosiy rasm boshqaruvi
+Monohrom
+Sirli yarim tun
+Neon va jasur
+Avval yangilar
+Yo‘q
+30 kundan eskiroq
+Avval eskilar
+P
+Mavzuni tanlang
+Piksellashtirish
+Piksellashtirish darajasi
+Ijobiy rang
+Nafis va nafis
+Yangituvchi yashil monohrom
+Okean ko‘ki
+Boy va murakkab
+To‘yinish
+Sarlavhasiz saqlash
+Nisbatni tanlash
+%@
+Sepiya
+Sozlamalar
+Soya rangi
+O‘tkirlik
+Yorliqlarni ko‘rsatish
+Sodda ehtiyot monohrom
+Slayder
+Slayder yorlig‘i
+Muloyim lavanda
+Muloyim pastel
+Tartib tartibi
+Yumshoq bej
+Shirin pushti monohrom
+Kalit
+Kalit yorlig‘i
+Matn rangi
+Mavzu tanlash
+Tus rangi
+Bugun
+Qiymat yorlig‘i
+Jonli va keskin
+Sharbatli meva monohrom
+Jonli qizil monohrom
+Vinjetka
+Yorqin va ta’sirli
+Issiq quyosh botishi
+Kecha
+a
+t.ch.
+t.ch.
+am
+fon rasmi yuklanmadi
+xiralashtirish
+mumkin
+rang namunalari: fon
+rang namunalari: matn
+Dizayn yarating
+o‘chirish
+buni bekor qilib bo‘lmaydi
+dizaynni o‘chirasizmi?
+dizaynlar
+qilish
+nusxalash
+sakkiz
+Boshlash uchun birinchi dizayningizni yarating.
+Hali dizayn yo‘q
+dizayn saqlanmadi
+figura
+besh
+shrift o‘lchami
+to‘rt
+u
+k
+to‘qqiz
+bir
+out
+p
+p.
+t.ch.
+t.ch.
+piksellashtirish
+t.ch.
+qayta urinish
+yetti
+rang namunalarini ko‘rsatish
+asboblarni ko‘rsatish
+olti
+bo‘sh joy
+cho‘zish
+iCloud bilan sinxron
+uch
+ikki
+siz
+nol
+zerØ
+ø

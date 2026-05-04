@@ -1,0 +1,162 @@
+:
+Chủ đề hạnh nhân ấm áp và dịu.
+Tỷ lệ khung hình
+Bật tự động sửa
+Độ trong suốt nền
+Làm mờ nền
+Độ sáng nền
+Màu nền
+Độ tương phản nền
+Phơi sáng nền
+Lật nền ngang
+Lật nền dọc
+Gamma nền
+Ảnh nền
+Điều khiển ảnh nền
+Đảo màu nền
+Nền đơn sắc
+Pixel hóa nền
+Độ bão hòa nền
+Tỷ lệ nền
+Nền sepia
+Làm nét nền
+Viền tối nền
+Táo bạo và năng động
+Cam đơn sắc táo bạo
+Vui và sáng
+Sáng và nắng
+Vàng đơn sắc sáng
+Độ sáng
+Hủy
+Cổ điển và vượt thời gian
+Đóng
+Bộ chọn màu
+Đầy màu và vui nhộn
+Xác nhận trước khi xóa
+Độ tương phản
+Điều khiển
+Bạc hà mát lành
+Xanh lam lạnh đơn sắc
+Chế độ tối
+Màu chế độ tối
+Rừng sâu yên tĩnh
+Chàm đậm đơn sắc
+Mặc định
+Màu nền mặc định
+Màu chữ mặc định
+Điều khiển thiết kế
+Màu cảnh báo
+Phơi sáng
+Phạm vi mở rộng
+Bộ chọn phông chữ
+Cỡ chữ
+Tên phông chữ
+Buộc chữ thường
+Cam quýt tươi mát
+Chỉnh gamma
+Tím nhẹ đơn sắc
+Đảo màu
+Sửa đổi gần nhất
+30 ngày qua
+7 ngày qua
+Giờ qua
+Chế độ sáng
+Màu chế độ sáng
+Sống động và năng lượng
+Điều khiển ảnh chính
+Đơn sắc
+Nửa đêm huyền bí
+Neon và táo bạo
+Mới nhất trước
+Không
+Cũ hơn 30 ngày
+Cũ nhất trước
+P
+Chọn chủ đề
+Pixel hóa
+Mức pixel hóa
+Màu tích cực
+Tinh tế và thanh lịch
+Xanh lá mát đơn sắc
+Xanh biển mát đơn sắc
+Phong phú và tinh tế
+Độ bão hòa
+Lưu không tiêu đề
+Chọn tỷ lệ khung hình
+Phông chữ đã chọn
+Tông sepia
+Cài đặt
+Màu đổ bóng
+Làm nét
+Hiện nhãn
+Đơn sắc giản dị
+Thanh trượt
+Nhãn thanh trượt
+Oải hương dịu nhẹ
+Pastel mềm mại
+Thứ tự sắp xếp
+Be trung tính tinh tế
+Hồng ngọt đơn sắc
+Công tắc
+Nhãn công tắc
+Màu chữ
+Chọn chủ đề
+Màu tông
+Hôm nay
+Nhãn giá trị
+Sống động và gai góc
+Quả mọng mọng nước
+Đỏ rực đơn sắc
+Viền tối
+Rõ ràng và ấn tượng
+Hoàng hôn ấm mời gọi
+Hôm qua
+a
+sáng
+buổi sáng
+SA
+không tải được ảnh nền
+mờ
+có thể
+bảng màu: nền
+bảng màu: chữ
+Tạo thiết kế
+xóa
+không thể hoàn tác
+xóa thiết kế?
+thiết kế
+làm
+nhân đôi
+tám
+Tạo thiết kế đầu tiên để bắt đầu.
+Chưa có thiết kế
+không lưu được thiết kế
+tìm ra
+năm
+cỡ chữ
+bốn
+nó
+ok
+chín
+một
+ra
+p
+p.
+chiều
+buổi chiều
+pixel hóa
+CH
+thử lại
+bảy
+hiện bảng màu
+hiện công cụ
+sáu
+khoảng trắng
+kéo giãn
+đã đồng bộ từ iCloud
+ba
+hai
+bạn
+không
+zerØ
+ø

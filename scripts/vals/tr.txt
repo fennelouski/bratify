@@ -1,0 +1,162 @@
+:
+Sıcak ve yumuşak badem teması.
+En boy oranı
+Otomatik düzeltme açık
+Arka plan opaklığı
+Arka plan bulanıklığı
+Arka plan parlaklığı
+Arka plan rengi
+Arka plan kontrastı
+Arka plan pozlaması
+Arka planı yatay çevir
+Arka planı dikey çevir
+Arka plan gama
+Arka plan görseli
+Arka plan görseli denetimleri
+Arka planı ters çevir
+Arka plan tek renk
+Arka plan pikselleştirme
+Arka plan doygunluğu
+Arka plan ölçeği
+Arka plan sepia
+Arka plan keskinleştirme
+Arka plan vignette
+Cesur ve dinamik
+Cesur turuncu tek renk
+Neşeli ve parlak
+Parlak ve güneşli
+Parlak sarı tek renk
+Parlaklık
+İptal
+Klasik ve zamansız
+Kapat
+Renk seçici
+Renkli ve oyuncak
+Silmeden önce onayla
+Kontrast
+Denetimler
+Serinleten nane
+Soğuk mavi tek renk
+Karanlık mod
+Karanlık mod renkleri
+Derin huzurlu orman
+Derin indigo tek renk
+Varsayılan
+Varsayılan arka plan rengi
+Varsayılan metin rengi
+Tasarım denetimleri
+Uyarı rengi
+Pozlama
+Genişletilmiş aralık
+Yazı tipi seçici
+Yazı tipi boyutu
+Yazı tipi adı
+Küçük harfe zorla
+Taze ve canlı turunçgiller
+Gama
+Nazil mor tek renk
+Ters çevir
+Son değişiklik
+Son 30 gün
+Son 7 gün
+Son saat
+Açık mod
+Açık mod renkleri
+Canlı ve enerjik
+Ana görsel denetimleri
+Tek renk
+Gizemli gece yarısı
+Neon ve cesur
+Önce en yeni
+Yok
+30 günden eski
+Önce en eski
+P
+Bir tema seç
+Pikselleştirme
+Pikselleştirme ölçeği
+Olumlu renk
+Zarif ve şık
+Serinleten yeşil tek renk
+Serinleten okyanus mavisi
+Zengin ve sofistike
+Doygunluk
+Başlıksız kaydet
+En boy oranı seç
+Seçilen yazı tipi
+Sepya tonu
+Ayarlar
+Gölge rengi
+Keskinleştir
+Etiketleri göster
+Sade ve muted tek renk
+Kaydırıcı
+Kaydırıcı etiketi
+Yumuşak sakinleştirici lavanta
+Yumuşak nazik pastel
+Sıralama düzeni
+İnce nötr bej
+Tatlı pembe tek renk
+Anahtar
+Anahtar etiketi
+Metin rengi
+Tema seçimi
+Ton rengi
+Bugün
+Değer etiketi
+Canlı ve keskin
+Sulu böğürtlen canlı
+Canlı kırmızı tek renk
+Vinyet
+Belirgin ve çarpıcı
+Sıcak davetkar gün batımı
+Dün
+a
+öö
+a.m
+a.m
+arka plan görseli yüklenemedi
+bulanık
+yapabilirsin
+renk örnekleri: arka plan
+renk örnekleri: metin
+Tasarım oluştur
+sil
+bu geri alınamaz
+tasarım silinsin mi?
+tasarımlar
+yap
+çoğalt
+sekiz
+Başlamak için ilk tasarımını oluştur.
+Henüz tasarım yok
+tasarım kaydedilemedi
+çöz
+beş
+yazı tipi boyutu
+dört
+onu
+tamam
+dokuz
+bir
+dışarı
+p
+p.m
+ös
+p.m
+pikselleştirme
+p.m
+yeniden dene
+yedi
+renk örneklerini göster
+araçları göster
+altı
+boşluk
+esnet
+iCloud’dan senkronize edildi
+üç
+iki
+sen
+sıfır
+zerØ
+ø

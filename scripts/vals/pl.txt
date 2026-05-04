@@ -53,7 +53,7 @@ Rozmiar czcionki
 Nazwa czcionki
 Wymuszaj małe litery
 Świeże cytrusy z pazurem
-Gamma
+Korekta gamma
 Delikatny fiolet monochrom
 Odwróć
 Ostatnia modyfikacja
@@ -84,7 +84,7 @@ Nasycenie
 Zapisz bez tytułu
 Wybierz proporcje
 Wybrana czcionka
-Sepia
+Ton sepii
 Ustawienia
 Kolor cienia
 Wyostrzenie
@@ -112,7 +112,7 @@ Wyrazisty i mocny
 Ciepły zapraszający zachód słońca
 Wczoraj
 a
-a.m
+przed poł.
 a.m
 a.m
 nie można wczytać obrazu tła
@@ -142,7 +142,7 @@ jeden
 na zewnątrz
 p
 p.m
-p.m
+po poł.
 p.m
 pikselacja
 p.m
@@ -157,6 +157,6 @@ zsynchronizowano z iCloud
 trzy
 dwa
 ty
-zero
+zero wartość
 zerØ
 ø

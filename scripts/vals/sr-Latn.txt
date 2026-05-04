@@ -1,0 +1,162 @@
+:
+Topla i nežna bademova tema.
+Odnos stranica
+Autokorekcija uključena
+Providnost pozadine
+Zamućenje pozadine
+Osvetljenost pozadine
+Boja pozadine
+Kontrast pozadine
+Ekspozicija pozadine
+Ogledalo pozadinu horizontalno
+Ogledalo pozadinu vertikalno
+Gama pozadine
+Pozadinska slika
+Kontrole pozadinske slike
+Invertuj pozadinu
+Monohromna pozadina
+Pikselizuj pozadinu
+Zasićenost pozadine
+Razmera pozadine
+Sepija pozadine
+Izoštravanje pozadine
+Vineta pozadine
+Odvažno i dinamično
+Odvažna narandžasta monohromija
+Svetlo i veselo
+Sunčano i živo
+Svetlo žuta monohromija
+Osvetljenost
+Otkaži
+Klasično i trajno
+Zatvori
+Birač boje
+Šareno i igrivo
+Potvrdi pre brisanja
+Kontrast
+Kontrole
+Sveža nana
+Hladno plava monohromija
+Tamni režim
+Boje tamnog režima
+Duboka mirna šuma
+Duboka indigo monohromija
+Podrazumevano
+Podrazumevana boja pozadine
+Podrazumevana boja teksta
+Kontrole dizajna
+Destruktivna boja
+Ekspozicija
+Prošireni opseg
+Birač fonta
+Veličina fonta
+%@
+Forsiraj mala slova
+Svež citrus
+Gama
+Nežna ljubičasta monohromija
+Invertuj
+Poslednja izmena
+Poslednjih 30 dana
+Poslednjih 7 dana
+Poslednji sat
+Svetli režim
+Boje svetlog režima
+Živo i energično
+Kontrole glavne slike
+Monohrom
+Misteriozna ponoć
+Neon i odvažno
+Prvo najnovije
+Nema
+Starije od 30 dana
+Prvo najstarije
+P
+Izaberi temu
+Pikselizuj
+Stepen pikselizacije
+Pozitivna boja
+Rafinirano i elegantno
+Osvežavajuća zelena monohromija
+Plavo okeana
+Bogato i sofisticirano
+Zasićenost
+Sačuvaj bez naslova
+Izaberi odnos stranica
+%@
+Sepija
+Podešavanja
+Boja senke
+Izoštravanje
+Prikaži oznake
+Jednostavna prigušena monohromija
+Klizač
+Oznaka klizača
+Meka lavanda
+Mek pastel
+Redosled sortiranja
+Fina bež
+Slatka ružičasta monohromija
+Prekidač
+Oznaka prekidača
+Boja teksta
+Izbor teme
+Boja nijanse
+Danas
+Oznaka vrednosti
+Živo i oštro
+Sočna bobičasta monohromija
+Živa crvena monohromija
+Vineta
+Živopisno i upečatljivo
+Topao zalazak sunca
+Juče
+a
+pre pod.
+pre pod.
+am
+nije učitana pozadinska slika
+zamućenje
+može
+uzorci boje: pozadina
+uzorci boje: tekst
+Napravi dizajn
+obriši
+ovo se ne može poništiti
+obrisati dizajn?
+dizajni
+uradi
+dupliraj
+osam
+Napravite prvi dizajn.
+Još nema dizajna
+nije sačuvan dizajn
+figura
+pet
+veličina fonta
+četiri
+to
+k
+devet
+jedan
+out
+p
+p.
+po pod.
+po pod.
+pikselizacija
+po pod.
+pokušaj ponovo
+sedam
+prikaži uzorke boja
+prikaži alatke
+šest
+razmak
+razvuci
+sinhronizovano sa iCloud-a
+tri
+dva
+ti
+nula
+zerØ
+ø

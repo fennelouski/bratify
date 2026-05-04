@@ -1,0 +1,162 @@
+:
+Tema de améndoa cálida e suave.
+Proporción
+Corrección automática activada
+Opacidade do fondo
+Desenfoque do fondo
+Brillo do fondo
+Cor de fondo
+Contraste do fondo
+Exposición do fondo
+Voltear fondo horizontalmente
+Voltear fondo verticalmente
+Gamma do fondo
+Imaxe de fondo
+Controis da imaxe de fondo
+Inverter fondo
+Monocromo de fondo
+Pixelar fondo
+Saturación do fondo
+Escala do fondo
+Sepia do fondo
+Enfocar fondo
+Viñeta do fondo
+Ousado e dinámico
+Monocromo laranxa intenso
+Alegre e luminoso
+Solleiro e vivo
+Monocromo amarelo brillante
+Brillo
+Cancelar
+Clásico e eterno
+Pechar
+Selector de cor
+Colorido e xoguetón
+Confirmar antes de eliminar
+Contraste
+Controis
+Menta fresca
+Monocromo azul frío
+Modo escuro
+Cores do modo escuro
+Bosque profundo e tranquilo
+Monocromo índigo profundo
+Predeterminado
+Cor de fondo predeterminada
+Cor do texto predeterminada
+Controis de deseño
+Cor destrutiva
+Exposición
+Rango estendido
+Selector de fonte
+Tamaño da fonte
+%@
+Forzar minúsculas
+Cítrico fresco
+Gamma
+Monocromo violeta suave
+Inverter
+Última modificación
+Últimos 30 días
+Últimos 7 días
+Última hora
+Modo claro
+Cores do modo claro
+Vivo e enerxético
+Controis da imaxe principal
+Monocromo
+Medianoite escura e misteriosa
+Neón e ousado
+Máis novos primeiro
+Ningún
+Máis vellos ca 30 días
+Máis vellos primeiro
+P
+Escolle un tema
+Pixelar
+Escala de pixelado
+Cor positiva
+Refinado e elegante
+Monocromo verde refrescante
+Azul océano
+Rico e sofisticado
+Saturación
+Gardar sen título
+Seleccionar proporción
+%@
+Sepia
+Axustes
+Cor da sombra
+Enfocar
+Mostrar etiquetas
+Monocromo sobrio simple
+Control deslizante
+Etiqueta do control
+Lavanda suave
+Pastel suave
+Orde de clasificación
+Beixe neutro
+Monocromo rosa doce
+Interruptor
+Etiqueta do interruptor
+Cor do texto
+Selección de tema
+Cor de tinta
+Hoxe
+Etiqueta de valor
+Vibrante e atrevido
+Monocromo baga zumentosa
+Monocromo vermello vibrante
+Viñeta
+Vívido e marcante
+Solpor acolledor
+Onte
+a
+a.m.
+a.m.
+am
+non se puido cargar a imaxe de fondo
+desenfoque
+pode
+mostras de cor: fondo
+mostras de cor: texto
+Crea un deseño
+eliminar
+isto non se pode desfacer
+eliminar deseño?
+deseños
+facer
+duplicar
+oito
+Crea o teu primeiro deseño para comezar.
+Aínda non hai deseños
+non se puido gardar o deseño
+figura
+cinco
+tamaño da fonte
+catro
+ela
+k
+nove
+un
+out
+p
+p.
+p.m.
+p.m.
+pixelado
+p.m.
+tentar de novo
+sete
+mostrar mostras de cor
+mostrar ferramentas
+seis
+espazo
+estirar
+sincronizado dende iCloud
+tres
+dous
+ti
+cero
+zerØ
+ø

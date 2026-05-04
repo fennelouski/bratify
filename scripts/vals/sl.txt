@@ -1,0 +1,162 @@
+:
+Topla nežna mandljeva tema.
+Razmerje strani
+Samodejno popravljanje vklopljeno
+Prosojnost ozadja
+Zameglitev ozadja
+Svetlost ozadja
+Barva ozadja
+Kontrast ozadja
+Osvetlitev ozadja
+Zrcali ozadje vodoravno
+Zrcali ozadje navpično
+Gama ozadja
+Slika ozadja
+Kontrolniki slike ozadja
+Invertiraj ozadje
+Enobarvno ozadje
+Piksli ozadja
+Nasičenost ozadja
+Merilo ozadja
+Sepija ozadja
+Izostritev ozadja
+Vineta ozadja
+Drzno in dinamično
+Drzna oranžna enobarvna
+Veselo in svetlo
+Sončno in svetlo
+Svetlo rumena enobarvna
+Svetlost
+Prekliči
+Klasično in brezčasno
+Zapri
+Izbirnik barv
+Pisano in igrivo
+Potrdi pred brisanjem
+Kontrast
+Kontrolniki
+Osvežilna meta
+Hladna modra enobarvna
+Temni način
+Barve temnega načina
+Globok mirni gozd
+Globoka indigo enobarvna
+Privzeto
+Privzeta barva ozadja
+Privzeta barva besedila
+Kontrolniki oblikovanja
+Opozorilna barva
+Osvetlitev
+Razširjen obseg
+Izbirnik pisave
+Velikost pisave
+Ime pisave
+Prisili male črke
+Sveži citrusi z ostrino
+Gama
+Nežna vijolična enobarvna
+Invertiraj
+Nazadnje spremenjeno
+Zadnjih 30 dni
+Zadnjih 7 dni
+Zadnja ura
+Svetli način
+Barve svetlega načina
+Živahno in energično
+Kontrolniki glavne slike
+Enobarvno
+Skrivnostna polnoč
+Neon in drznost
+Najnovejše najprej
+Brez
+Starejše od 30 dni
+Najstarejše najprej
+P
+Izberi temo
+Pikselacija
+Merilo pikselacije
+Pozitivna barva
+Prefinjeno in elegantno
+Osvežilna zelena enobarvna
+Osvežilno oceansko modra
+Bogato in prefinjeno
+Nasičenost
+Shrani brez naslova
+Izberi razmerje strani
+Izbrana pisava
+Sepija
+Nastavitve
+Barva sence
+Izostritev
+Pokaži oznake
+Enostavna zadržana enobarvna
+Drsnik
+Oznaka drsnika
+Mehka pomirjujoča sivka
+Mehka nežna pastelna
+Vrstni red razvrščanja
+Subtilna nevtralna bež
+Sladka roza enobarvna
+Stikalo
+Oznaka stikala
+Barva besedila
+Izbira teme
+Odtenek
+Danes
+Oznaka vrednosti
+Živahno in ostro
+Sočne jagode živahno
+Živo rdeča enobarvna
+Vineta
+Živo in izrazito
+Topel vabljiv sončni zahod
+Včeraj
+a
+dop.
+a.m
+a.m
+slike ozadja ni bilo mogoče naložiti
+zameglitev
+lahko
+barvni vzorci: ozadje
+barvni vzorci: besedilo
+Ustvari obliko
+izbriši
+tega ni mogoče razveljaviti
+izbrisati obliko?
+oblike
+naredi
+podvoji
+osem
+Ustvarite prvo obliko za začetek.
+Še ni oblik
+oblike ni bilo mogoče shraniti
+razumeš
+pet
+velikost pisave
+štiri
+to
+ok
+devet
+ena
+ven
+p
+p.m
+pop.
+p.m
+pikselacija
+p.m
+poskusi znova
+sedem
+prikaži barvne vzorce
+prikaži orodja
+šest
+presledek
+raztegni
+sinhronizirano iz iCloud
+tri
+dva
+ti
+nič
+zerØ
+ø

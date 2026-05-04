@@ -53,7 +53,7 @@ Dimensione font
 Nome font
 Forza minuscole
 Agrumi freschi e vivaci
-Gamma
+Curva gamma
 Viola delicato monocromatico
 Inverti
 Ultima modifica
@@ -90,7 +90,7 @@ Colore ombra
 Nitidezza
 Mostra etichette
 Monocromatico semplice e sobrio
-Slider
+Cursore
 Etichetta slider
 Lavanda morbida e calmante
 Pastello morbido e delicato
@@ -112,7 +112,7 @@ Intenso e d’impatto
 Tramonto caldo e accogliente
 Ieri
 a
-a.m
+mat.
 a.m
 a.m
 impossibile caricare l’immagine di sfondo
@@ -142,7 +142,7 @@ uno
 fuori
 p
 p.m
-p.m
+pom.
 p.m
 pixelazione
 p.m
@@ -157,6 +157,6 @@ sincronizzato da iCloud
 tre
 due
 tu
-zero
+zero assoluto
 zerØ
 ø

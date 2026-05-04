@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Generate scripts/locale_columns.json (locale -> [164 strings] in KEY_LIST order).
+"""Background\* string templates per locale (`BG`) used by emit_locale_columns.
 
-Run from repo root: python3 scripts/gen_locale_columns.py
+Use **emit_locale_columns.py** to build locale_columns.json; this file only holds BG + `_bg_value`.
 """
 
 from __future__ import annotations
@@ -10,11 +10,8 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = Path(__file__).resolve().parent / "locale_columns.json"
 
 SKIP = {"", ":", "ø", "zerØ"}
-
-KEY_LIST: list[str] = []
 
 
 def _key_list() -> list[str]:
@@ -330,62 +327,11 @@ def _bg_value(loc: str, key: str) -> str | None:
     return m.get(tail)
 
 
-# --- Per-locale full overrides (key -> str); missing keys filled from EN later in bratify_locale_table ---
-
-
 def main() -> None:
-    global KEY_LIST
-    KEY_LIST = _key_list()
-    assert len(KEY_LIST) == 164
-
-    locales = [
-        "ca",
-        "cs",
-        "da",
-        "de",
-        "el",
-        "es",
-        "es-419",
-        "es-US",
-        "fi",
-        "fr",
-        "fr-CA",
-        "he",
-        "hi",
-        "hr",
-    ]
-
-    cols: dict[str, list[str]] = {loc: [] for loc in locales}
-
-    # Placeholder: will be filled in next patch with full UI/theme/digit strings.
-    with open(ROOT / "brat" / "Localizable.xcstrings", encoding="utf-8") as f:
-        catalog = json.load(f)
-
-    for key in KEY_LIST:
-        en = (
-            (catalog["strings"][key].get("localizations") or {})
-            .get("en", {})
-            .get("stringUnit", {})
-            .get("value", key)
-        )
-        # en fixes
-        if key == "LastHour":
-            en = "Last hour"
-        elif key == "Last7Days":
-            en = "Last 7 days"
-        elif key == "Last30Days":
-            en = "Last 30 days"
-        elif key == "OlderThan30Days":
-            en = "Older than 30 days"
-        elif key in ("FontNameLabel", "SelectedFontLabel"):
-            en = "%@"
-
-        for loc in locales:
-            v = _bg_value(loc, key)
-            cols[loc].append(v if v is not None else en)
-
-    OUT.write_text(json.dumps(cols, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"Wrote {OUT} ({len(KEY_LIST)} keys × {len(locales)} locales, partial)")
+    raise SystemExit(
+        "Use scripts/emit_locale_columns.py to regenerate scripts/locale_columns.json "
+        "(after editing scripts/ui_parallel.py or Background BG templates)."
+    )
 
 
 if __name__ == "__main__":

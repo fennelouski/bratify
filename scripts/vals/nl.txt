@@ -33,7 +33,7 @@ Sluiten
 Kleurenkiezer
 Kleurrijk en speels
 Bevestigen voor verwijderen
-Contrast
+Beeldcontrast
 Bediening
 Verfrissende munt
 Koele blauwe monochrome
@@ -53,7 +53,7 @@ Lettergrootte
 Lettertype naam
 Forceer kleine letters
 Frisse citrus met pit
-Gamma
+Gammawaarde
 Zachte violet monochrome
 Omkeren
 Laatst gewijzigd
@@ -64,7 +64,7 @@ Lichte modus
 Lichte modus kleuren
 Levendig en energiek
 Hoofdafbeelding bediening
-Monochrome
+Monochroom
 Mystieke donkere nacht
 Neon en gedurfd
 Nieuwste eerst
@@ -84,7 +84,7 @@ Verzadiging
 Opslaan zonder titel
 Beeldverhouding kiezen
 Geselecteerd lettertype
-Sepia
+Sepiatint
 Instellingen
 Schaduwkleur
 Verscherpen
@@ -112,7 +112,7 @@ Krachtig en opvallend
 Warme uitnodigende zonsondergang
 Gisteren
 a
-a.m
+v.m.
 a.m
 a.m
 kon achtergrondafbeelding niet laden
@@ -142,7 +142,7 @@ negen
 uit
 p
 p.m
-p.m
+n.m.
 p.m
 pixelatie
 p.m

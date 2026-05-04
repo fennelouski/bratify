@@ -53,7 +53,7 @@ Betűméret
 Betűnév
 Csak kisbetű
 Friss, élénkus citrus
-Gamma
+Gammaérték
 Lágy ibolya monokróm
 Invertálás
 Utolsó módosítás

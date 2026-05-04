@@ -53,7 +53,7 @@ Skriftstørrelse
 Fontnavn
 Tving små bokstaver
 Frisk sitrus med sting
-Gamma
+Gammakurve
 Myk fiolett monokrom
 Inverter
 Sist endret
@@ -84,7 +84,7 @@ Metning
 Lagre uten tittel
 Velg størrelsesforhold
 Valgt font
-Sepia
+Sepiatone
 Innstillinger
 Skyggefarge
 Skjerpe
@@ -112,7 +112,7 @@ Sterkt og slående
 Varm og innbydende solnedgang
 I går
 a
-a.m
+f.m.
 a.m
 a.m
 kunne ikke laste bakgrunnsbilde
@@ -142,7 +142,7 @@ ni
 ut
 p.m
 p.m
-p.m
+e.m.
 p.m
 pikselering
 p.m

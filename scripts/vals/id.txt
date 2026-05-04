@@ -53,7 +53,7 @@ Ukuran font
 Nama font
 Paksa huruf kecil
 Jeruk segar dan ceria
-Gamma
+Koreksi gamma
 Ungu lembut monokrom
 Balik
 Terakhir diubah
@@ -112,7 +112,7 @@ Tajam dan mencolok
 Senja hangat mengundang
 Kemarin
 a.m
-a.m
+P
 a.m
 a.m
 tidak bisa memuat gambar latar
@@ -142,7 +142,7 @@ satu
 keluar
 p.m
 p.m
-p.m
+S
 p.m
 pikselation
 p.m
