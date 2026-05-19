@@ -20,7 +20,6 @@ enum TrailingSidebarLayout {
     static let compactPanelHeightAspectRatio: CGFloat = 300
     static let compactPanelHeightBackgroundImage: CGFloat = 320
     static let compactPanelHeightWebImport: CGFloat = 340
-    static let compactPanelHeightSettingsMaximum: CGFloat = 420
 
     static func isEligible(width: CGFloat) -> Bool {
         width >= minimumWindowWidth
@@ -110,15 +109,11 @@ enum TrailingSidebarLayout {
             return compactPanelHeightBackgroundImage
         case .webImport:
             return compactPanelHeightWebImport
-        case .settings:
-            let proportional = editorMiddleBandHeight * 0.55
-            return min(compactPanelHeightSettingsMaximum, max(proportional, compactPanelHeightFilterStyles))
         }
     }
 }
 
 enum EditorPanel: Equatable {
-    case settings
     case backgroundImage
     case filterStyles
     case fontPicker

@@ -5,7 +5,7 @@ import WebImagePicker
 /// Hosts ``WebImagePicker`` from UIKit and saves the result through the same disk path as the photo library picker.
 enum WebImageImportPresenter {
 
-    /// Presents a form-sheet ``WebImagePicker``. On success, images are written via `imageService` and `onImagePicked` receives the new asset name (first decoded image when multiple are returned).
+    /// Presents a form-sheet ``WebImagePicker`` (modal). The editor uses ``embed(_:in:container:)`` instead; keep this for other UIKit hosts.
     @MainActor
     static func present(
         from presenter: UIViewController,
@@ -50,6 +50,11 @@ enum WebImageImportPresenter {
         container: UIView,
         contentLeadingAnchor: NSLayoutXAxisAnchor
     ) {
+        if host.parent != nil {
+            host.willMove(toParent: nil)
+            host.view.removeFromSuperview()
+            host.removeFromParent()
+        }
         parent.addChild(host)
         container.addSubview(host.view)
         host.view.translatesAutoresizingMaskIntoConstraints = false
@@ -82,6 +87,28 @@ enum WebImageImportPresenter {
             }
         )
         return UIHostingController(rootView: rootView)
+    }
+
+    /// Refreshes callbacks on a reused hosting controller (compact panel / sidebar re-present).
+    @MainActor
+    static func updateHostingController(
+        _ host: UIHostingController<WebImagePicker>,
+        imageService: ImageService,
+        initialURLString: String? = nil,
+        onCancel: @escaping () -> Void,
+        onImagePicked: @escaping (String) -> Void
+    ) {
+        host.rootView = WebImagePicker(
+            configuration: makeConfiguration(initialURLString: initialURLString),
+            onCancel: onCancel,
+            onPick: { selections in
+                guard let imageName = saveFirstImage(from: selections, imageService: imageService) else {
+                    onCancel()
+                    return
+                }
+                onImagePicked(imageName)
+            }
+        )
     }
 
     static func makeConfiguration(initialURLString: String? = nil) -> WebImagePickerConfiguration {

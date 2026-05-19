@@ -111,7 +111,7 @@ final class ImageFilterSettingsTests: XCTestCase {
         settings.hue = 30
         let output = image.applyFilters(settings)
         XCTAssertNotNil(output)
-        XCTAssertEqual(output?.size.width, 64, accuracy: 0.5)
+        XCTAssertEqual(Double(output?.size.width ?? 0), 64, accuracy: 0.5)
     }
 
     func testCacheKeyFragmentChangesWithHue() {

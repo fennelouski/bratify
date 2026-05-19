@@ -1077,10 +1077,6 @@ class EditDesignViewController: UIViewController {
             previewImageViewBottomCanvasConstraint?.isActive = false
 
             NSLayoutConstraint.activate([
-                editorBottomPanelContainer.topAnchor.constraint(
-                    equalTo: previewImageView.bottomAnchor,
-                    constant: .su2
-                ),
                 editorBottomPanelContainer.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
                 editorBottomPanelContainer.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
                 editorBottomPanelHeightConstraint!,
@@ -1449,7 +1445,7 @@ class EditDesignViewController: UIViewController {
             dismissEditorPanel(animated: true)
         }
         if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
-            previewImageViewBottomConstraint?.constant = -keyboardFrame.height
+            previewImageViewBottomConstraint?.constant = -.su2 - keyboardFrame.height
             UIView.animate(withDuration: 0.3) {
                 self.view.layoutIfNeeded()
             }
@@ -1458,7 +1454,7 @@ class EditDesignViewController: UIViewController {
 
     @objc private func keyboardWillHide(_ notification: NSNotification) {
         guard !isDesignControlsModeActive else { return }
-        previewImageViewBottomConstraint?.constant = -200
+        previewImageViewBottomConstraint?.constant = -.su2
         UIView.animate(withDuration: 0.3) {
             self.view.layoutIfNeeded()
         }
@@ -2871,16 +2867,14 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
         }
         fontViewController.onDone = onDone
 
-        addChild(fontViewController)
-        container.addSubview(fontViewController.view)
-        fontViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            fontViewController.view.topAnchor.constraint(equalTo: container.topAnchor),
-            fontViewController.view.leadingAnchor.constraint(equalTo: leadingAnchor),
-            fontViewController.view.trailingAnchor.constraint(equalTo: container.trailingAnchor),
-            fontViewController.view.bottomAnchor.constraint(equalTo: container.bottomAnchor),
-        ])
-        fontViewController.didMove(toParent: self)
+        embedChildViewController(fontViewController, in: container) { childView in
+            [
+                childView.topAnchor.constraint(equalTo: container.topAnchor),
+                childView.leadingAnchor.constraint(equalTo: leadingAnchor),
+                childView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+                childView.bottomAnchor.constraint(equalTo: container.bottomAnchor),
+            ]
+        }
     }
 
     private func embedAspectRatioInTrailingSidebar() {
@@ -2911,16 +2905,14 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
         aspectViewController.nativeImageAspectSize = nativeBackgroundImageAspectSize()
         aspectViewController.selectedCanvasSize = CGSize(width: canvasWidth, height: canvasHeight)
 
-        addChild(aspectViewController)
-        container.addSubview(aspectViewController.view)
-        aspectViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            aspectViewController.view.topAnchor.constraint(equalTo: container.topAnchor),
-            aspectViewController.view.leadingAnchor.constraint(equalTo: leadingAnchor),
-            aspectViewController.view.trailingAnchor.constraint(equalTo: container.trailingAnchor),
-            aspectViewController.view.bottomAnchor.constraint(equalTo: container.bottomAnchor),
-        ])
-        aspectViewController.didMove(toParent: self)
+        embedChildViewController(aspectViewController, in: container) { childView in
+            [
+                childView.topAnchor.constraint(equalTo: container.topAnchor),
+                childView.leadingAnchor.constraint(equalTo: leadingAnchor),
+                childView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+                childView.bottomAnchor.constraint(equalTo: container.bottomAnchor),
+            ]
+        }
     }
 
     private func nativeBackgroundImageAspectSize() -> (width: Int, height: Int)? {
@@ -2961,6 +2953,18 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
         let host: UIHostingController<WebImagePicker>
         if let existing = embeddedWebImagePickerHostingController {
             host = existing
+            WebImageImportPresenter.updateHostingController(
+                host,
+                imageService: imageService,
+                onCancel: onDone,
+                onImagePicked: { [weak self] imageName in
+                    guard let self else { return }
+                    self.imageName = imageName
+                    self.updateDesignImage()
+                    self.updateAllToolbarButtonAppearances()
+                    onDone()
+                }
+            )
         } else {
             host = WebImageImportPresenter.makeHostingController(
                 imageService: imageService,
@@ -3091,8 +3095,6 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
                 leadingAnchor: editorBottomPanelContainer.leadingAnchor,
                 onDone: onDone
             )
-        case .settings:
-            return
         case .filterStyles:
             embedFilterStyles(
                 in: editorBottomPanelContainer,
@@ -3149,8 +3151,6 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
                 imagePickerVC.willMove(toParent: nil)
                 imagePickerVC.view.removeFromSuperview()
                 imagePickerVC.removeFromParent()
-            case .settings:
-                break
             case .filterStyles:
                 guard let stylesVC = self.embeddedFilterStylesViewController else { return }
                 stylesVC.willMove(toParent: nil)
@@ -3262,22 +3262,20 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
         }
         imagePickerViewController.onDone = onDone
 
-        addChild(imagePickerViewController)
-        container.addSubview(imagePickerViewController.view)
-        imagePickerViewController.view.translatesAutoresizingMaskIntoConstraints = false
         let trailingAnchor: NSLayoutXAxisAnchor = {
             if container === imagePickerSidebarContainer {
                 return imagePickerSidebarSeparator.leadingAnchor
             }
             return container.trailingAnchor
         }()
-        NSLayoutConstraint.activate([
-            imagePickerViewController.view.topAnchor.constraint(equalTo: container.topAnchor),
-            imagePickerViewController.view.leadingAnchor.constraint(equalTo: leadingAnchor),
-            imagePickerViewController.view.trailingAnchor.constraint(equalTo: trailingAnchor),
-            imagePickerViewController.view.bottomAnchor.constraint(equalTo: container.bottomAnchor),
-        ])
-        imagePickerViewController.didMove(toParent: self)
+        embedChildViewController(imagePickerViewController, in: container) { childView in
+            [
+                childView.topAnchor.constraint(equalTo: container.topAnchor),
+                childView.leadingAnchor.constraint(equalTo: leadingAnchor),
+                childView.trailingAnchor.constraint(equalTo: trailingAnchor),
+                childView.bottomAnchor.constraint(equalTo: container.bottomAnchor),
+            ]
+        }
     }
 
     private func embedSettingsInLeadingSidebar() {
@@ -3304,23 +3302,24 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
             embeddedSettingsNavigationController = navigationController
         }
         navigationController.popToRootViewController(animated: false)
+        if let settingsViewController = navigationController.viewControllers.first as? SettingsViewController {
+            settingsViewController.onDone = onDone
+        }
 
-        addChild(navigationController)
-        container.addSubview(navigationController.view)
-        navigationController.view.translatesAutoresizingMaskIntoConstraints = false
         let trailingAnchor: NSLayoutXAxisAnchor = {
             if container === imagePickerSidebarContainer {
                 return imagePickerSidebarSeparator.leadingAnchor
             }
             return container.trailingAnchor
         }()
-        NSLayoutConstraint.activate([
-            navigationController.view.topAnchor.constraint(equalTo: container.topAnchor),
-            navigationController.view.leadingAnchor.constraint(equalTo: leadingAnchor),
-            navigationController.view.trailingAnchor.constraint(equalTo: trailingAnchor),
-            navigationController.view.bottomAnchor.constraint(equalTo: container.bottomAnchor),
-        ])
-        navigationController.didMove(toParent: self)
+        embedChildViewController(navigationController, in: container) { childView in
+            [
+                childView.topAnchor.constraint(equalTo: container.topAnchor),
+                childView.leadingAnchor.constraint(equalTo: leadingAnchor),
+                childView.trailingAnchor.constraint(equalTo: trailingAnchor),
+                childView.bottomAnchor.constraint(equalTo: container.bottomAnchor),
+            ]
+        }
     }
 
     private func embedFilterStylesInLeadingSidebar() {
@@ -3345,27 +3344,25 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
                 showsSidebarChrome: true
             )
             stylesViewController.delegate = self
-            stylesViewController.onDone = onDone
             embeddedFilterStylesViewController = stylesViewController
         }
+        stylesViewController.onDone = onDone
         stylesViewController.reloadSelection(selectedPresetID: lastAppliedPresetID)
 
-        addChild(stylesViewController)
-        container.addSubview(stylesViewController.view)
-        stylesViewController.view.translatesAutoresizingMaskIntoConstraints = false
         let trailingAnchor: NSLayoutXAxisAnchor = {
             if container === imagePickerSidebarContainer {
                 return imagePickerSidebarSeparator.leadingAnchor
             }
             return container.trailingAnchor
         }()
-        NSLayoutConstraint.activate([
-            stylesViewController.view.topAnchor.constraint(equalTo: container.topAnchor),
-            stylesViewController.view.leadingAnchor.constraint(equalTo: leadingAnchor),
-            stylesViewController.view.trailingAnchor.constraint(equalTo: trailingAnchor),
-            stylesViewController.view.bottomAnchor.constraint(equalTo: container.bottomAnchor),
-        ])
-        stylesViewController.didMove(toParent: self)
+        embedChildViewController(stylesViewController, in: container) { childView in
+            [
+                childView.topAnchor.constraint(equalTo: container.topAnchor),
+                childView.leadingAnchor.constraint(equalTo: leadingAnchor),
+                childView.trailingAnchor.constraint(equalTo: trailingAnchor),
+                childView.bottomAnchor.constraint(equalTo: container.bottomAnchor),
+            ]
+        }
     }
 
     private func dismissLeadingSidebar(animated: Bool) {
@@ -3515,6 +3512,26 @@ extension EditDesignViewController: AspectRatioPickerDelegate {
         embeddedAspectRatioPickerViewController?.selectedCanvasSize = CGSize(width: canvasWidth, height: canvasHeight)
         keyboardOptionsView.update(with: currentDesign)
         updateDesignImage()
+    }
+}
+
+private extension EditDesignViewController {
+    /// Detaches `child` from any prior parent before embedding to avoid duplicate `addChild` warnings when switching panels quickly.
+    func embedChildViewController(
+        _ child: UIViewController,
+        in container: UIView,
+        constraints: (UIView) -> [NSLayoutConstraint]
+    ) {
+        if child.parent != nil || child.view.superview != nil {
+            child.willMove(toParent: nil)
+            child.view.removeFromSuperview()
+            child.removeFromParent()
+        }
+        addChild(child)
+        container.addSubview(child.view)
+        child.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate(constraints(child.view))
+        child.didMove(toParent: self)
     }
 }
 

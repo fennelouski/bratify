@@ -911,6 +911,7 @@
 				);
 				MARKETING_VERSION = 2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nathanfennel.brat;
+				PRODUCT_MODULE_NAME = brat;
 				PRODUCT_NAME = bratify;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = YES;
@@ -949,6 +950,7 @@
 				);
 				MARKETING_VERSION = 2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nathanfennel.brat;
+				PRODUCT_MODULE_NAME = brat;
 				PRODUCT_NAME = bratify;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = YES;
@@ -974,7 +976,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/brat.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/brat";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/bratify.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/bratify";
 			};
 			name = Debug;
 		};
@@ -993,7 +995,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/brat.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/brat";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/bratify.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/bratify";
 			};
 			name = Release;
 		};

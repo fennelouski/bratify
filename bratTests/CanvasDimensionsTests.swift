@@ -4,9 +4,20 @@ import XCTest
 final class CanvasDimensionsTests: XCTestCase {
 
     func testSimplifiedRatio() {
-        XCTAssertEqual(CanvasDimensions.simplifiedRatio(width: 3024, height: 4032), (3, 4))
-        XCTAssertEqual(CanvasDimensions.simplifiedRatio(width: 16, height: 9), (16, 9))
-        XCTAssertEqual(CanvasDimensions.simplifiedRatio(width: 191, height: 100), (191, 100))
+        assertRatio(CanvasDimensions.simplifiedRatio(width: 3024, height: 4032), width: 3, height: 4)
+        assertRatio(CanvasDimensions.simplifiedRatio(width: 16, height: 9), width: 16, height: 9)
+        assertRatio(CanvasDimensions.simplifiedRatio(width: 191, height: 100), width: 191, height: 100)
+    }
+
+    private func assertRatio(
+        _ ratio: (width: Int, height: Int),
+        width: Int,
+        height: Int,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        XCTAssertEqual(ratio.width, width, file: file, line: line)
+        XCTAssertEqual(ratio.height, height, file: file, line: line)
     }
 
     func testPixelSizeClampsLargeDimensions() {

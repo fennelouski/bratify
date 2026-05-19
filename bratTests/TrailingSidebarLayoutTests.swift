@@ -101,4 +101,42 @@ final class TrailingSidebarLayoutTests: XCTestCase {
             )
         )
     }
+
+    /// Compact editor exposes five bottom panels; settings uses navigation push, not ``EditorPanel``.
+    func testCompactBottomPanelCount() {
+        let panels: [EditorPanel] = [
+            .backgroundImage,
+            .filterStyles,
+            .fontPicker,
+            .webImport,
+            .aspectRatio,
+        ]
+        XCTAssertEqual(panels.count, 5)
+        for panel in panels {
+            let height = TrailingSidebarLayout.compactPanelHeight(
+                for: panel,
+                editorMiddleBandHeight: 800
+            )
+            XCTAssertGreaterThan(height, 0)
+        }
+    }
+
+    func testPhoneCompactLayoutDoesNotUseSidebars() {
+        XCTAssertTrue(
+            TrailingSidebarLayout.shouldUseCompactBottomPanel(
+                idiom: .phone,
+                width: 390,
+                height: 844,
+                usesMacCollapsibleBottomPanel: false
+            )
+        )
+        XCTAssertFalse(
+            TrailingSidebarLayout.shouldUseSidebars(
+                idiom: .phone,
+                width: 390,
+                height: 844,
+                usesMacCollapsibleBottomPanel: false
+            )
+        )
+    }
 }
