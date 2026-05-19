@@ -3,6 +3,7 @@ import UIKit
 extension Notification.Name {
     static let designSaveFailed = Notification.Name("com.bratify.designSaveFailed")
     static let designsDidSync = Notification.Name("com.bratify.designsDidSync")
+    static let designsInitialSyncDidComplete = Notification.Name("com.bratify.designsInitialSyncDidComplete")
 }
 
 class DesignManager {
@@ -10,9 +11,13 @@ class DesignManager {
     static let shared = DesignManager()
 
     private let designsFileName = "designs.json"
+    private let initialSyncTimeout: TimeInterval = 20
+
     private var designs: [Design] = []
     private var metadataQuery: NSMetadataQuery?
     private var iCloudDocumentsURL: URL?
+    private var hasCompletedInitialSync = false
+    private var initialSyncTimeoutWorkItem: DispatchWorkItem?
 
     init() {
         designs = loadFromDisk(at: localFileURL)
@@ -35,6 +40,7 @@ class DesignManager {
                 }
                 self.migrateLocalToiCloudIfNeeded()
                 self.setupiCloudObserver()
+                self.beginInitialSyncCheck()
             }
         }
     }
@@ -73,6 +79,103 @@ class DesignManager {
         }
     }
 
+    // MARK: - Initial Sync
+
+    private func beginInitialSyncCheck() {
+        scheduleInitialSyncTimeout()
+
+        guard iCloudDocumentsURL != nil, let iCloudURL = iCloudFileURL else {
+            finishInitialSyncIfNeeded()
+            return
+        }
+
+        guard FileManager.default.fileExists(atPath: iCloudURL.path) else {
+            finishInitialSyncIfNeeded()
+            return
+        }
+
+        try? FileManager.default.startDownloadingUbiquitousItem(at: iCloudURL)
+
+        if isRemoteFileReadyForRead() {
+            _ = attemptMergeFromiCloud()
+            finishInitialSyncIfNeeded()
+        }
+    }
+
+    private func scheduleInitialSyncTimeout() {
+        initialSyncTimeoutWorkItem?.cancel()
+        let workItem = DispatchWorkItem { [weak self] in
+            self?.finishInitialSyncIfNeeded()
+        }
+        initialSyncTimeoutWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + initialSyncTimeout, execute: workItem)
+    }
+
+    private func cancelInitialSyncTimeout() {
+        initialSyncTimeoutWorkItem?.cancel()
+        initialSyncTimeoutWorkItem = nil
+    }
+
+    private func finishInitialSyncIfNeeded() {
+        guard !hasCompletedInitialSync else { return }
+        hasCompletedInitialSync = true
+        cancelInitialSyncTimeout()
+
+        if let iCloudURL = iCloudFileURL,
+           FileManager.default.fileExists(atPath: iCloudURL.path),
+           isRemoteFileReadyForRead() {
+            _ = attemptMergeFromiCloud()
+        }
+
+        let loaded = loadFromDisk(at: activeFileURL)
+        if !loaded.isEmpty {
+            designs = loaded
+        } else if designs.isEmpty {
+            designs = generateRandomDesigns(count: .random(in: 4...5))
+            saveDesigns(designs)
+        }
+
+        NotificationCenter.default.post(name: .designsInitialSyncDidComplete, object: nil)
+    }
+
+    private func ubiquitousDownloadStatus() -> String? {
+        guard let results = metadataQuery?.results as? [NSMetadataItem] else { return nil }
+        let item = results.first { metadataItem in
+            (metadataItem.value(forAttribute: NSMetadataItemFSNameKey) as? String) == designsFileName
+        }
+        return item?.value(forAttribute: NSMetadataUbiquitousItemDownloadingStatusKey) as? String
+    }
+
+    private func isRemoteFileReadyForRead() -> Bool {
+        if let status = ubiquitousDownloadStatus() {
+            return status == NSMetadataUbiquitousItemDownloadingStatusCurrent
+                || status == NSMetadataUbiquitousItemDownloadingStatusDownloaded
+        }
+        guard let iCloudURL = iCloudFileURL else { return false }
+        return FileManager.default.fileExists(atPath: iCloudURL.path)
+    }
+
+    @discardableResult
+    private func attemptMergeFromiCloud() -> Bool {
+        guard let iCloudURL = iCloudFileURL else { return false }
+        let remoteDesigns = loadFromDisk(at: iCloudURL)
+        guard !remoteDesigns.isEmpty else { return false }
+
+        let merged = merge(local: designs, remote: remoteDesigns)
+        guard designsChanged(from: designs, to: merged) else { return false }
+
+        designs = merged
+        writeToDisk(merged, at: iCloudURL)
+        return true
+    }
+
+    private func designsChanged(from current: [Design], to merged: [Design]) -> Bool {
+        merged.count != current.count ||
+            merged.contains { design in
+                current.first(where: { $0.id == design.id })?.modifiedDate != design.modifiedDate
+            }
+    }
+
     // MARK: - iCloud Observer
 
     private func setupiCloudObserver() {
@@ -99,24 +202,42 @@ class DesignManager {
         metadataQuery?.disableUpdates()
         defer { metadataQuery?.enableUpdates() }
 
+        if !hasCompletedInitialSync {
+            processInitialSyncMetadataUpdate()
+            return
+        }
+
         guard let iCloudURL = iCloudFileURL else { return }
-        let remoteDesigns = loadFromDisk(at: iCloudURL)
-        guard !remoteDesigns.isEmpty else { return }
+        guard isRemoteFileReadyForRead() else {
+            try? FileManager.default.startDownloadingUbiquitousItem(at: iCloudURL)
+            return
+        }
 
-        let merged = merge(local: designs, remote: remoteDesigns)
-
-        let hasChanges = merged.count != designs.count ||
-            merged.contains(where: { remote in
-                designs.first(where: { $0.id == remote.id })?.modifiedDate != remote.modifiedDate
-            })
-
-        guard hasChanges else { return }
-        designs = merged
-        writeToDisk(merged, at: iCloudURL)
+        guard attemptMergeFromiCloud() else { return }
         NotificationCenter.default.post(name: .designsDidSync, object: nil)
     }
 
-    private func merge(local: [Design], remote: [Design]) -> [Design] {
+    private func processInitialSyncMetadataUpdate() {
+        guard let iCloudURL = iCloudFileURL else {
+            finishInitialSyncIfNeeded()
+            return
+        }
+
+        guard FileManager.default.fileExists(atPath: iCloudURL.path) else {
+            finishInitialSyncIfNeeded()
+            return
+        }
+
+        if !isRemoteFileReadyForRead() {
+            try? FileManager.default.startDownloadingUbiquitousItem(at: iCloudURL)
+            return
+        }
+
+        _ = attemptMergeFromiCloud()
+        finishInitialSyncIfNeeded()
+    }
+
+    func merge(local: [Design], remote: [Design]) -> [Design] {
         var byID = Dictionary(uniqueKeysWithValues: local.map { ($0.id, $0) })
         for design in remote {
             if let existing = byID[design.id] {
@@ -168,10 +289,15 @@ class DesignManager {
         return designs
     }
 
-    func loadDesigns() -> [Design] {
+    func loadDesigns(allowSampleGeneration: Bool = true) -> [Design] {
         let loaded = loadFromDisk(at: activeFileURL)
         if loaded.isEmpty {
-            designs = generateRandomDesigns(count: .random(in: 4...5))
+            if allowSampleGeneration {
+                designs = generateRandomDesigns(count: .random(in: 4...5))
+                saveDesigns(designs)
+            } else {
+                designs = []
+            }
         } else {
             designs = loaded
         }
@@ -181,6 +307,8 @@ class DesignManager {
     // MARK: - Persistence
 
     private func loadFromDisk(at url: URL) -> [Design] {
+        guard FileManager.default.fileExists(atPath: url.path) else { return [] }
+
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         var result: [Design] = []

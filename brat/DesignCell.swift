@@ -119,14 +119,32 @@ class DesignCell: UICollectionViewCell {
         }
         
         // Load image using imageService
-        let cacheKey = design.description
+        let interfaceStyle = DesignTextColor.resolvedUserInterfaceStyle(
+            traitCollection.userInterfaceStyle,
+            traitCollection: traitCollection,
+            view: self
+        )
+        let cacheKey = design.imageCacheKey(
+            userInterfaceStyle: interfaceStyle,
+            traitCollection: traitCollection,
+            view: self
+        )
         if let cachedImage = imageService.memoryCache.object(forKey: cacheKey as NSString) {
             imageView.image = cachedImage
         } else {
-            design.generateImage(with: imageService) { [weak self] generatedImage, generatedImageDescription in
+            design.generateImage(
+                with: imageService,
+                userInterfaceStyle: interfaceStyle,
+                traitCollection: traitCollection,
+                view: self
+            ) { [weak self] generatedImage, generatedImageDescription in
                 guard let self,
                       let currentDesign,
-                      generatedImageDescription == currentDesign.description else {
+                      generatedImageDescription == currentDesign.imageCacheKey(
+                        userInterfaceStyle: interfaceStyle,
+                        traitCollection: traitCollection,
+                        view: self
+                      ) else {
                     return  // stale result for a recycled cell
                 }
                 guard let generatedImage else {

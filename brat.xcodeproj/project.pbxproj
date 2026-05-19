@@ -3,21 +3,27 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		70E9CFDFB9C249F8B216EE30 /* TypographyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5543FD1CDB104D3281CAC569 /* TypographyViewController.swift */; };
 		805368BF2D2C804400E78CEF /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 805368BE2D2C804400E78CEF /* Localizable.xcstrings */; };
 		807A4F3D2C52DAFD009ED2FD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F3C2C52DAFD009ED2FD /* AppDelegate.swift */; };
 		807A4F3F2C52DAFD009ED2FD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F3E2C52DAFD009ED2FD /* SceneDelegate.swift */; };
 		807A4F412C52DAFD009ED2FD /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F402C52DAFD009ED2FD /* ViewController.swift */; };
 		807A4F432C52DAFD009ED2FD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 807A4F422C52DAFD009ED2FD /* Main.storyboard */; };
-		807A4F482C52DAFE009ED2FD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 807A4F472C52DAFE009ED2FD /* LaunchScreen.storyboard */; };
 		807A4F462C52DAFE009ED2FD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 807A4F452C52DAFE009ED2FD /* Assets.xcassets */; };
+		807A4F482C52DAFE009ED2FD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 807A4F472C52DAFE009ED2FD /* LaunchScreen.storyboard */; };
 		807A4F542C52DAFE009ED2FD /* bratTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F532C52DAFE009ED2FD /* bratTests.swift */; };
+		E1BEE00000000002CAFECAFE /* DesignManagerMergeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BEE00000000001CAFECAFE /* DesignManagerMergeTests.swift */; };
 		807A4F5E2C52DAFE009ED2FD /* bratUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F5D2C52DAFE009ED2FD /* bratUITests.swift */; };
 		807A4F602C52DAFE009ED2FD /* bratUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F5F2C52DAFE009ED2FD /* bratUITestsLaunchTests.swift */; };
+		E1FACADE00000002CAFECAFE /* ScreenshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1FACADE00000001CAFECAFE /* ScreenshotTests.swift */; };
+		E1FACADE00000004CAFECAFE /* WebImagePickerUIAccessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1FACADE00000003CAFECAFE /* WebImagePickerUIAccessibility.swift */; };
 		807A4F6D2C52DB11009ED2FD /* Design.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F6C2C52DB11009ED2FD /* Design.swift */; };
+		E2TEXT00000000002CAFECAFE /* DesignTextColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2TEXT00000000001CAFECAFE /* DesignTextColor.swift */; };
+		E2TEXT00000000004CAFECAFE /* DesignTextColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2TEXT00000000003CAFECAFE /* DesignTextColorTests.swift */; };
 		807A4F6F2C52DB26009ED2FD /* EditDesignViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F6E2C52DB26009ED2FD /* EditDesignViewController.swift */; };
 		807A4F712C52DBC2009ED2FD /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F702C52DBC2009ED2FD /* SettingsManager.swift */; };
 		807A4F732C52DBCF009ED2FD /* ThemeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F722C52DBCF009ED2FD /* ThemeModel.swift */; };
@@ -34,20 +40,19 @@
 		807A4F8F2C52DC09009ED2FD /* ColorContextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F792C52DC09009ED2FD /* ColorContextView.swift */; };
 		807A4F902C52DC09009ED2FD /* FontCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F762C52DC09009ED2FD /* FontCell.swift */; };
 		807A4F912C52DC09009ED2FD /* UIColor+HexString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F822C52DC09009ED2FD /* UIColor+HexString.swift */; };
-		9722DC6688F841DA989ECAB0 /* UIColor+Contrast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E82833F48124901B68E8882 /* UIColor+Contrast.swift */; };
 		807A4F922C52DC09009ED2FD /* UILabel+AppLabels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F7F2C52DC09009ED2FD /* UILabel+AppLabels.swift */; };
 		807A4F932C52DC09009ED2FD /* UIView+Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F782C52DC09009ED2FD /* UIView+Theme.swift */; };
 		807A4F942C52DC09009ED2FD /* UIView+AdaptiveBackgroundColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F842C52DC09009ED2FD /* UIView+AdaptiveBackgroundColor.swift */; };
 		807A4F952C52DC09009ED2FD /* UIFont+AppFonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F772C52DC09009ED2FD /* UIFont+AppFonts.swift */; };
 		807A4F972C52DC28009ED2FD /* HistogramSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F962C52DC28009ED2FD /* HistogramSliderView.swift */; };
 		807A4F992C52DC3F009ED2FD /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F982C52DC3F009ED2FD /* SettingsViewController.swift */; };
-		925F684140994FD3AD3B7D60 /* SettingsCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE14DE7D5E14A4DBE2A0D54 /* SettingsCategoryViewController.swift */; };
-		A1B2C3D4E5F60001A1B2C3D4 /* MasonryLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002A1B2C3D4 /* MasonryLayout.swift */; };
-		70E9CFDFB9C249F8B216EE30 /* TypographyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5543FD1CDB104D3281CAC569 /* TypographyViewController.swift */; };
 		807A4F9B2C52DC58009ED2FD /* StepperTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F9A2C52DC58009ED2FD /* StepperTableViewCell.swift */; };
 		807A4F9D2C52DC6F009ED2FD /* UIDevice+Admin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F9C2C52DC6F009ED2FD /* UIDevice+Admin.swift */; };
 		807A4F9F2C52DC72009ED2FD /* UIDevice+Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F9E2C52DC72009ED2FD /* UIDevice+Keyboard.swift */; };
 		807A4FA12C52DC82009ED2FD /* SliderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4FA02C52DC82009ED2FD /* SliderTableViewCell.swift */; };
+		80B2C3D42E8A100100A1B2C3 /* SliderMacRowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B2C3D32E8A100100A1B2C3 /* SliderMacRowLayout.swift */; };
+		80B2C3D62E8A100200A1B2C3 /* TrailingSidebarLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B2C3D52E8A100200A1B2C3 /* TrailingSidebarLayout.swift */; };
+		80B2C3D82E8A100300A1B2C3 /* BackgroundImagePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B2C3D72E8A100300A1B2C3 /* BackgroundImagePickerViewController.swift */; };
 		807A4FA32C52DC8A009ED2FD /* TextFieldTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4FA22C52DC8A009ED2FD /* TextFieldTableViewCell.swift */; };
 		807A4FA52C52DC8D009ED2FD /* SwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4FA42C52DC8D009ED2FD /* SwitchTableViewCell.swift */; };
 		807A4FA72C52DCA0009ED2FD /* KeyboardObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4FA62C52DCA0009ED2FD /* KeyboardObserver.swift */; };
@@ -79,9 +84,24 @@
 		8084C0E12C5D7C9D00EA453C /* DesignControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8084C0E02C5D7C9D00EA453C /* DesignControlsView.swift */; };
 		8084C0E32C5D7F3A00EA453C /* DesignControlsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8084C0E22C5D7F3A00EA453C /* DesignControlsViewController.swift */; };
 		80F4589B2C61D3160039C385 /* UIImage+Filters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F4589A2C61D3160039C385 /* UIImage+Filters.swift */; };
-		D70253BCFDB04392B29043BB /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA541FEB83A43E197403C21 /* ToastView.swift */; };
+		E3FLT00000000002CAFECAFE /* ImageFilterSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT00000000001CAFECAFE /* ImageFilterSettings.swift */; };
+		E3FLT00000000004CAFECAFE /* FilterPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT00000000003CAFECAFE /* FilterPreset.swift */; };
+		E3FLT00000000006CAFECAFE /* FilterPresetPickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT00000000005CAFECAFE /* FilterPresetPickerCell.swift */; };
+		E3FLT0000000000BCAFECAFE /* FilterPresetPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT0000000000ACAFECAFE2 /* FilterPresetPickerView.swift */; };
+		E3FLT0000000000DCAFECAFE /* FilterStylesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT0000000000CCAFECAFE /* FilterStylesViewController.swift */; };
+		E3FLT00000000008CAFECAFE /* DesignFilterStateSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT00000000007CAFECAFE /* DesignFilterStateSync.swift */; };
+		E3FLT0000000000ACAFECAFE /* ImageFilterSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT00000000009CAFECAFE /* ImageFilterSettingsTests.swift */; };
 		80F4589D2C61E2EB0039C385 /* AspectRatioPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F4589C2C61E2EB0039C385 /* AspectRatioPickerViewController.swift */; };
 		80F4589F2C61EA860039C385 /* AspectRatioCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F4589E2C61EA860039C385 /* AspectRatioCell.swift */; };
+		E3AR000000000002CAFECAFE /* CanvasDimensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AR000000000001CAFECAFE /* CanvasDimensions.swift */; };
+		E3AR000000000004CAFECAFE /* AspectRatioPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AR000000000003CAFECAFE /* AspectRatioPreset.swift */; };
+		E3PLAT00000000002CAFECAFE /* PlatformBrandIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3PLAT00000000001CAFECAFE /* PlatformBrandIcon.swift */; };
+		E3AR000000000006CAFECAFE /* CanvasDimensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AR000000000005CAFECAFE /* CanvasDimensionsTests.swift */; };
+		E3TSID00000000002CAFECAFE /* TrailingSidebarLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3TSID00000000001CAFECAFE /* TrailingSidebarLayoutTests.swift */; };
+		925F684140994FD3AD3B7D60 /* SettingsCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE14DE7D5E14A4DBE2A0D54 /* SettingsCategoryViewController.swift */; };
+		9722DC6688F841DA989ECAB0 /* UIColor+Contrast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E82833F48124901B68E8882 /* UIColor+Contrast.swift */; };
+		A1B2C3D4E5F60001A1B2C3D4 /* MasonryLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002A1B2C3D4 /* MasonryLayout.swift */; };
+		D70253BCFDB04392B29043BB /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA541FEB83A43E197403C21 /* ToastView.swift */; };
 		E8F1A1002E5B100012340002 /* WebImageImportPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F1A1002E5B100012340001 /* WebImageImportPresenter.swift */; };
 		E8F1A1002E5B100012340003 /* WebImagePicker in Frameworks */ = {isa = PBXBuildFile; productRef = E8F1A1002E5B100012340005 /* WebImagePicker */; };
 /* End PBXBuildFile section */
@@ -104,6 +124,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5543FD1CDB104D3281CAC569 /* TypographyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypographyViewController.swift; sourceTree = "<group>"; };
+		5E82833F48124901B68E8882 /* UIColor+Contrast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Contrast.swift"; sourceTree = "<group>"; };
 		805368BE2D2C804400E78CEF /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		805368C02D2C8FEF00E78CEF /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/Main.storyboard; sourceTree = "<group>"; };
 		805368C12D2C8FEF00E78CEF /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -125,10 +147,15 @@
 		807A4F4A2C52DAFE009ED2FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		807A4F4F2C52DAFE009ED2FD /* bratTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = bratTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		807A4F532C52DAFE009ED2FD /* bratTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bratTests.swift; sourceTree = "<group>"; };
+		E1BEE00000000001CAFECAFE /* DesignManagerMergeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignManagerMergeTests.swift; sourceTree = "<group>"; };
 		807A4F592C52DAFE009ED2FD /* bratUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = bratUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		807A4F5D2C52DAFE009ED2FD /* bratUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bratUITests.swift; sourceTree = "<group>"; };
 		807A4F5F2C52DAFE009ED2FD /* bratUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bratUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		E1FACADE00000001CAFECAFE /* ScreenshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotTests.swift; sourceTree = "<group>"; };
+		E1FACADE00000003CAFECAFE /* WebImagePickerUIAccessibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImagePickerUIAccessibility.swift; sourceTree = "<group>"; };
 		807A4F6C2C52DB11009ED2FD /* Design.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Design.swift; sourceTree = "<group>"; };
+		E2TEXT00000000001CAFECAFE /* DesignTextColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignTextColor.swift; sourceTree = "<group>"; };
+		E2TEXT00000000003CAFECAFE /* DesignTextColorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignTextColorTests.swift; sourceTree = "<group>"; };
 		807A4F6E2C52DB26009ED2FD /* EditDesignViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditDesignViewController.swift; sourceTree = "<group>"; };
 		807A4F702C52DBC2009ED2FD /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
 		807A4F722C52DBCF009ED2FD /* ThemeModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeModel.swift; sourceTree = "<group>"; };
@@ -146,19 +173,18 @@
 		807A4F802C52DC09009ED2FD /* CGFloat+SpacingUnits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGFloat+SpacingUnits.swift"; sourceTree = "<group>"; };
 		807A4F812C52DC09009ED2FD /* ThemeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTableViewCell.swift; sourceTree = "<group>"; };
 		807A4F822C52DC09009ED2FD /* UIColor+HexString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+HexString.swift"; sourceTree = "<group>"; };
-		5E82833F48124901B68E8882 /* UIColor+Contrast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Contrast.swift"; sourceTree = "<group>"; };
 		807A4F832C52DC09009ED2FD /* ColorPaletteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPaletteView.swift; sourceTree = "<group>"; };
 		807A4F842C52DC09009ED2FD /* UIView+AdaptiveBackgroundColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+AdaptiveBackgroundColor.swift"; sourceTree = "<group>"; };
 		807A4F852C52DC09009ED2FD /* UIViewController+Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Theme.swift"; sourceTree = "<group>"; };
 		807A4F962C52DC28009ED2FD /* HistogramSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistogramSliderView.swift; sourceTree = "<group>"; };
 		807A4F982C52DC3F009ED2FD /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
-		FEE14DE7D5E14A4DBE2A0D54 /* SettingsCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCategoryViewController.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60002A1B2C3D4 /* MasonryLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasonryLayout.swift; sourceTree = "<group>"; };
-		5543FD1CDB104D3281CAC569 /* TypographyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypographyViewController.swift; sourceTree = "<group>"; };
 		807A4F9A2C52DC58009ED2FD /* StepperTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepperTableViewCell.swift; sourceTree = "<group>"; };
 		807A4F9C2C52DC6F009ED2FD /* UIDevice+Admin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+Admin.swift"; sourceTree = "<group>"; };
 		807A4F9E2C52DC72009ED2FD /* UIDevice+Keyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+Keyboard.swift"; sourceTree = "<group>"; };
 		807A4FA02C52DC82009ED2FD /* SliderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SliderTableViewCell.swift; sourceTree = "<group>"; };
+		80B2C3D32E8A100100A1B2C3 /* SliderMacRowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SliderMacRowLayout.swift; sourceTree = "<group>"; };
+		80B2C3D52E8A100200A1B2C3 /* TrailingSidebarLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrailingSidebarLayout.swift; sourceTree = "<group>"; };
+		80B2C3D72E8A100300A1B2C3 /* BackgroundImagePickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundImagePickerViewController.swift; sourceTree = "<group>"; };
 		807A4FA22C52DC8A009ED2FD /* TextFieldTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldTableViewCell.swift; sourceTree = "<group>"; };
 		807A4FA42C52DC8D009ED2FD /* SwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCell.swift; sourceTree = "<group>"; };
 		807A4FA62C52DCA0009ED2FD /* KeyboardObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardObserver.swift; sourceTree = "<group>"; };
@@ -191,10 +217,24 @@
 		8084C0E02C5D7C9D00EA453C /* DesignControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignControlsView.swift; sourceTree = "<group>"; };
 		8084C0E22C5D7F3A00EA453C /* DesignControlsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignControlsViewController.swift; sourceTree = "<group>"; };
 		80F4589A2C61D3160039C385 /* UIImage+Filters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Filters.swift"; sourceTree = "<group>"; };
-		CFA541FEB83A43E197403C21 /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
+		E3FLT00000000001CAFECAFE /* ImageFilterSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFilterSettings.swift; sourceTree = "<group>"; };
+		E3FLT00000000003CAFECAFE /* FilterPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterPreset.swift; sourceTree = "<group>"; };
+		E3FLT00000000005CAFECAFE /* FilterPresetPickerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterPresetPickerCell.swift; sourceTree = "<group>"; };
+		E3FLT0000000000ACAFECAFE2 /* FilterPresetPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterPresetPickerView.swift; sourceTree = "<group>"; };
+		E3FLT0000000000CCAFECAFE /* FilterStylesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterStylesViewController.swift; sourceTree = "<group>"; };
+		E3FLT00000000007CAFECAFE /* DesignFilterStateSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignFilterStateSync.swift; sourceTree = "<group>"; };
+		E3FLT00000000009CAFECAFE /* ImageFilterSettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFilterSettingsTests.swift; sourceTree = "<group>"; };
 		80F4589C2C61E2EB0039C385 /* AspectRatioPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectRatioPickerViewController.swift; sourceTree = "<group>"; };
 		80F4589E2C61EA860039C385 /* AspectRatioCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectRatioCell.swift; sourceTree = "<group>"; };
+		E3AR000000000001CAFECAFE /* CanvasDimensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasDimensions.swift; sourceTree = "<group>"; };
+		E3AR000000000003CAFECAFE /* AspectRatioPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectRatioPreset.swift; sourceTree = "<group>"; };
+		E3PLAT00000000001CAFECAFE /* PlatformBrandIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformBrandIcon.swift; sourceTree = "<group>"; };
+		E3AR000000000005CAFECAFE /* CanvasDimensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasDimensionsTests.swift; sourceTree = "<group>"; };
+		E3TSID00000000001CAFECAFE /* TrailingSidebarLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailingSidebarLayoutTests.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F60002A1B2C3D4 /* MasonryLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasonryLayout.swift; sourceTree = "<group>"; };
+		CFA541FEB83A43E197403C21 /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 		E8F1A1002E5B100012340001 /* WebImageImportPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageImportPresenter.swift; sourceTree = "<group>"; };
+		FEE14DE7D5E14A4DBE2A0D54 /* SettingsCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCategoryViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -262,8 +302,15 @@
 				807A4FC22C52F8F0009ED2FD /* DesignView.swift */,
 				807A4FBE2C52E384009ED2FD /* Date+SpelledOutTime.swift */,
 				807A4F6C2C52DB11009ED2FD /* Design.swift */,
+				E2TEXT00000000001CAFECAFE /* DesignTextColor.swift */,
 				807A4FCE2C536515009ED2FD /* Design+ImageGeneration.swift */,
 				80F4589A2C61D3160039C385 /* UIImage+Filters.swift */,
+				E3FLT00000000001CAFECAFE /* ImageFilterSettings.swift */,
+				E3FLT00000000003CAFECAFE /* FilterPreset.swift */,
+				E3FLT00000000005CAFECAFE /* FilterPresetPickerCell.swift */,
+				E3FLT0000000000ACAFECAFE2 /* FilterPresetPickerView.swift */,
+				E3FLT0000000000CCAFECAFE /* FilterStylesViewController.swift */,
+				E3FLT00000000007CAFECAFE /* DesignFilterStateSync.swift */,
 				CFA541FEB83A43E197403C21 /* ToastView.swift */,
 				8084C0E02C5D7C9D00EA453C /* DesignControlsView.swift */,
 				807A4FBA2C52DE82009ED2FD /* DesignManager.swift */,
@@ -289,11 +336,17 @@
 				807A4F852C52DC09009ED2FD /* UIViewController+Theme.swift */,
 				807A4F962C52DC28009ED2FD /* HistogramSliderView.swift */,
 				807A4FA02C52DC82009ED2FD /* SliderTableViewCell.swift */,
+				80B2C3D32E8A100100A1B2C3 /* SliderMacRowLayout.swift */,
+				80B2C3D52E8A100200A1B2C3 /* TrailingSidebarLayout.swift */,
+				80B2C3D72E8A100300A1B2C3 /* BackgroundImagePickerViewController.swift */,
 				8084C0DE2C5D790D00EA453C /* AspectRatioTableViewCell.swift */,
 				807A4F982C52DC3F009ED2FD /* SettingsViewController.swift */,
 				FEE14DE7D5E14A4DBE2A0D54 /* SettingsCategoryViewController.swift */,
 				5543FD1CDB104D3281CAC569 /* TypographyViewController.swift */,
 				A1B2C3D4E5F60002A1B2C3D4 /* MasonryLayout.swift */,
+				E3AR000000000001CAFECAFE /* CanvasDimensions.swift */,
+				E3AR000000000003CAFECAFE /* AspectRatioPreset.swift */,
+				E3PLAT00000000001CAFECAFE /* PlatformBrandIcon.swift */,
 				80F4589C2C61E2EB0039C385 /* AspectRatioPickerViewController.swift */,
 				80F4589E2C61EA860039C385 /* AspectRatioCell.swift */,
 				807A4F9A2C52DC58009ED2FD /* StepperTableViewCell.swift */,
@@ -329,6 +382,11 @@
 			isa = PBXGroup;
 			children = (
 				807A4F532C52DAFE009ED2FD /* bratTests.swift */,
+				E1BEE00000000001CAFECAFE /* DesignManagerMergeTests.swift */,
+				E2TEXT00000000003CAFECAFE /* DesignTextColorTests.swift */,
+				E3FLT00000000009CAFECAFE /* ImageFilterSettingsTests.swift */,
+				E3AR000000000005CAFECAFE /* CanvasDimensionsTests.swift */,
+				E3TSID00000000001CAFECAFE /* TrailingSidebarLayoutTests.swift */,
 			);
 			path = bratTests;
 			sourceTree = "<group>";
@@ -338,6 +396,8 @@
 			children = (
 				807A4F5D2C52DAFE009ED2FD /* bratUITests.swift */,
 				807A4F5F2C52DAFE009ED2FD /* bratUITestsLaunchTests.swift */,
+				E1FACADE00000001CAFECAFE /* ScreenshotTests.swift */,
+				E1FACADE00000003CAFECAFE /* WebImagePickerUIAccessibility.swift */,
 			);
 			path = bratUITests;
 			sourceTree = "<group>";
@@ -557,6 +617,9 @@
 				807A4FB12C52DCF0009ED2FD /* UIImage+SFSymbolsLarge.swift in Sources */,
 				807A4FBD2C52DEEE009ED2FD /* UIBarButtonItem+Settings.swift in Sources */,
 				807A4FA12C52DC82009ED2FD /* SliderTableViewCell.swift in Sources */,
+				80B2C3D42E8A100100A1B2C3 /* SliderMacRowLayout.swift in Sources */,
+				80B2C3D62E8A100200A1B2C3 /* TrailingSidebarLayout.swift in Sources */,
+				80B2C3D82E8A100300A1B2C3 /* BackgroundImagePickerViewController.swift in Sources */,
 				807A4F8B2C52DC09009ED2FD /* FontsViewController.swift in Sources */,
 				8084C0E12C5D7C9D00EA453C /* DesignControlsView.swift in Sources */,
 				807A4F6F2C52DB26009ED2FD /* EditDesignViewController.swift in Sources */,
@@ -566,6 +629,12 @@
 				807A4FAF2C52DCED009ED2FD /* UIImage+SFSymbols.swift in Sources */,
 				807A4FBF2C52E384009ED2FD /* Date+SpelledOutTime.swift in Sources */,
 				80F4589B2C61D3160039C385 /* UIImage+Filters.swift in Sources */,
+				E3FLT00000000002CAFECAFE /* ImageFilterSettings.swift in Sources */,
+				E3FLT00000000004CAFECAFE /* FilterPreset.swift in Sources */,
+				E3FLT00000000006CAFECAFE /* FilterPresetPickerCell.swift in Sources */,
+				E3FLT0000000000BCAFECAFE /* FilterPresetPickerView.swift in Sources */,
+				E3FLT0000000000DCAFECAFE /* FilterStylesViewController.swift in Sources */,
+				E3FLT00000000008CAFECAFE /* DesignFilterStateSync.swift in Sources */,
 				D70253BCFDB04392B29043BB /* ToastView.swift in Sources */,
 				807A4FCD2C535C20009ED2FD /* KeyboardOptionsView.swift in Sources */,
 				807A4FA52C52DC8D009ED2FD /* SwitchTableViewCell.swift in Sources */,
@@ -597,6 +666,7 @@
 				807A4FA32C52DC8A009ED2FD /* TextFieldTableViewCell.swift in Sources */,
 				8084C0DF2C5D790D00EA453C /* AspectRatioTableViewCell.swift in Sources */,
 				807A4F6D2C52DB11009ED2FD /* Design.swift in Sources */,
+				E2TEXT00000000002CAFECAFE /* DesignTextColor.swift in Sources */,
 				8084C0E32C5D7F3A00EA453C /* DesignControlsViewController.swift in Sources */,
 				807A4F3D2C52DAFD009ED2FD /* AppDelegate.swift in Sources */,
 				807A4F8A2C52DC09009ED2FD /* CompactColorPaletteView.swift in Sources */,
@@ -614,6 +684,9 @@
 				9722DC6688F841DA989ECAB0 /* UIColor+Contrast.swift in Sources */,
 				807A4F9B2C52DC58009ED2FD /* StepperTableViewCell.swift in Sources */,
 				807A4F3F2C52DAFD009ED2FD /* SceneDelegate.swift in Sources */,
+				E3AR000000000002CAFECAFE /* CanvasDimensions.swift in Sources */,
+				E3AR000000000004CAFECAFE /* AspectRatioPreset.swift in Sources */,
+				E3PLAT00000000002CAFECAFE /* PlatformBrandIcon.swift in Sources */,
 				80F4589D2C61E2EB0039C385 /* AspectRatioPickerViewController.swift in Sources */,
 				807A4FD82C53F843009ED2FD /* CustomColorPickerViewController.swift in Sources */,
 				E8F1A1002E5B100012340002 /* WebImageImportPresenter.swift in Sources */,
@@ -625,6 +698,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				807A4F542C52DAFE009ED2FD /* bratTests.swift in Sources */,
+				E1BEE00000000002CAFECAFE /* DesignManagerMergeTests.swift in Sources */,
+				E2TEXT00000000004CAFECAFE /* DesignTextColorTests.swift in Sources */,
+				E3FLT0000000000ACAFECAFE /* ImageFilterSettingsTests.swift in Sources */,
+				E3AR000000000006CAFECAFE /* CanvasDimensionsTests.swift in Sources */,
+				E3TSID00000000002CAFECAFE /* TrailingSidebarLayoutTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -634,6 +712,8 @@
 			files = (
 				807A4F5E2C52DAFE009ED2FD /* bratUITests.swift in Sources */,
 				807A4F602C52DAFE009ED2FD /* bratUITestsLaunchTests.swift in Sources */,
+				E1FACADE00000002CAFECAFE /* ScreenshotTests.swift in Sources */,
+				E1FACADE00000004CAFECAFE /* WebImagePickerUIAccessibility.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -829,7 +909,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1;
+				MARKETING_VERSION = 2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nathanfennel.brat;
 				PRODUCT_NAME = bratify;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -867,7 +947,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1;
+				MARKETING_VERSION = 2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nathanfennel.brat;
 				PRODUCT_NAME = bratify;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

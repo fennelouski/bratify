@@ -1,4 +1,6 @@
+import SwiftUI
 import UIKit
+import WebImagePicker
 
 class EditDesignViewController: UIViewController {
 
@@ -32,9 +34,30 @@ class EditDesignViewController: UIViewController {
     private var previewImageViewBottomConstraint: NSLayoutConstraint?
     private var previewImageViewTopSwatchConstraint: NSLayoutConstraint?
     private var previewImageViewTopSafeAreaConstraint: NSLayoutConstraint?
+    private var previewImageViewTopCanvasConstraint: NSLayoutConstraint?
+    private var previewImageViewBottomCanvasConstraint: NSLayoutConstraint?
     private var previewImageViewAspectRatioConstraint: NSLayoutConstraint?
     private var isDesignControlsModeActive = false
+    private var isEditingChromeVisible = false
     private lazy var keyboardOptionsView = KeyboardOptionsView(settingsManager: settingsManager)
+    private var keyboardOptionsHeightConstraint: NSLayoutConstraint?
+    private let macKeyboardOptionsExpandedHeight: CGFloat = 300
+
+    private var usesMacCollapsibleBottomPanel: Bool {
+        #if targetEnvironment(macCatalyst)
+        return true
+        #else
+        return UIDevice.current.userInterfaceIdiom == .mac
+        #endif
+    }
+
+    private weak var primarySlidersToggleButton: UIButton?
+    private weak var controlsToolbarButton: UIButton?
+    private weak var stylesToolbarButton: UIButton?
+    private weak var backgroundImageToolbarButton: UIButton?
+    private weak var settingsToolbarButton: UIButton?
+    private var lastAppliedPresetID: String?
+    private weak var settingsNavBarButton: UIBarButtonItem?
 
     private enum ColorSwatchMode { case tools, backgroundColor, textColor }
     private var colorSwatchMode: ColorSwatchMode = .tools { didSet { applySwatchMode() } }
@@ -83,6 +106,111 @@ class EditDesignViewController: UIViewController {
     private var scrollViewLeadingNormal: NSLayoutConstraint?
     private var scrollViewLeadingFull: NSLayoutConstraint?
 
+    private let fontPickerSidebarContainer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .secondarySystemBackground
+        view.clipsToBounds = true
+        view.isHidden = true
+        return view
+    }()
+
+    private let fontPickerSidebarSeparator: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .separator
+        return view
+    }()
+
+    private var fontPickerSidebarWidthConstraint: NSLayoutConstraint?
+    private var previewImageViewTrailingToViewConstraint: NSLayoutConstraint?
+    private var previewImageViewTrailingToSidebarConstraint: NSLayoutConstraint?
+    private var embeddedFontPickerViewController: FontsViewController?
+    private var embeddedWebImagePickerHostingController: UIHostingController<WebImagePicker>?
+    private var embeddedAspectRatioPickerViewController: AspectRatioPickerViewController?
+    private weak var fontPickerToolbarButton: UIButton?
+    private weak var webImportToolbarButton: UIButton?
+    private weak var aspectRatioToolbarButton: UIButton?
+
+    private enum TrailingSidebarContent {
+        case fontPicker
+        case webImages
+        case aspectRatio
+    }
+
+    private var activeTrailingSidebar: TrailingSidebarContent?
+
+    private var isTrailingSidebarVisible: Bool {
+        activeTrailingSidebar != nil
+    }
+
+    private var isFontPickerSidebarVisible: Bool {
+        activeTrailingSidebar == .fontPicker
+    }
+
+    private var isWebImageSidebarVisible: Bool {
+        activeTrailingSidebar == .webImages
+    }
+
+    private var isAspectRatioSidebarVisible: Bool {
+        activeTrailingSidebar == .aspectRatio
+    }
+
+    private enum LeadingSidebarContent {
+        case backgroundImage
+        case settings
+        case filterStyles
+    }
+
+    private var embeddedSettingsNavigationController: UINavigationController?
+    private var activeLeadingSidebar: LeadingSidebarContent?
+
+    private var isLeadingSidebarVisible: Bool {
+        activeLeadingSidebar != nil
+    }
+
+    private var isImagePickerSidebarVisible: Bool {
+        activeLeadingSidebar == .backgroundImage
+    }
+
+    private let imagePickerSidebarContainer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .secondarySystemBackground
+        view.clipsToBounds = true
+        view.isHidden = true
+        return view
+    }()
+
+    private let imagePickerSidebarSeparator: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .separator
+        return view
+    }()
+
+    private var imagePickerSidebarWidthConstraint: NSLayoutConstraint?
+    private var previewImageViewLeadingToViewConstraint: NSLayoutConstraint?
+    private var previewImageViewLeadingToSidebarConstraint: NSLayoutConstraint?
+    private var embeddedBackgroundImagePickerViewController: BackgroundImagePickerViewController?
+    private var embeddedFilterStylesViewController: FilterStylesViewController?
+
+    private let editorBottomPanelContainer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .secondarySystemBackground
+        view.clipsToBounds = true
+        view.isHidden = true
+        return view
+    }()
+
+    private var editorBottomPanelHeightConstraint: NSLayoutConstraint?
+    private var activeEditorPanel: EditorPanel?
+
+    private var isEditorBottomPanelVisible: Bool {
+        activeEditorPanel != nil
+    }
+
     // MARK: - Focus mode
     private enum FocusState { case editing, distractionFree, fullScreen }
     private var focusState: FocusState = .editing
@@ -125,16 +253,56 @@ class EditDesignViewController: UIViewController {
         }
     }()
 
-    private lazy var textColor: UIColor = {
-        if let color = design?.textColor {
-            return color
+    private var usesAutomaticTextColor = true
+    private var customTextColor: UIColor = .white
+
+    /// Resolved light/dark appearance for the editor chrome and preview rendering.
+    private var resolvedInterfaceStyle: UIUserInterfaceStyle {
+        DesignTextColor.resolvedUserInterfaceStyle(
+            traitCollection.userInterfaceStyle,
+            traitCollection: traitCollection,
+            view: isViewLoaded ? view : nil
+        )
+    }
+
+    private var resolvedEditingTextColor: UIColor {
+        currentDesign.resolvedTextColor(for: resolvedInterfaceStyle)
+    }
+
+    private func configureTextColorState() {
+        if let design {
+            usesAutomaticTextColor = design.usesAutomaticTextColor
+            customTextColor = design.textColor
         } else {
-            return UIColor(hexString: settingsManager.textColorHex)
+            usesAutomaticTextColor = settingsManager.usesAutomaticDefaultTextColor
+            customTextColor = UIColor(hexString: settingsManager.textColorHex)
         }
-    }() {
-        didSet {
-            keyboardOptionsView.update(with: currentDesign)
+    }
+
+    private func setTextColor(_ color: UIColor, isUserChosen: Bool) {
+        if isUserChosen {
+            usesAutomaticTextColor = false
+            customTextColor = color
+            settingsManager.textColorHex = color.toHexString()
+            settingsManager.usesAutomaticDefaultTextColor = false
         }
+        keyboardOptionsView.update(with: currentDesign)
+        if colorSwatchMode == .textColor {
+            colorSwatchIndicatorView.backgroundColor = resolvedEditingTextColor
+            refreshColorSwatches(currentColor: resolvedEditingTextColor)
+        }
+        updateDesignImage()
+    }
+
+    private func setAutomaticTextColor() {
+        guard !usesAutomaticTextColor else { return }
+        usesAutomaticTextColor = true
+        keyboardOptionsView.update(with: currentDesign)
+        if colorSwatchMode == .textColor {
+            colorSwatchIndicatorView.backgroundColor = resolvedEditingTextColor
+            refreshColorSwatches(currentColor: resolvedEditingTextColor)
+        }
+        updateDesignImage()
     }
 
     private lazy var fontName: String = design?.fontName ?? settingsManager.preferredFontName {
@@ -146,6 +314,7 @@ class EditDesignViewController: UIViewController {
     private lazy var imageName: String = design?.backgroundImageKey ?? "" {
         didSet {
             keyboardOptionsView.update(with: currentDesign)
+            reloadAspectRatioSidebarNativeImageIfNeeded()
         }
     }
 
@@ -323,6 +492,45 @@ class EditDesignViewController: UIViewController {
             keyboardOptionsView.update(with: currentDesign)
         }
     }
+
+    private lazy var hue: CGFloat = design?.hue ?? 0 {
+        didSet { keyboardOptionsView.update(with: currentDesign) }
+    }
+    private lazy var highlightAmount: CGFloat = design?.highlightAmount ?? 1 {
+        didSet { keyboardOptionsView.update(with: currentDesign) }
+    }
+    private lazy var shadowAmount: CGFloat = design?.shadowAmount ?? 0 {
+        didSet { keyboardOptionsView.update(with: currentDesign) }
+    }
+    private lazy var grain: CGFloat = design?.grain ?? 0 {
+        didSet { keyboardOptionsView.update(with: currentDesign) }
+    }
+    private lazy var bloom: CGFloat = design?.bloom ?? 0 {
+        didSet { keyboardOptionsView.update(with: currentDesign) }
+    }
+    private lazy var duotoneIntensity: CGFloat = design?.duotoneIntensity ?? 0 {
+        didSet { keyboardOptionsView.update(with: currentDesign) }
+    }
+    private lazy var duotoneColorHex: String = design?.duotoneColorHex ?? "8ACE00"
+    private lazy var vibrance: CGFloat = design?.vibrance ?? 0 {
+        didSet { keyboardOptionsView.update(with: currentDesign) }
+    }
+    private lazy var posterizeLevels: CGFloat = design?.posterizeLevels ?? 0 {
+        didSet { keyboardOptionsView.update(with: currentDesign) }
+    }
+    private lazy var colorTemperature: CGFloat = design?.colorTemperature ?? 6500 {
+        didSet { keyboardOptionsView.update(with: currentDesign) }
+    }
+    private lazy var colorTint: CGFloat = design?.colorTint ?? 0 {
+        didSet { keyboardOptionsView.update(with: currentDesign) }
+    }
+    private lazy var photoEffect: FilterPhotoEffect? = design?.photoEffect
+    private lazy var halftone: CGFloat = design?.halftone ?? 0 {
+        didSet { keyboardOptionsView.update(with: currentDesign) }
+    }
+    private lazy var unsharpMask: CGFloat = design?.unsharpMask ?? 0 {
+        didSet { keyboardOptionsView.update(with: currentDesign) }
+    }
     
     private lazy var backgroundBrightness: CGFloat = {
         if let brightness = design?.backgroundBrightness {
@@ -456,6 +664,45 @@ class EditDesignViewController: UIViewController {
         }
     }
 
+    private lazy var backgroundHue: CGFloat = design?.backgroundHue ?? 0 {
+        didSet { keyboardOptionsView.update(with: currentDesign) }
+    }
+    private lazy var backgroundHighlightAmount: CGFloat = design?.backgroundHighlightAmount ?? 1 {
+        didSet { keyboardOptionsView.update(with: currentDesign) }
+    }
+    private lazy var backgroundShadowAmount: CGFloat = design?.backgroundShadowAmount ?? 0 {
+        didSet { keyboardOptionsView.update(with: currentDesign) }
+    }
+    private lazy var backgroundGrain: CGFloat = design?.backgroundGrain ?? 0 {
+        didSet { keyboardOptionsView.update(with: currentDesign) }
+    }
+    private lazy var backgroundBloom: CGFloat = design?.backgroundBloom ?? 0 {
+        didSet { keyboardOptionsView.update(with: currentDesign) }
+    }
+    private lazy var backgroundDuotoneIntensity: CGFloat = design?.backgroundDuotoneIntensity ?? 0 {
+        didSet { keyboardOptionsView.update(with: currentDesign) }
+    }
+    private lazy var backgroundDuotoneColorHex: String = design?.backgroundDuotoneColorHex ?? "8ACE00"
+    private lazy var backgroundVibrance: CGFloat = design?.backgroundVibrance ?? 0 {
+        didSet { keyboardOptionsView.update(with: currentDesign) }
+    }
+    private lazy var backgroundPosterizeLevels: CGFloat = design?.backgroundPosterizeLevels ?? 0 {
+        didSet { keyboardOptionsView.update(with: currentDesign) }
+    }
+    private lazy var backgroundColorTemperature: CGFloat = design?.backgroundColorTemperature ?? 6500 {
+        didSet { keyboardOptionsView.update(with: currentDesign) }
+    }
+    private lazy var backgroundColorTint: CGFloat = design?.backgroundColorTint ?? 0 {
+        didSet { keyboardOptionsView.update(with: currentDesign) }
+    }
+    private lazy var backgroundPhotoEffect: FilterPhotoEffect? = design?.backgroundPhotoEffect
+    private lazy var backgroundHalftone: CGFloat = design?.backgroundHalftone ?? 0 {
+        didSet { keyboardOptionsView.update(with: currentDesign) }
+    }
+    private lazy var backgroundUnsharpMask: CGFloat = design?.backgroundUnsharpMask ?? 0 {
+        didSet { keyboardOptionsView.update(with: currentDesign) }
+    }
+    
     private lazy var backgroundScale: CGFloat = {
         if let scale = design?.backgroundScale {
             return scale
@@ -518,20 +765,23 @@ class EditDesignViewController: UIViewController {
 
 
     private var creationDate = Date()
-    
+    private var canvasWidth: CGFloat
+    private var canvasHeight: CGFloat
+
     var currentDesign: Design {
         Design(
             text: textView.text,
             backgroundColor: backgroundColor,
-            textColor: textColor,
+            textColor: customTextColor,
+            usesAutomaticTextColor: usesAutomaticTextColor,
             creationDate: creationDate,
             fontName: fontName,
             fontSize: fontSize,
             pixelationScale: pixelationScale,
             stretch: stretch,
             blur: blur,
-            width: design?.width ?? settingsManager.xDimension,
-            height: design?.height ?? settingsManager.yDimension,
+            width: canvasWidth,
+            height: canvasHeight,
             brightness: brightness,
             contrast: contrast,
             saturation: saturation,
@@ -543,6 +793,20 @@ class EditDesignViewController: UIViewController {
             sharpen: sharpen,
             monochrome: monochrome,
             vignette: vignette,
+            hue: hue,
+            highlightAmount: highlightAmount,
+            shadowAmount: shadowAmount,
+            grain: grain,
+            bloom: bloom,
+            duotoneIntensity: duotoneIntensity,
+            duotoneColorHex: duotoneColorHex,
+            vibrance: vibrance,
+            posterizeLevels: posterizeLevels,
+            colorTemperature: colorTemperature,
+            colorTint: colorTint,
+            photoEffect: photoEffect,
+            halftone: halftone,
+            unsharpMask: unsharpMask,
             backgroundImageKey: imageName,
             backgroundScale: backgroundScale,
             backgroundFlipHorizontal: backgroundFlipHorizontal,
@@ -560,6 +824,20 @@ class EditDesignViewController: UIViewController {
             backgroundSharpen: backgroundSharpen,
             backgroundMonochrome: backgroundMonochrome,
             backgroundVignette: backgroundVignette,
+            backgroundHue: backgroundHue,
+            backgroundHighlightAmount: backgroundHighlightAmount,
+            backgroundShadowAmount: backgroundShadowAmount,
+            backgroundGrain: backgroundGrain,
+            backgroundBloom: backgroundBloom,
+            backgroundDuotoneIntensity: backgroundDuotoneIntensity,
+            backgroundDuotoneColorHex: backgroundDuotoneColorHex,
+            backgroundVibrance: backgroundVibrance,
+            backgroundPosterizeLevels: backgroundPosterizeLevels,
+            backgroundColorTemperature: backgroundColorTemperature,
+            backgroundColorTint: backgroundColorTint,
+            backgroundPhotoEffect: backgroundPhotoEffect,
+            backgroundHalftone: backgroundHalftone,
+            backgroundUnsharpMask: backgroundUnsharpMask,
             id: design?.id ?? UUID()
         )
     }
@@ -576,6 +854,13 @@ class EditDesignViewController: UIViewController {
         self.design = design
         self.settingsManager = settingsManager
         self.imageService = imageService
+        if let design {
+            canvasWidth = design.width
+            canvasHeight = design.height
+        } else {
+            canvasWidth = settingsManager.xDimension
+            canvasHeight = settingsManager.yDimension
+        }
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -589,7 +874,8 @@ class EditDesignViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        configureTextColorState()
+
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(keyboardWillShow(_:)),
@@ -610,31 +896,49 @@ class EditDesignViewController: UIViewController {
         )
 
         // Setup navigation bar
-        var rightBarButtonItems: [UIBarButtonItem] = [
-            .settings(self),
-            .share {  [weak self] in
-                self?.shareButtonTouched()
-            }
-        ]
-
-        var isRunningOnMacCatalyst: Bool {
-            #if targetEnvironment(macCatalyst)
-            return true
-            #else
-            return false
-            #endif
+        let shareBarButton = UIBarButtonItem.share { [weak self] in
+            self?.shareButtonTouched()
         }
-        
-        if !isRunningOnMacCatalyst {
+
+        if usesMacCollapsibleBottomPanel {
+            navigationItem.rightBarButtonItems = [shareBarButton]
+        } else {
+            let settingsBarButton: UIBarButtonItem = {
+                if let image = UIImage.gear {
+                    let button = UIBarButtonItem(
+                        image: image,
+                        style: .plain,
+                        target: self,
+                        action: #selector(openSettingsFromEditor)
+                    )
+                    button.accessibilityLabel = NSLocalizedString(
+                        "Settings",
+                        comment: "The name of the button that goes to the settings menu."
+                    )
+                    settingsNavBarButton = button
+                    return button
+                }
+                let titleButton = UIBarButtonItem(
+                    title: NSLocalizedString(
+                        "Settings",
+                        comment: "The name of the button that goes to the settings menu."
+                    ),
+                    style: .plain,
+                    target: self,
+                    action: #selector(openSettingsFromEditor)
+                )
+                settingsNavBarButton = titleButton
+                return titleButton
+            }()
+            var rightBarButtonItems: [UIBarButtonItem] = [settingsBarButton, shareBarButton]
             rightBarButtonItems.insert(UIBarButtonItem(
                 image: UIImage(systemName: "keyboard"),
                 style: .plain,
                 target: self,
                 action: #selector(toggleKeyboard)
             ), at: 0)
+            navigationItem.rightBarButtonItems = rightBarButtonItems
         }
-
-        navigationItem.rightBarButtonItems = rightBarButtonItems
 
         // Setup color swatch row — toggle always visible on left, content scrolls in on right
         colorSwatchScrollView.addSubview(colorSwatchStackView)
@@ -684,16 +988,34 @@ class EditDesignViewController: UIViewController {
         )
         previewImageViewTopSwatchConstraint = topSwatchConstraint
         previewImageViewTopSafeAreaConstraint = topSafeAreaConstraint
+        previewImageViewTopCanvasConstraint = previewImageView.topAnchor.constraint(
+            equalTo: view.safeAreaLayoutGuide.topAnchor,
+            constant: .su2
+        )
+        previewImageViewTopCanvasConstraint?.isActive = false
+        previewImageViewTrailingToViewConstraint = previewImageView.trailingAnchor.constraint(
+            equalTo: view.trailingAnchor,
+            constant: -.su2
+        )
+        previewImageViewTrailingToSidebarConstraint = previewImageView.trailingAnchor.constraint(
+            equalTo: fontPickerSidebarContainer.leadingAnchor,
+            constant: -.su2
+        )
+        previewImageViewTrailingToSidebarConstraint?.isActive = false
+        previewImageViewLeadingToViewConstraint = previewImageView.leadingAnchor.constraint(
+            equalTo: view.leadingAnchor,
+            constant: .su2
+        )
+        previewImageViewLeadingToSidebarConstraint = previewImageView.leadingAnchor.constraint(
+            equalTo: imagePickerSidebarContainer.trailingAnchor,
+            constant: .su2
+        )
+        previewImageViewLeadingToSidebarConstraint?.isActive = false
         NSLayoutConstraint.activate([
             topSwatchConstraint,
-            previewImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .su2),
-            previewImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.su2)
+            previewImageViewLeadingToViewConstraint!,
+            previewImageViewTrailingToViewConstraint!,
         ])
-        previewImageViewBottomConstraint = previewImageView.bottomAnchor.constraint(
-            equalTo: view.bottomAnchor,
-            constant: -300
-        )
-        previewImageViewBottomConstraint?.isActive = true
 
         let longPress = UILongPressGestureRecognizer(target: self, action: #selector(handlePreviewLongPress(_:)))
         longPress.minimumPressDuration = 0.01
@@ -710,16 +1032,74 @@ class EditDesignViewController: UIViewController {
             } else if UIDevice.current.userInterfaceIdiom == .pad {
                 return 160
             }
-            return 300
+            return macKeyboardOptionsExpandedHeight
         }()
-        NSLayoutConstraint.activate([
-            keyboardOptionsView.topAnchor.constraint(lessThanOrEqualTo: previewImageView.bottomAnchor, constant: .su2),
-            keyboardOptionsView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            keyboardOptionsView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            keyboardOptionsView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            keyboardOptionsView.heightAnchor.constraint(greaterThanOrEqualToConstant: keyboardOptionsViewHeight),
-        ])
-        
+
+        if usesMacCollapsibleBottomPanel {
+            keyboardOptionsHeightConstraint = keyboardOptionsView.heightAnchor.constraint(equalToConstant: 0)
+        } else {
+            keyboardOptionsHeightConstraint = keyboardOptionsView.heightAnchor.constraint(
+                greaterThanOrEqualToConstant: keyboardOptionsViewHeight
+            )
+        }
+
+        if usesMacCollapsibleBottomPanel {
+            previewImageViewBottomConstraint = previewImageView.bottomAnchor.constraint(
+                equalTo: keyboardOptionsView.topAnchor,
+                constant: -.su2
+            )
+            previewImageViewBottomCanvasConstraint = previewImageView.bottomAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.bottomAnchor,
+                constant: -.su2
+            )
+            previewImageViewBottomCanvasConstraint?.isActive = false
+
+            NSLayoutConstraint.activate([
+                keyboardOptionsView.topAnchor.constraint(lessThanOrEqualTo: previewImageView.bottomAnchor, constant: .su2),
+                keyboardOptionsView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+                keyboardOptionsView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+                keyboardOptionsView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+                keyboardOptionsHeightConstraint!,
+                previewImageViewBottomConstraint!,
+            ])
+        } else {
+            view.addSubview(editorBottomPanelContainer)
+            editorBottomPanelHeightConstraint = editorBottomPanelContainer.heightAnchor.constraint(equalToConstant: 0)
+
+            previewImageViewBottomConstraint = previewImageView.bottomAnchor.constraint(
+                equalTo: editorBottomPanelContainer.topAnchor,
+                constant: -.su2
+            )
+            previewImageViewBottomCanvasConstraint = previewImageView.bottomAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.bottomAnchor,
+                constant: -.su2
+            )
+            previewImageViewBottomCanvasConstraint?.isActive = false
+
+            NSLayoutConstraint.activate([
+                editorBottomPanelContainer.topAnchor.constraint(
+                    equalTo: previewImageView.bottomAnchor,
+                    constant: .su2
+                ),
+                editorBottomPanelContainer.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+                editorBottomPanelContainer.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+                editorBottomPanelHeightConstraint!,
+
+                keyboardOptionsView.topAnchor.constraint(
+                    equalTo: editorBottomPanelContainer.bottomAnchor,
+                    constant: .su2
+                ),
+                keyboardOptionsView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+                keyboardOptionsView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+                keyboardOptionsView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+                keyboardOptionsHeightConstraint!,
+                previewImageViewBottomConstraint!,
+            ])
+        }
+
+        setupFontPickerSidebar()
+        setupImagePickerSidebar()
+
         view.backgroundColor = .systemBackground
 
         // Load design if exists
@@ -729,24 +1109,84 @@ class EditDesignViewController: UIViewController {
             originalBackgroundColor = design.backgroundColor
         }
         
-        // Show keyboard
         view.addSubview(textView)
-        textView.becomeFirstResponder()
         textView.backgroundColor = .clear
 
         // Populate the swatch row with tool buttons immediately
         refreshToolButtons()
+        if usesMacCollapsibleBottomPanel {
+            applyMacEditorInitialState()
+        } else {
+            setEditingChromeVisible(false, animated: false)
+        }
 
         updateDesignImage()
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        apply(settingsManager.selectedTheme)
-        let isDarkMode = traitCollection.userInterfaceStyle == .dark
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        updateEditorPanelLayoutMode()
+    }
+
+    private func applyAppearanceSensitiveChrome() {
+        let isDarkMode = resolvedInterfaceStyle == .dark
         if let theme = settingsManager.selectedTheme {
             currentTintColor = isDarkMode ? theme.darkModeColors.tintColor : theme.lightModeColors.tintColor
         }
+        updateAllToolbarButtonAppearances()
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateEditorPanelLayoutMode()
+
+        let previousStyle = previousTraitCollection.map {
+            DesignTextColor.resolvedUserInterfaceStyle(
+                $0.userInterfaceStyle,
+                traitCollection: previousTraitCollection,
+                view: isViewLoaded ? view : nil
+            )
+        }
+        guard previousStyle != resolvedInterfaceStyle else {
+            return
+        }
+
+        apply(settingsManager.selectedTheme)
+        applyAppearanceSensitiveChrome()
+
+        if usesAutomaticTextColor {
+            if colorSwatchMode == .textColor {
+                colorSwatchIndicatorView.backgroundColor = resolvedEditingTextColor
+                refreshColorSwatches(currentColor: resolvedEditingTextColor)
+            }
+            updateDesignImage()
+        }
+    }
+
+    override var canBecomeFirstResponder: Bool {
+        isTrailingSidebarVisible || isLeadingSidebarVisible || isEditorBottomPanelVisible
+    }
+
+    override var keyCommands: [UIKeyCommand]? {
+        guard isTrailingSidebarVisible || isLeadingSidebarVisible || isEditorBottomPanelVisible else {
+            return super.keyCommands
+        }
+        return [
+            UIKeyCommand(
+                title: NSLocalizedString("Close", comment: "Title for close key command"),
+                action: #selector(dismissEditorPanelsFromKeyCommand),
+                input: UIKeyCommand.inputEscape,
+                modifierFlags: [.shift],
+                propertyList: nil
+            ),
+        ]
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        apply(settingsManager.selectedTheme)
+        applyAppearanceSensitiveChrome()
         keyboardOptionsView.update(with: currentDesign)
+        updateAllToolbarButtonAppearances()
         pixelationScale = pixelationScale + .random(in: 0...0.001)
         updateDesignImage()
         pixelationScale = pixelationScale + .random(in: 0...0.001)
@@ -776,6 +1216,7 @@ class EditDesignViewController: UIViewController {
             textView.text = design.text
             originalText = design.text
             originalBackgroundColor = design.backgroundColor
+            configureTextColorState()
         }
         updateDesignImage()
     }
@@ -788,8 +1229,83 @@ class EditDesignViewController: UIViewController {
         if textView.isFirstResponder {
             textView.resignFirstResponder()
         } else {
+            setEditingChromeVisible(true, animated: true)
             textView.becomeFirstResponder()
         }
+    }
+
+    /// macOS: toolbar visible, no sidebars, sliders, or design-controls panel until the user opts in.
+    private func applyMacEditorInitialState() {
+        guard usesMacCollapsibleBottomPanel else { return }
+
+        keyboardOptionsView.dismissInlineEditingPanels()
+        keyboardOptionsHeightConstraint?.constant = 0
+        isDesignControlsModeActive = false
+
+        isEditingChromeVisible = true
+        previewImageViewTopSwatchConstraint?.isActive = true
+        previewImageViewTopCanvasConstraint?.isActive = false
+        previewImageViewBottomConstraint?.isActive = true
+        previewImageViewBottomCanvasConstraint?.isActive = false
+
+        colorSwatchToggleButton.isUserInteractionEnabled = true
+        colorSwatchScrollView.isUserInteractionEnabled = true
+        keyboardOptionsView.isUserInteractionEnabled = true
+        colorSwatchToggleButton.alpha = 1
+        colorSwatchIndicatorView.alpha = 1
+        colorSwatchScrollView.alpha = 1
+        keyboardOptionsView.alpha = 1
+
+        updateAllToolbarButtonAppearances()
+        view.layoutIfNeeded()
+    }
+
+    private func setEditingChromeVisible(_ visible: Bool, animated: Bool) {
+        let visibilityChanged = isEditingChromeVisible != visible
+        isEditingChromeVisible = visible
+
+        if visibilityChanged {
+            if usesMacCollapsibleBottomPanel {
+                if visible {
+                    keyboardOptionsView.setMacPrimarySlidersVisible(
+                        settingsManager.macPrimarySlidersVisible,
+                        persist: false
+                    )
+                } else {
+                    keyboardOptionsView.dismissInlineEditingPanels()
+                    keyboardOptionsHeightConstraint?.constant = 0
+                }
+            }
+
+            previewImageViewTopSwatchConstraint?.isActive = visible
+            previewImageViewTopCanvasConstraint?.isActive = !visible
+            if usesMacCollapsibleBottomPanel {
+                previewImageViewBottomConstraint?.isActive = true
+                previewImageViewBottomCanvasConstraint?.isActive = false
+            } else {
+                previewImageViewBottomConstraint?.isActive = visible
+                previewImageViewBottomCanvasConstraint?.isActive = !visible
+            }
+        }
+
+        applyEditingChromeAppearance(animated: animated)
+    }
+
+    private func applyEditingChromeAppearance(animated: Bool) {
+        let duration = animated ? 0.25 : 0
+        let visible = isEditingChromeVisible
+        let alpha: CGFloat = visible ? 1 : 0
+        colorSwatchToggleButton.isUserInteractionEnabled = visible
+        colorSwatchScrollView.isUserInteractionEnabled = visible
+        keyboardOptionsView.isUserInteractionEnabled = visible
+        UIView.animate(withDuration: duration) {
+            self.colorSwatchToggleButton.alpha = alpha
+            self.colorSwatchIndicatorView.alpha = alpha
+            self.colorSwatchScrollView.alpha = alpha
+            self.keyboardOptionsView.alpha = alpha
+            self.view.layoutIfNeeded()
+        }
+        updateAllToolbarButtonAppearances()
     }
     
     @objc func selectColor() {
@@ -817,13 +1333,13 @@ class EditDesignViewController: UIViewController {
     @objc func selectTextColor() {
         isPickingTextColor = true
         #if targetEnvironment(macCatalyst)
-        MacColorPicker.shared.showColorPicker(initialColor: textColor) { [weak self] selectedColor in
-            self?.textColor = selectedColor
+        MacColorPicker.shared.showColorPicker(initialColor: resolvedEditingTextColor) { [weak self] selectedColor in
+            self?.setTextColor(selectedColor, isUserChosen: true)
             self?.updateDesignImage()
         }
         #else
         let colorPicker = UIColorPickerViewController()
-        colorPicker.selectedColor = textColor
+        colorPicker.selectedColor = resolvedEditingTextColor
         colorPicker.delegate = self
         present(colorPicker, animated: true, completion: nil)
         #endif
@@ -843,7 +1359,9 @@ class EditDesignViewController: UIViewController {
         DesignManager.shared.addDesign(currentDesign)
 
         settingsManager.backgroundColorHex = backgroundColor.toHexString()
-        settingsManager.textColorHex = textColor.toHexString()
+        if !usesAutomaticTextColor {
+            settingsManager.textColorHex = customTextColor.toHexString()
+        }
     }
     
     private var lastUpdateDate: Date?
@@ -877,6 +1395,9 @@ class EditDesignViewController: UIViewController {
         let failedImageKey = imageName
         currentDesign.generateImage(
             with: imageService,
+            userInterfaceStyle: resolvedInterfaceStyle,
+            traitCollection: traitCollection,
+            view: isViewLoaded ? view : nil,
             onBackgroundImageLoadFailed: { [weak self] in
                 guard let self,
                       generationID == self.previewImageGenerationID,
@@ -909,17 +1430,24 @@ class EditDesignViewController: UIViewController {
     }
 
     @objc private func canvasDimensionsDidChange() {
+        canvasWidth = settingsManager.xDimension
+        canvasHeight = settingsManager.yDimension
         if var d = design {
-            d.width = settingsManager.xDimension
-            d.height = settingsManager.yDimension
+            d.width = canvasWidth
+            d.height = canvasHeight
             design = d
         }
+        embeddedAspectRatioPickerViewController?.selectedCanvasSize = CGSize(width: canvasWidth, height: canvasHeight)
+        embeddedAspectRatioPickerViewController?.reloadNativeImageSection(nativeImageAspectSize: nativeBackgroundImageAspectSize())
         keyboardOptionsView.update(with: currentDesign)
         updateDesignImage()
     }
     
     @objc private func keyboardWillShow(_ notification: NSNotification) {
         guard !isDesignControlsModeActive else { return }
+        if isEditorBottomPanelVisible, shouldUseCompactBottomPanel {
+            dismissEditorPanel(animated: true)
+        }
         if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
             previewImageViewBottomConstraint?.constant = -keyboardFrame.height
             UIView.animate(withDuration: 0.3) {
@@ -937,7 +1465,12 @@ class EditDesignViewController: UIViewController {
     }
     
     @objc private func shareButtonTouched() {
-        currentDesign.generateImage(with: imageService) { [weak self] imageToShare, _ in
+        currentDesign.generateImage(
+            with: imageService,
+            userInterfaceStyle: resolvedInterfaceStyle,
+            traitCollection: traitCollection,
+            view: view
+        ) { [weak self] imageToShare, _ in
             guard let imageToShare,
                     let self else {
                 return
@@ -1008,12 +1541,7 @@ class EditDesignViewController: UIViewController {
         guard focusState == .distractionFree else { return }
         focusState = .editing
         navigationController?.setNavigationBarHidden(false, animated: animated)
-        UIView.animate(withDuration: animated ? 0.25 : 0) {
-            self.colorSwatchToggleButton.alpha = 1
-            self.colorSwatchIndicatorView.alpha = 1
-            self.colorSwatchScrollView.alpha = 1
-            self.keyboardOptionsView.alpha = 1
-        }
+        applyEditingChromeAppearance(animated: animated)
     }
 
     private func enterDesignControlsMode() {
@@ -1269,11 +1797,11 @@ extension EditDesignViewController: UITextViewDelegate {
 }
 
 extension UIImage {
-    func scaled(by scale: CGFloat, flipHorizontal: Bool = false, flipVertical: Bool = false, crop: CGFloat = 3) -> UIImage? {
+    func scaled(by scale: CGFloat, flipHorizontal: Bool = false, flipVertical: Bool = false) -> UIImage? {
         let size = CGSize(width: self.size.width * scale, height: self.size.height * scale)
         
-        // Create a bitmap graphics context of the scaled size
-        UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
+        // Opaque context + nearest-neighbor keeps pixel edges sharp (no background bleed).
+        UIGraphicsBeginImageContextWithOptions(size, true, self.scale)
         guard let context = UIGraphicsGetCurrentContext() else { return nil }
         
         // Set up transformations
@@ -1289,9 +1817,8 @@ extension UIImage {
             context.scaleBy(x: 1.0, y: -1.0)
         }
         
-        // Draw the image in the context with high-quality interpolation
-        context.interpolationQuality = .high
-        context.draw(self.cgImage!, in: CGRect(origin: .zero, size: size).insetBy(dx: -crop, dy: -crop))
+        context.interpolationQuality = .none
+        context.draw(self.cgImage!, in: CGRect(origin: .zero, size: size))
         
         // Restore the context to its original state
         context.restoreGState()
@@ -1307,7 +1834,7 @@ extension UIImage {
 extension EditDesignViewController: UIColorPickerViewControllerDelegate {
     func colorPickerViewControllerDidSelectColor(_ viewController: UIColorPickerViewController) {
         if isPickingTextColor {
-            textColor = viewController.selectedColor
+            setTextColor(viewController.selectedColor, isUserChosen: true)
         } else {
             backgroundColor = viewController.selectedColor
             textView.backgroundColor = .clear
@@ -1323,9 +1850,7 @@ extension EditDesignViewController: UIColorPickerViewControllerDelegate {
             return
         }
         if isPickingTextColor {
-            textColor = color
-            settingsManager.textColorHex = color.toHexString()
-            if colorSwatchMode == .textColor { refreshColorSwatches(currentColor: color) }
+            setTextColor(color, isUserChosen: true)
         } else {
             applyBackgroundColor(color)
             settingsManager.backgroundColorHex = color.toHexString()
@@ -1376,6 +1901,7 @@ extension EditDesignViewController {
         case .backgroundColor: colorSwatchMode = .textColor
         case .textColor: colorSwatchMode = .tools
         }
+        updateAllToolbarButtonAppearances()
     }
 
     private func applySwatchMode() {
@@ -1403,9 +1929,14 @@ extension EditDesignViewController {
             colorSwatchIndicatorView.backgroundColor = backgroundColor
             refreshColorSwatches(currentColor: backgroundColor)
         case .textColor:
-            colorSwatchIndicatorView.backgroundColor = textColor
-            refreshColorSwatches(currentColor: textColor)
+            colorSwatchIndicatorView.backgroundColor = resolvedEditingTextColor
+            refreshColorSwatches(currentColor: resolvedEditingTextColor)
         }
+
+        applyToolbarButtonSelectedAppearance(
+            colorSwatchToggleButton,
+            isSelected: colorSwatchMode != .tools
+        )
     }
 
     private func refreshToolButtons() {
@@ -1421,13 +1952,24 @@ extension EditDesignViewController {
         colorSwatchToggleButton.isHidden = true
         colorSwatchIndicatorView.isHidden = true
 
-        let items: [(String, String, Selector)] = [
+        var items: [(String, String, Selector)] = []
+        if usesMacCollapsibleBottomPanel {
+            items.append(("gearshape", "Settings", #selector(openSettingsFromEditor)))
+        }
+        items.append(contentsOf: [
             ("paintpalette",        "Color Mode",        #selector(cycleSwatchMode)),
-            ("textformat",          "Font Picker",       #selector(selectFont)),
-            ("slider.horizontal.3", "Controls",          #selector(showControlsFromToolbar)),
             ("photo",               "Background Image",  #selector(selectBackgroundImage)),
+            ("camera.filters",      "Styles",            #selector(toggleFilterStyles)),
+        ])
+        if usesMacCollapsibleBottomPanel {
+            items.append(("slider.vertical.3", "Primary Sliders", #selector(togglePrimarySlidersFromToolbar)))
+        }
+        items.append(contentsOf: [
+            ("slider.horizontal.3", "Controls",          #selector(showControlsFromToolbar)),
+            ("aspectratio",         "Aspect Ratio",      #selector(toggleAspectRatioSidebar)),
+            ("textformat",          "Font Picker",       #selector(selectFont)),
             ("globe",               "Import from web",   #selector(importBackgroundFromWeb)),
-        ]
+        ])
         for (icon, label, action) in items {
             let button = UIButton(type: .system)
             button.setImage(UIImage(systemName: icon), for: .normal)
@@ -1440,11 +1982,129 @@ extension EditDesignViewController {
             ])
             button.addTarget(self, action: action, for: .touchUpInside)
             colorSwatchStackView.addArrangedSubview(button)
+            switch action {
+            case #selector(selectFont):
+                fontPickerToolbarButton = button
+            case #selector(importBackgroundFromWeb):
+                webImportToolbarButton = button
+            case #selector(togglePrimarySlidersFromToolbar):
+                primarySlidersToggleButton = button
+            case #selector(showControlsFromToolbar):
+                controlsToolbarButton = button
+            case #selector(selectBackgroundImage):
+                backgroundImageToolbarButton = button
+            case #selector(toggleFilterStyles):
+                stylesToolbarButton = button
+            case #selector(openSettingsFromEditor):
+                settingsToolbarButton = button
+            case #selector(toggleAspectRatioSidebar):
+                aspectRatioToolbarButton = button
+            default:
+                break
+            }
         }
+        updateAllToolbarButtonAppearances()
+    }
+
+    @objc private func togglePrimarySlidersFromToolbar() {
+        keyboardOptionsView.toggleMacPrimarySliders()
+        updateAllToolbarButtonAppearances()
     }
 
     @objc private func showControlsFromToolbar() {
         keyboardOptionsView.showControls()
+        updateAllToolbarButtonAppearances()
+    }
+
+    @objc private func toggleFilterStyles() {
+        if shouldUseSidebars {
+            toggleLeadingSidebar(.filterStyles)
+        } else if shouldUseCompactBottomPanel {
+            toggleEditorPanel(.filterStyles)
+        }
+    }
+
+    private var isFilterStylesVisible: Bool {
+        if shouldUseCompactBottomPanel {
+            return activeEditorPanel == .filterStyles
+        }
+        return activeLeadingSidebar == .filterStyles
+    }
+
+    private func refreshFilterStylesSelection() {
+        embeddedFilterStylesViewController?.reloadSelection(selectedPresetID: lastAppliedPresetID)
+    }
+
+    private var isDesignControlsToolbarSelected: Bool {
+        if usesMacCollapsibleBottomPanel {
+            return keyboardOptionsView.isMacDesignControlsShowing
+        }
+        return isDesignControlsModeActive
+    }
+
+    private func applyToolbarButtonSelectedAppearance(_ button: UIButton?, isSelected: Bool) {
+        guard let button else { return }
+        button.isSelected = isSelected
+        if isSelected {
+            button.backgroundColor = currentTintColor.withAlphaComponent(0.15)
+            button.layer.cornerRadius = 6
+            button.tintColor = currentTintColor
+        } else {
+            button.backgroundColor = .clear
+            button.layer.cornerRadius = 0
+            button.tintColor = currentTintColor
+        }
+    }
+
+    private func updateAllToolbarButtonAppearances() {
+        let usesCompact = shouldUseCompactBottomPanel
+
+        applyToolbarButtonSelectedAppearance(
+            colorSwatchToggleButton,
+            isSelected: colorSwatchMode != .tools
+        )
+        applyToolbarButtonSelectedAppearance(
+            fontPickerToolbarButton,
+            isSelected: usesCompact ? activeEditorPanel == .fontPicker : isFontPickerSidebarVisible
+        )
+        applyToolbarButtonSelectedAppearance(
+            primarySlidersToggleButton,
+            isSelected: keyboardOptionsView.isMacPrimarySlidersShowing
+        )
+        applyToolbarButtonSelectedAppearance(
+            controlsToolbarButton,
+            isSelected: isDesignControlsToolbarSelected
+        )
+        applyToolbarButtonSelectedAppearance(
+            backgroundImageToolbarButton,
+            isSelected: usesCompact ? activeEditorPanel == .backgroundImage : isImagePickerSidebarVisible
+        )
+        applyToolbarButtonSelectedAppearance(
+            stylesToolbarButton,
+            isSelected: isFilterStylesVisible
+        )
+        applyToolbarButtonSelectedAppearance(
+            webImportToolbarButton,
+            isSelected: usesCompact ? activeEditorPanel == .webImport : isWebImageSidebarVisible
+        )
+        applyToolbarButtonSelectedAppearance(
+            aspectRatioToolbarButton,
+            isSelected: usesCompact ? activeEditorPanel == .aspectRatio : isAspectRatioSidebarVisible
+        )
+        applyToolbarButtonSelectedAppearance(
+            settingsToolbarButton,
+            isSelected: activeLeadingSidebar == .settings
+        )
+
+        settingsNavBarButton?.tintColor = activeLeadingSidebar == .settings ? currentTintColor : nil
+    }
+
+    @objc private func toggleAspectRatioSidebar() {
+        if shouldUseSidebars {
+            toggleTrailingSidebar(.aspectRatio)
+        } else if shouldUseCompactBottomPanel {
+            toggleEditorPanel(.aspectRatio)
+        }
     }
 
     private func refreshColorSwatches(currentColor: UIColor) {
@@ -1460,9 +2120,13 @@ extension EditDesignViewController {
         colorSwatchToggleButton.isHidden = false
         colorSwatchIndicatorView.isHidden = false
 
+        if colorSwatchIsTextMode {
+            colorSwatchStackView.addArrangedSubview(makeAutomaticTextColorSwatchButton())
+        }
+
         for color in Self.presetColors {
             colorSwatchStackView.addArrangedSubview(
-                makeSwatchButton(color: color, isCurrent: color.toHexString() == currentColor.toHexString())
+                makeSwatchButton(color: color, isCurrent: !usesAutomaticTextColor && color.toHexString() == currentColor.toHexString())
             )
         }
 
@@ -1473,6 +2137,33 @@ extension EditDesignViewController {
                 makeSwatchButton(color: color, isCurrent: color.toHexString() == currentColor.toHexString())
             )
         }
+    }
+
+    private func makeAutomaticTextColorSwatchButton() -> UIButton {
+        let button = UIButton(type: .system)
+        let config = UIImage.SymbolConfiguration(pointSize: 14, weight: .medium)
+        button.setImage(UIImage(systemName: "circle.lefthalf.filled", withConfiguration: config), for: .normal)
+        button.tintColor = resolvedEditingTextColor
+        button.backgroundColor = .secondarySystemFill
+        button.layer.cornerRadius = 15
+        button.layer.masksToBounds = true
+        button.layer.borderWidth = usesAutomaticTextColor ? 2.5 : 1
+        button.layer.borderColor = usesAutomaticTextColor
+            ? currentTintColor.cgColor
+            : UIColor.gray.withAlphaComponent(0.4).cgColor
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.accessibilityLabel = NSLocalizedString(
+            "Automatic text color",
+            comment: "Swatch that adapts text color to light or dark mode"
+        )
+        NSLayoutConstraint.activate([
+            button.widthAnchor.constraint(equalToConstant: 30),
+            button.heightAnchor.constraint(equalToConstant: 30),
+        ])
+        button.addAction(UIAction { [weak self] _ in
+            self?.setAutomaticTextColor()
+        }, for: .touchUpInside)
+        return button
     }
 
     private func makeSwatchButton(color: UIColor, isCurrent: Bool) -> UIButton {
@@ -1530,13 +2221,13 @@ extension EditDesignViewController {
             self.isPickingTextColor = self.colorSwatchIsTextMode
             self.isPickingCustomColor = true
             #if targetEnvironment(macCatalyst)
-            let initialColor = self.colorSwatchIsTextMode ? self.textColor : self.backgroundColor
+            let initialColor = self.colorSwatchIsTextMode ? self.resolvedEditingTextColor : self.backgroundColor
             MacColorPicker.shared.showColorPicker(initialColor: initialColor) { [weak self] selectedColor in
                 self?.applyCustomColor(selectedColor)
             }
             #else
             let colorPicker = UIColorPickerViewController()
-            colorPicker.selectedColor = self.colorSwatchIsTextMode ? self.textColor : self.backgroundColor
+            colorPicker.selectedColor = self.colorSwatchIsTextMode ? self.resolvedEditingTextColor : self.backgroundColor
             colorPicker.delegate = self
             self.present(colorPicker, animated: true)
             #endif
@@ -1551,6 +2242,178 @@ extension EditDesignViewController {
         } else {
             didSelectBackgroundColor(color)
         }
+    }
+}
+
+extension EditDesignViewController {
+    func applyFilterState(from design: Design) {
+        brightness = design.brightness
+        contrast = design.contrast
+        saturation = design.saturation
+        exposure = design.exposure
+        gamma = design.gamma
+        sepia = design.sepia
+        invert = design.invert
+        pixelate = design.pixelate
+        sharpen = design.sharpen
+        monochrome = design.monochrome
+        vignette = design.vignette
+        hue = design.hue
+        highlightAmount = design.highlightAmount
+        shadowAmount = design.shadowAmount
+        grain = design.grain
+        bloom = design.bloom
+        duotoneIntensity = design.duotoneIntensity
+        duotoneColorHex = design.duotoneColorHex
+        vibrance = design.vibrance
+        posterizeLevels = design.posterizeLevels
+        colorTemperature = design.colorTemperature
+        colorTint = design.colorTint
+        photoEffect = design.photoEffect
+        halftone = design.halftone
+        unsharpMask = design.unsharpMask
+
+        backgroundBrightness = design.backgroundBrightness
+        backgroundContrast = design.backgroundContrast
+        backgroundSaturation = design.backgroundSaturation
+        backgroundExposure = design.backgroundExposure
+        backgroundGamma = design.backgroundGamma
+        backgroundSepia = design.backgroundSepia
+        backgroundInvert = design.backgroundInvert
+        backgroundPixelate = design.backgroundPixelate
+        backgroundSharpen = design.backgroundSharpen
+        backgroundMonochrome = design.backgroundMonochrome
+        backgroundVignette = design.backgroundVignette
+        backgroundHue = design.backgroundHue
+        backgroundHighlightAmount = design.backgroundHighlightAmount
+        backgroundShadowAmount = design.backgroundShadowAmount
+        backgroundGrain = design.backgroundGrain
+        backgroundBloom = design.backgroundBloom
+        backgroundDuotoneIntensity = design.backgroundDuotoneIntensity
+        backgroundDuotoneColorHex = design.backgroundDuotoneColorHex
+        backgroundVibrance = design.backgroundVibrance
+        backgroundPosterizeLevels = design.backgroundPosterizeLevels
+        backgroundColorTemperature = design.backgroundColorTemperature
+        backgroundColorTint = design.backgroundColorTint
+        backgroundPhotoEffect = design.backgroundPhotoEffect
+        backgroundHalftone = design.backgroundHalftone
+        backgroundUnsharpMask = design.backgroundUnsharpMask
+    }
+
+    func applyMainImageFilters(from settings: ImageFilterSettings) {
+        brightness = settings.brightness
+        contrast = settings.contrast
+        saturation = settings.saturation
+        exposure = settings.exposure
+        gamma = settings.gamma
+        sepia = settings.sepia
+        invert = settings.invert
+        pixelate = settings.pixelate
+        sharpen = settings.sharpen
+        monochrome = settings.monochrome
+        vignette = settings.vignette
+        hue = settings.hue
+        highlightAmount = settings.highlightAmount
+        shadowAmount = settings.shadowAmount
+        grain = settings.grain
+        bloom = settings.bloom
+        duotoneIntensity = settings.duotoneIntensity
+        duotoneColorHex = settings.duotoneColorHex
+        vibrance = settings.vibrance
+        posterizeLevels = settings.posterizeLevels
+        colorTemperature = settings.colorTemperature
+        colorTint = settings.colorTint
+        photoEffect = settings.photoEffect
+        halftone = settings.halftone
+        unsharpMask = settings.unsharpMask
+    }
+
+    func applyBackgroundImageFilters(from settings: ImageFilterSettings) {
+        backgroundBrightness = settings.brightness
+        backgroundContrast = settings.contrast
+        backgroundSaturation = settings.saturation
+        backgroundExposure = settings.exposure
+        backgroundGamma = settings.gamma
+        backgroundSepia = settings.sepia
+        backgroundInvert = settings.invert
+        backgroundPixelate = settings.pixelate
+        backgroundSharpen = settings.sharpen
+        backgroundMonochrome = settings.monochrome
+        backgroundVignette = settings.vignette
+        backgroundHue = settings.hue
+        backgroundHighlightAmount = settings.highlightAmount
+        backgroundShadowAmount = settings.shadowAmount
+        backgroundGrain = settings.grain
+        backgroundBloom = settings.bloom
+        backgroundDuotoneIntensity = settings.duotoneIntensity
+        backgroundDuotoneColorHex = settings.duotoneColorHex
+        backgroundVibrance = settings.vibrance
+        backgroundPosterizeLevels = settings.posterizeLevels
+        backgroundColorTemperature = settings.colorTemperature
+        backgroundColorTint = settings.colorTint
+        backgroundPhotoEffect = settings.photoEffect
+        backgroundHalftone = settings.halftone
+        backgroundUnsharpMask = settings.unsharpMask
+    }
+
+    var mainImageFilterSettings: ImageFilterSettings {
+        ImageFilterSettings(
+            brightness: brightness,
+            contrast: contrast,
+            saturation: saturation,
+            exposure: exposure,
+            gamma: gamma,
+            sepia: sepia,
+            invert: invert,
+            pixelate: pixelate,
+            sharpen: sharpen,
+            monochrome: monochrome,
+            vignette: vignette,
+            hue: hue,
+            highlightAmount: highlightAmount,
+            shadowAmount: shadowAmount,
+            grain: grain,
+            bloom: bloom,
+            duotoneIntensity: duotoneIntensity,
+            duotoneColorHex: duotoneColorHex,
+            vibrance: vibrance,
+            posterizeLevels: posterizeLevels,
+            colorTemperature: colorTemperature,
+            colorTint: colorTint,
+            photoEffect: photoEffect,
+            halftone: halftone,
+            unsharpMask: unsharpMask
+        )
+    }
+
+    var backgroundImageFilterSettings: ImageFilterSettings {
+        ImageFilterSettings(
+            brightness: backgroundBrightness,
+            contrast: backgroundContrast,
+            saturation: backgroundSaturation,
+            exposure: backgroundExposure,
+            gamma: backgroundGamma,
+            sepia: backgroundSepia,
+            invert: backgroundInvert,
+            pixelate: backgroundPixelate,
+            sharpen: backgroundSharpen,
+            monochrome: backgroundMonochrome,
+            vignette: backgroundVignette,
+            hue: backgroundHue,
+            highlightAmount: backgroundHighlightAmount,
+            shadowAmount: backgroundShadowAmount,
+            grain: backgroundGrain,
+            bloom: backgroundBloom,
+            duotoneIntensity: backgroundDuotoneIntensity,
+            duotoneColorHex: backgroundDuotoneColorHex,
+            vibrance: backgroundVibrance,
+            posterizeLevels: backgroundPosterizeLevels,
+            colorTemperature: backgroundColorTemperature,
+            colorTint: backgroundColorTint,
+            photoEffect: backgroundPhotoEffect,
+            halftone: backgroundHalftone,
+            unsharpMask: backgroundUnsharpMask
+        )
     }
 }
 
@@ -1607,6 +2470,102 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
     
     func didChangeVignette(_ vignette: CGFloat) {
         self.vignette = vignette
+        updateDesignImage()
+    }
+
+    func didChangeHue(_ hue: CGFloat) {
+        self.hue = hue
+        updateDesignImage()
+    }
+
+    func didChangeHighlightAmount(_ amount: CGFloat) {
+        highlightAmount = amount
+        updateDesignImage()
+    }
+
+    func didChangeShadowAmount(_ amount: CGFloat) {
+        shadowAmount = amount
+        updateDesignImage()
+    }
+
+    func didChangeGrain(_ grain: CGFloat) {
+        self.grain = grain
+        updateDesignImage()
+    }
+
+    func didChangeBloom(_ bloom: CGFloat) {
+        self.bloom = bloom
+        updateDesignImage()
+    }
+
+    func didChangeDuotoneIntensity(_ intensity: CGFloat) {
+        duotoneIntensity = intensity
+        updateDesignImage()
+    }
+
+    func didChangeVibrance(_ vibrance: CGFloat) {
+        self.vibrance = vibrance
+        updateDesignImage()
+    }
+
+    func didChangePosterizeLevels(_ levels: CGFloat) {
+        posterizeLevels = levels
+        updateDesignImage()
+    }
+
+    func didChangeColorTemperature(_ temperature: CGFloat) {
+        colorTemperature = temperature
+        updateDesignImage()
+    }
+
+    func didChangeColorTint(_ tint: CGFloat) {
+        colorTint = tint
+        updateDesignImage()
+    }
+
+    func didChangeHalftone(_ halftone: CGFloat) {
+        self.halftone = halftone
+        updateDesignImage()
+    }
+
+    func didChangeUnsharpMask(_ amount: CGFloat) {
+        unsharpMask = amount
+        updateDesignImage()
+    }
+
+    func didApplyFilterPreset(_ preset: FilterPreset) {
+        var updated = currentDesign
+        preset.apply(to: &updated)
+        if preset.id == "none" {
+            updated.backgroundScale = 1.0
+            updated.backgroundFlipHorizontal = false
+            updated.backgroundFlipVertical = false
+            updated.backgroundBlur = 0.0
+            updated.backgroundAlpha = 1.0
+        }
+        applyFilterState(from: updated)
+        backgroundScale = updated.backgroundScale
+        backgroundFlipHorizontal = updated.backgroundFlipHorizontal
+        backgroundFlipVertical = updated.backgroundFlipVertical
+        backgroundBlur = updated.backgroundBlur
+        backgroundAlpha = updated.backgroundAlpha
+        lastAppliedPresetID = preset.id
+        refreshFilterStylesSelection()
+        updateDesignImage()
+    }
+
+    func didRequestCopyBackgroundFiltersToMain() {
+        applyMainImageFilters(from: backgroundImageFilterSettings)
+        updateDesignImage()
+    }
+
+    func didRequestResetMainImageFilters() {
+        applyMainImageFilters(from: .default)
+        updateDesignImage()
+    }
+
+    func didRequestResetBackgroundImageFilters() {
+        applyBackgroundImageFilters(from: .default)
         updateDesignImage()
     }
     
@@ -1689,39 +2648,77 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
         self.backgroundVignette = vignette
         updateDesignImage()
     }
+
+    func didChangeBackgroundHue(_ hue: CGFloat) {
+        backgroundHue = hue
+        updateDesignImage()
+    }
+
+    func didChangeBackgroundHighlightAmount(_ amount: CGFloat) {
+        backgroundHighlightAmount = amount
+        updateDesignImage()
+    }
+
+    func didChangeBackgroundShadowAmount(_ amount: CGFloat) {
+        backgroundShadowAmount = amount
+        updateDesignImage()
+    }
+
+    func didChangeBackgroundGrain(_ grain: CGFloat) {
+        backgroundGrain = grain
+        updateDesignImage()
+    }
+
+    func didChangeBackgroundBloom(_ bloom: CGFloat) {
+        backgroundBloom = bloom
+        updateDesignImage()
+    }
+
+    func didChangeBackgroundDuotoneIntensity(_ intensity: CGFloat) {
+        backgroundDuotoneIntensity = intensity
+        updateDesignImage()
+    }
+
+    func didChangeBackgroundVibrance(_ vibrance: CGFloat) {
+        backgroundVibrance = vibrance
+        updateDesignImage()
+    }
+
+    func didChangeBackgroundPosterizeLevels(_ levels: CGFloat) {
+        backgroundPosterizeLevels = levels
+        updateDesignImage()
+    }
+
+    func didChangeBackgroundColorTemperature(_ temperature: CGFloat) {
+        backgroundColorTemperature = temperature
+        updateDesignImage()
+    }
+
+    func didChangeBackgroundColorTint(_ tint: CGFloat) {
+        backgroundColorTint = tint
+        updateDesignImage()
+    }
+
+    func didChangeBackgroundHalftone(_ halftone: CGFloat) {
+        backgroundHalftone = halftone
+        updateDesignImage()
+    }
+
+    func didChangeBackgroundUnsharpMask(_ amount: CGFloat) {
+        backgroundUnsharpMask = amount
+        updateDesignImage()
+    }
     
     
     func designControlsViewController(
         _ controller: DesignControlsViewController,
         didUpdateDesign design: Design
     ) {
-        textColor = design.textColor
         stretch = design.stretch
         blur = design.blur
         fontSize = design.fontSize
         pixelationScale = design.pixelationScale
-        brightness = design.brightness
-        contrast = design.contrast
-        saturation = design.saturation
-        exposure = design.exposure
-        gamma = design.gamma
-        sepia = design.sepia
-        invert = design.invert
-        pixelate = design.pixelate
-        sharpen = design.sharpen
-        monochrome = design.monochrome
-        vignette = design.vignette
-        backgroundBrightness = design.backgroundBrightness
-        backgroundContrast = design.backgroundContrast
-        backgroundSaturation = design.backgroundSaturation
-        backgroundExposure = design.backgroundExposure
-        backgroundGamma = design.backgroundGamma
-        backgroundSepia = design.backgroundSepia
-        backgroundInvert = design.backgroundInvert
-        backgroundPixelate = design.backgroundPixelate
-        backgroundSharpen = design.backgroundSharpen
-        backgroundMonochrome = design.backgroundMonochrome
-        backgroundVignette = design.backgroundVignette
+        applyFilterState(from: design)
         backgroundScale = design.backgroundScale
         backgroundFlipHorizontal = design.backgroundFlipHorizontal
         backgroundFlipVertical = design.backgroundFlipVertical
@@ -1742,45 +2739,732 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
         fontSize = newFontSize
     }
     
-    @objc func selectFont() {
-        showFontPicker { [weak self] in
-            self?.updateDesignImage()
+    @objc func openSettingsFromEditor() {
+        if shouldUseSidebars {
+            toggleLeadingSidebar(.settings)
+        } else {
+            openSettings()
         }
     }
-    
+
+    @objc func selectFont() {
+        if shouldUseSidebars {
+            toggleTrailingSidebar(.fontPicker)
+        } else if shouldUseCompactBottomPanel {
+            toggleEditorPanel(.fontPicker)
+        }
+    }
+
     func pixelationScaleChanged(to newPixelationScale: CGFloat) {
         pixelationScale = newPixelationScale
     }
-    
-    private func showFontPicker(_ completion: @escaping () -> Void) {
-        let fontViewController = FontsViewController(settingsManager: settingsManager) { [weak self] fontName in
-            guard let self else {
-                return
-            }
-            settingsManager.preferredFontName = fontName
-            self.fontName = fontName
-            completion()
-        }
-        
-        present(fontViewController)
-    }
-    
-    @objc internal func selectBackgroundImage() {
-        let imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
-        imagePicker.sourceType = .photoLibrary
-        present(
-            imagePicker,
-            animated: true,
-            completion: nil
+
+    private var shouldUseCompactBottomPanel: Bool {
+        guard isViewLoaded else { return false }
+        return TrailingSidebarLayout.shouldUseCompactBottomPanel(
+            idiom: traitCollection.userInterfaceIdiom,
+            width: view.bounds.width,
+            height: view.bounds.height,
+            usesMacCollapsibleBottomPanel: usesMacCollapsibleBottomPanel
         )
     }
 
-    @objc private func importBackgroundFromWeb() {
-        WebImageImportPresenter.present(from: self, imageService: imageService) { [weak self] imageName in
+    private var shouldUseSidebars: Bool {
+        guard isViewLoaded else { return false }
+        return TrailingSidebarLayout.shouldUseSidebars(
+            idiom: traitCollection.userInterfaceIdiom,
+            width: view.bounds.width,
+            height: view.bounds.height,
+            usesMacCollapsibleBottomPanel: usesMacCollapsibleBottomPanel
+        )
+    }
+
+    private var editorMiddleBandHeight: CGFloat {
+        let swatchBottom = colorSwatchToggleButton.frame.maxY + .su2
+        let keyboardTop = keyboardOptionsView.frame.minY - .su2
+        return max(keyboardTop - swatchBottom, 200)
+    }
+
+    private func setupFontPickerSidebar() {
+        view.addSubview(fontPickerSidebarContainer)
+        fontPickerSidebarContainer.addSubview(fontPickerSidebarSeparator)
+
+        fontPickerSidebarWidthConstraint = fontPickerSidebarContainer.widthAnchor.constraint(equalToConstant: 0)
+
+        NSLayoutConstraint.activate([
+            fontPickerSidebarContainer.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            fontPickerSidebarContainer.topAnchor.constraint(equalTo: colorSwatchToggleButton.bottomAnchor, constant: .su2),
+            fontPickerSidebarContainer.bottomAnchor.constraint(equalTo: keyboardOptionsView.topAnchor, constant: -.su2),
+            fontPickerSidebarWidthConstraint!,
+
+            fontPickerSidebarSeparator.leadingAnchor.constraint(equalTo: fontPickerSidebarContainer.leadingAnchor),
+            fontPickerSidebarSeparator.topAnchor.constraint(equalTo: fontPickerSidebarContainer.topAnchor),
+            fontPickerSidebarSeparator.bottomAnchor.constraint(equalTo: fontPickerSidebarContainer.bottomAnchor),
+            fontPickerSidebarSeparator.widthAnchor.constraint(equalToConstant: 0.5),
+        ])
+    }
+
+    private func toggleTrailingSidebar(_ content: TrailingSidebarContent) {
+        guard shouldUseSidebars else { return }
+        if activeTrailingSidebar == content {
+            dismissTrailingSidebar(animated: true)
+        } else {
+            presentTrailingSidebar(content)
+        }
+    }
+
+    private func presentTrailingSidebar(_ content: TrailingSidebarContent) {
+        guard shouldUseSidebars, activeTrailingSidebar != content else { return }
+
+        if activeTrailingSidebar != nil {
+            dismissTrailingSidebar(animated: false)
+        }
+
+        switch content {
+        case .fontPicker:
+            embedFontPickerInTrailingSidebar()
+        case .webImages:
+            embedWebImagePickerInTrailingSidebar()
+        case .aspectRatio:
+            embedAspectRatioInTrailingSidebar()
+        }
+
+        activeTrailingSidebar = content
+        fontPickerSidebarContainer.isHidden = false
+        view.bringSubviewToFront(fontPickerSidebarContainer)
+        fontPickerSidebarWidthConstraint?.constant = TrailingSidebarLayout.width
+        previewImageViewTrailingToViewConstraint?.isActive = false
+        previewImageViewTrailingToSidebarConstraint?.isActive = true
+        updateAllToolbarButtonAppearances()
+        becomeFirstResponder()
+
+        UIView.animate(withDuration: 0.25) {
+            self.view.layoutIfNeeded()
+        }
+    }
+
+    private func embedFontPickerInTrailingSidebar() {
+        embedFontPicker(
+            in: fontPickerSidebarContainer,
+            leadingAnchor: fontPickerSidebarSeparator.trailingAnchor,
+            onDone: { [weak self] in self?.dismissTrailingSidebar(animated: true) }
+        )
+    }
+
+    private func embedFontPicker(
+        in container: UIView,
+        leadingAnchor: NSLayoutXAxisAnchor,
+        onDone: @escaping () -> Void
+    ) {
+        let fontViewController: FontsViewController
+        if let existing = embeddedFontPickerViewController {
+            fontViewController = existing
+        } else {
+            fontViewController = FontsViewController(settingsManager: settingsManager) { [weak self] fontName in
+                guard let self else { return }
+                settingsManager.preferredFontName = fontName
+                self.fontName = fontName
+                self.updateDesignImage()
+            }
+            fontViewController.presentationStyle = .sidebar
+            embeddedFontPickerViewController = fontViewController
+        }
+        fontViewController.onDone = onDone
+
+        addChild(fontViewController)
+        container.addSubview(fontViewController.view)
+        fontViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            fontViewController.view.topAnchor.constraint(equalTo: container.topAnchor),
+            fontViewController.view.leadingAnchor.constraint(equalTo: leadingAnchor),
+            fontViewController.view.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            fontViewController.view.bottomAnchor.constraint(equalTo: container.bottomAnchor),
+        ])
+        fontViewController.didMove(toParent: self)
+    }
+
+    private func embedAspectRatioInTrailingSidebar() {
+        embedAspectRatioPicker(
+            in: fontPickerSidebarContainer,
+            leadingAnchor: fontPickerSidebarSeparator.trailingAnchor,
+            onDone: { [weak self] in self?.dismissTrailingSidebar(animated: true) }
+        )
+    }
+
+    private func embedAspectRatioPicker(
+        in container: UIView,
+        leadingAnchor: NSLayoutXAxisAnchor,
+        onDone: @escaping () -> Void
+    ) {
+        let aspectViewController: AspectRatioPickerViewController
+        if let existing = embeddedAspectRatioPickerViewController {
+            aspectViewController = existing
+        } else {
+            aspectViewController = AspectRatioPickerViewController(settingsManager: settingsManager)
+            aspectViewController.presentationStyle = .sidebar
+            aspectViewController.delegate = self
+            embeddedAspectRatioPickerViewController = aspectViewController
+        }
+        aspectViewController.onDone = onDone
+        aspectViewController.presentationStyle = .sidebar
+        aspectViewController.delegate = self
+        aspectViewController.nativeImageAspectSize = nativeBackgroundImageAspectSize()
+        aspectViewController.selectedCanvasSize = CGSize(width: canvasWidth, height: canvasHeight)
+
+        addChild(aspectViewController)
+        container.addSubview(aspectViewController.view)
+        aspectViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            aspectViewController.view.topAnchor.constraint(equalTo: container.topAnchor),
+            aspectViewController.view.leadingAnchor.constraint(equalTo: leadingAnchor),
+            aspectViewController.view.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            aspectViewController.view.bottomAnchor.constraint(equalTo: container.bottomAnchor),
+        ])
+        aspectViewController.didMove(toParent: self)
+    }
+
+    private func nativeBackgroundImageAspectSize() -> (width: Int, height: Int)? {
+        guard !imageName.isEmpty else { return nil }
+        let image: UIImage?
+        if let cached = imageService.memoryCache.object(forKey: imageName as NSString) {
+            image = cached
+        } else {
+            image = imageService.loadImageFromDisk(with: imageName)
+        }
+        guard let image, image.size.width > 0, image.size.height > 0 else { return nil }
+        let pixelWidth = max(1, Int((image.size.width * image.scale).rounded()))
+        let pixelHeight = max(1, Int((image.size.height * image.scale).rounded()))
+        return (pixelWidth, pixelHeight)
+    }
+
+    private func reloadAspectRatioSidebarNativeImageIfNeeded() {
+        guard isAspectRatioSidebarVisible || activeEditorPanel == .aspectRatio else { return }
+        embeddedAspectRatioPickerViewController?.nativeImageAspectSize = nativeBackgroundImageAspectSize()
+        embeddedAspectRatioPickerViewController?.reloadNativeImageSection(
+            nativeImageAspectSize: nativeBackgroundImageAspectSize()
+        )
+    }
+
+    private func embedWebImagePickerInTrailingSidebar() {
+        embedWebImagePicker(
+            in: fontPickerSidebarContainer,
+            leadingAnchor: fontPickerSidebarSeparator.trailingAnchor,
+            onDone: { [weak self] in self?.dismissTrailingSidebar(animated: true) }
+        )
+    }
+
+    private func embedWebImagePicker(
+        in container: UIView,
+        leadingAnchor: NSLayoutXAxisAnchor,
+        onDone: @escaping () -> Void
+    ) {
+        let host: UIHostingController<WebImagePicker>
+        if let existing = embeddedWebImagePickerHostingController {
+            host = existing
+        } else {
+            host = WebImageImportPresenter.makeHostingController(
+                imageService: imageService,
+                onCancel: onDone,
+                onImagePicked: { [weak self] imageName in
+                    guard let self else { return }
+                    self.imageName = imageName
+                    self.updateDesignImage()
+                    self.updateAllToolbarButtonAppearances()
+                    onDone()
+                }
+            )
+            embeddedWebImagePickerHostingController = host
+        }
+
+        if leadingAnchor === container.leadingAnchor {
+            WebImageImportPresenter.embed(host, in: self, container: container)
+        } else {
+            WebImageImportPresenter.embed(
+                host,
+                in: self,
+                container: container,
+                contentLeadingAnchor: leadingAnchor
+            )
+        }
+    }
+
+    private func dismissTrailingSidebar(animated: Bool) {
+        guard let content = activeTrailingSidebar else { return }
+
+        activeTrailingSidebar = nil
+        fontPickerSidebarWidthConstraint?.constant = 0
+        previewImageViewTrailingToSidebarConstraint?.isActive = false
+        previewImageViewTrailingToViewConstraint?.isActive = true
+        updateAllToolbarButtonAppearances()
+
+        let removeChild = { [weak self] in
             guard let self else { return }
-            self.imageName = imageName
-            self.updateDesignImage()
+            switch content {
+            case .fontPicker:
+                guard let fontVC = self.embeddedFontPickerViewController else { return }
+                fontVC.willMove(toParent: nil)
+                fontVC.view.removeFromSuperview()
+                fontVC.removeFromParent()
+            case .webImages:
+                guard let host = self.embeddedWebImagePickerHostingController else { return }
+                host.willMove(toParent: nil)
+                host.view.removeFromSuperview()
+                host.removeFromParent()
+            case .aspectRatio:
+                guard let aspectVC = self.embeddedAspectRatioPickerViewController else { return }
+                aspectVC.willMove(toParent: nil)
+                aspectVC.view.removeFromSuperview()
+                aspectVC.removeFromParent()
+            }
+        }
+
+        let finish = { [weak self] in
+            guard let self else { return }
+            self.fontPickerSidebarContainer.isHidden = true
+            if !self.isLeadingSidebarVisible, !self.isTrailingSidebarVisible, !self.isEditorBottomPanelVisible {
+                self.resignFirstResponder()
+            }
+        }
+
+        if animated {
+            UIView.animate(withDuration: 0.25, animations: {
+                self.view.layoutIfNeeded()
+            }, completion: { _ in
+                removeChild()
+                finish()
+            })
+        } else {
+            view.layoutIfNeeded()
+            removeChild()
+            finish()
+        }
+    }
+
+    @objc private func dismissEditorPanelsFromKeyCommand() {
+        if isEditorBottomPanelVisible {
+            dismissEditorPanel(animated: true)
+        }
+        if isLeadingSidebarVisible {
+            dismissLeadingSidebar(animated: true)
+        }
+        if isTrailingSidebarVisible {
+            dismissTrailingSidebar(animated: true)
+        }
+    }
+
+    private func updateEditorPanelLayoutMode() {
+        if isTrailingSidebarVisible, !shouldUseSidebars {
+            dismissTrailingSidebar(animated: false)
+        }
+        if isLeadingSidebarVisible, !shouldUseSidebars {
+            dismissLeadingSidebar(animated: false)
+        }
+        if isEditorBottomPanelVisible, !shouldUseCompactBottomPanel {
+            dismissEditorPanel(animated: false)
+        }
+    }
+
+    private func toggleEditorPanel(_ panel: EditorPanel) {
+        guard shouldUseCompactBottomPanel else { return }
+        if activeEditorPanel == panel {
+            dismissEditorPanel(animated: true)
+        } else {
+            presentEditorPanel(panel)
+        }
+    }
+
+    private func presentEditorPanel(_ panel: EditorPanel) {
+        guard shouldUseCompactBottomPanel, activeEditorPanel != panel else { return }
+
+        if activeEditorPanel != nil {
+            dismissEditorPanel(animated: false)
+        }
+
+        let onDone: () -> Void = { [weak self] in
+            self?.dismissEditorPanel(animated: true)
+        }
+
+        switch panel {
+        case .backgroundImage:
+            embedBackgroundImagePicker(
+                in: editorBottomPanelContainer,
+                leadingAnchor: editorBottomPanelContainer.leadingAnchor,
+                onDone: onDone
+            )
+        case .settings:
+            return
+        case .filterStyles:
+            embedFilterStyles(
+                in: editorBottomPanelContainer,
+                leadingAnchor: editorBottomPanelContainer.leadingAnchor,
+                onDone: onDone
+            )
+        case .fontPicker:
+            embedFontPicker(
+                in: editorBottomPanelContainer,
+                leadingAnchor: editorBottomPanelContainer.leadingAnchor,
+                onDone: onDone
+            )
+        case .webImport:
+            embedWebImagePicker(
+                in: editorBottomPanelContainer,
+                leadingAnchor: editorBottomPanelContainer.leadingAnchor,
+                onDone: onDone
+            )
+        case .aspectRatio:
+            embedAspectRatioPicker(
+                in: editorBottomPanelContainer,
+                leadingAnchor: editorBottomPanelContainer.leadingAnchor,
+                onDone: onDone
+            )
+        }
+
+        activeEditorPanel = panel
+        editorBottomPanelContainer.isHidden = false
+        view.bringSubviewToFront(editorBottomPanelContainer)
+        editorBottomPanelHeightConstraint?.constant = TrailingSidebarLayout.compactPanelHeight(
+            for: panel,
+            editorMiddleBandHeight: editorMiddleBandHeight
+        )
+        updateAllToolbarButtonAppearances()
+        becomeFirstResponder()
+
+        UIView.animate(withDuration: 0.25) {
+            self.view.layoutIfNeeded()
+        }
+    }
+
+    private func dismissEditorPanel(animated: Bool) {
+        guard let panel = activeEditorPanel else { return }
+
+        activeEditorPanel = nil
+        editorBottomPanelHeightConstraint?.constant = 0
+        updateAllToolbarButtonAppearances()
+
+        let removeChild = { [weak self] in
+            guard let self else { return }
+            switch panel {
+            case .backgroundImage:
+                guard let imagePickerVC = self.embeddedBackgroundImagePickerViewController else { return }
+                imagePickerVC.willMove(toParent: nil)
+                imagePickerVC.view.removeFromSuperview()
+                imagePickerVC.removeFromParent()
+            case .settings:
+                break
+            case .filterStyles:
+                guard let stylesVC = self.embeddedFilterStylesViewController else { return }
+                stylesVC.willMove(toParent: nil)
+                stylesVC.view.removeFromSuperview()
+                stylesVC.removeFromParent()
+            case .fontPicker:
+                guard let fontVC = self.embeddedFontPickerViewController else { return }
+                fontVC.willMove(toParent: nil)
+                fontVC.view.removeFromSuperview()
+                fontVC.removeFromParent()
+            case .webImport:
+                guard let host = self.embeddedWebImagePickerHostingController else { return }
+                host.willMove(toParent: nil)
+                host.view.removeFromSuperview()
+                host.removeFromParent()
+            case .aspectRatio:
+                guard let aspectVC = self.embeddedAspectRatioPickerViewController else { return }
+                aspectVC.willMove(toParent: nil)
+                aspectVC.view.removeFromSuperview()
+                aspectVC.removeFromParent()
+            }
+        }
+
+        let finish = { [weak self] in
+            guard let self else { return }
+            self.editorBottomPanelContainer.isHidden = true
+            if !self.isLeadingSidebarVisible, !self.isTrailingSidebarVisible, !self.isEditorBottomPanelVisible {
+                self.resignFirstResponder()
+            }
+        }
+
+        if animated {
+            UIView.animate(withDuration: 0.25, animations: {
+                self.view.layoutIfNeeded()
+            }, completion: { _ in
+                removeChild()
+                finish()
+            })
+        } else {
+            view.layoutIfNeeded()
+            removeChild()
+            finish()
+        }
+    }
+
+    private func toggleLeadingSidebar(_ content: LeadingSidebarContent) {
+        guard shouldUseSidebars else { return }
+        if activeLeadingSidebar == content {
+            dismissLeadingSidebar(animated: true)
+        } else {
+            presentLeadingSidebar(content)
+        }
+    }
+
+    private func presentLeadingSidebar(_ content: LeadingSidebarContent) {
+        guard shouldUseSidebars, activeLeadingSidebar != content else { return }
+
+        if activeLeadingSidebar != nil {
+            dismissLeadingSidebar(animated: false)
+        }
+
+        switch content {
+        case .backgroundImage:
+            embedBackgroundImagePickerInLeadingSidebar()
+        case .settings:
+            embedSettingsInLeadingSidebar()
+        case .filterStyles:
+            embedFilterStylesInLeadingSidebar()
+        }
+
+        activeLeadingSidebar = content
+        imagePickerSidebarContainer.isHidden = false
+        view.bringSubviewToFront(imagePickerSidebarContainer)
+        imagePickerSidebarWidthConstraint?.constant = TrailingSidebarLayout.width
+        previewImageViewLeadingToViewConstraint?.isActive = false
+        previewImageViewLeadingToSidebarConstraint?.isActive = true
+        updateAllToolbarButtonAppearances()
+        becomeFirstResponder()
+
+        UIView.animate(withDuration: 0.25) {
+            self.view.layoutIfNeeded()
+        }
+    }
+
+    private func embedBackgroundImagePickerInLeadingSidebar() {
+        embedBackgroundImagePicker(
+            in: imagePickerSidebarContainer,
+            leadingAnchor: imagePickerSidebarContainer.leadingAnchor,
+            onDone: { [weak self] in self?.dismissLeadingSidebar(animated: true) }
+        )
+    }
+
+    private func embedBackgroundImagePicker(
+        in container: UIView,
+        leadingAnchor: NSLayoutXAxisAnchor,
+        onDone: @escaping () -> Void
+    ) {
+        let imagePickerViewController: BackgroundImagePickerViewController
+        if let existing = embeddedBackgroundImagePickerViewController {
+            imagePickerViewController = existing
+        } else {
+            imagePickerViewController = BackgroundImagePickerViewController()
+            embeddedBackgroundImagePickerViewController = imagePickerViewController
+        }
+        imagePickerViewController.onImagePicked = { [weak self] image in
+            guard let self else { return }
+            self.applyPickedBackgroundImage(image)
+            onDone()
+        }
+        imagePickerViewController.onDone = onDone
+
+        addChild(imagePickerViewController)
+        container.addSubview(imagePickerViewController.view)
+        imagePickerViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        let trailingAnchor: NSLayoutXAxisAnchor = {
+            if container === imagePickerSidebarContainer {
+                return imagePickerSidebarSeparator.leadingAnchor
+            }
+            return container.trailingAnchor
+        }()
+        NSLayoutConstraint.activate([
+            imagePickerViewController.view.topAnchor.constraint(equalTo: container.topAnchor),
+            imagePickerViewController.view.leadingAnchor.constraint(equalTo: leadingAnchor),
+            imagePickerViewController.view.trailingAnchor.constraint(equalTo: trailingAnchor),
+            imagePickerViewController.view.bottomAnchor.constraint(equalTo: container.bottomAnchor),
+        ])
+        imagePickerViewController.didMove(toParent: self)
+    }
+
+    private func embedSettingsInLeadingSidebar() {
+        embedSettings(
+            in: imagePickerSidebarContainer,
+            leadingAnchor: imagePickerSidebarContainer.leadingAnchor,
+            onDone: { [weak self] in self?.dismissLeadingSidebar(animated: true) }
+        )
+    }
+
+    private func embedSettings(
+        in container: UIView,
+        leadingAnchor: NSLayoutXAxisAnchor,
+        onDone: @escaping () -> Void
+    ) {
+        let navigationController: UINavigationController
+        if let existing = embeddedSettingsNavigationController {
+            navigationController = existing
+        } else {
+            let settingsViewController = SettingsViewController(settingsManager: settingsManager)
+            settingsViewController.presentationStyle = .sidebar
+            settingsViewController.onDone = onDone
+            navigationController = UINavigationController(rootViewController: settingsViewController)
+            embeddedSettingsNavigationController = navigationController
+        }
+        navigationController.popToRootViewController(animated: false)
+
+        addChild(navigationController)
+        container.addSubview(navigationController.view)
+        navigationController.view.translatesAutoresizingMaskIntoConstraints = false
+        let trailingAnchor: NSLayoutXAxisAnchor = {
+            if container === imagePickerSidebarContainer {
+                return imagePickerSidebarSeparator.leadingAnchor
+            }
+            return container.trailingAnchor
+        }()
+        NSLayoutConstraint.activate([
+            navigationController.view.topAnchor.constraint(equalTo: container.topAnchor),
+            navigationController.view.leadingAnchor.constraint(equalTo: leadingAnchor),
+            navigationController.view.trailingAnchor.constraint(equalTo: trailingAnchor),
+            navigationController.view.bottomAnchor.constraint(equalTo: container.bottomAnchor),
+        ])
+        navigationController.didMove(toParent: self)
+    }
+
+    private func embedFilterStylesInLeadingSidebar() {
+        embedFilterStyles(
+            in: imagePickerSidebarContainer,
+            leadingAnchor: imagePickerSidebarContainer.leadingAnchor,
+            onDone: { [weak self] in self?.dismissLeadingSidebar(animated: true) }
+        )
+    }
+
+    private func embedFilterStyles(
+        in container: UIView,
+        leadingAnchor: NSLayoutXAxisAnchor,
+        onDone: @escaping () -> Void
+    ) {
+        let stylesViewController: FilterStylesViewController
+        if let existing = embeddedFilterStylesViewController {
+            stylesViewController = existing
+        } else {
+            stylesViewController = FilterStylesViewController(
+                settingsManager: settingsManager,
+                showsSidebarChrome: true
+            )
+            stylesViewController.delegate = self
+            stylesViewController.onDone = onDone
+            embeddedFilterStylesViewController = stylesViewController
+        }
+        stylesViewController.reloadSelection(selectedPresetID: lastAppliedPresetID)
+
+        addChild(stylesViewController)
+        container.addSubview(stylesViewController.view)
+        stylesViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        let trailingAnchor: NSLayoutXAxisAnchor = {
+            if container === imagePickerSidebarContainer {
+                return imagePickerSidebarSeparator.leadingAnchor
+            }
+            return container.trailingAnchor
+        }()
+        NSLayoutConstraint.activate([
+            stylesViewController.view.topAnchor.constraint(equalTo: container.topAnchor),
+            stylesViewController.view.leadingAnchor.constraint(equalTo: leadingAnchor),
+            stylesViewController.view.trailingAnchor.constraint(equalTo: trailingAnchor),
+            stylesViewController.view.bottomAnchor.constraint(equalTo: container.bottomAnchor),
+        ])
+        stylesViewController.didMove(toParent: self)
+    }
+
+    private func dismissLeadingSidebar(animated: Bool) {
+        guard let content = activeLeadingSidebar else { return }
+
+        activeLeadingSidebar = nil
+        imagePickerSidebarWidthConstraint?.constant = 0
+        previewImageViewLeadingToSidebarConstraint?.isActive = false
+        previewImageViewLeadingToViewConstraint?.isActive = true
+        updateAllToolbarButtonAppearances()
+
+        let removeChild = { [weak self] in
+            guard let self else { return }
+            switch content {
+            case .backgroundImage:
+                guard let imagePickerVC = self.embeddedBackgroundImagePickerViewController else { return }
+                imagePickerVC.willMove(toParent: nil)
+                imagePickerVC.view.removeFromSuperview()
+                imagePickerVC.removeFromParent()
+            case .settings:
+                guard let nav = self.embeddedSettingsNavigationController else { return }
+                nav.willMove(toParent: nil)
+                nav.view.removeFromSuperview()
+                nav.removeFromParent()
+            case .filterStyles:
+                guard let stylesVC = self.embeddedFilterStylesViewController else { return }
+                stylesVC.willMove(toParent: nil)
+                stylesVC.view.removeFromSuperview()
+                stylesVC.removeFromParent()
+            }
+        }
+
+        let finish = { [weak self] in
+            guard let self else { return }
+            self.imagePickerSidebarContainer.isHidden = true
+            if !self.isTrailingSidebarVisible, !self.isEditorBottomPanelVisible {
+                self.resignFirstResponder()
+            }
+        }
+
+        if animated {
+            UIView.animate(withDuration: 0.25, animations: {
+                self.view.layoutIfNeeded()
+            }, completion: { _ in
+                removeChild()
+                finish()
+            })
+        } else {
+            view.layoutIfNeeded()
+            removeChild()
+            finish()
+        }
+    }
+
+    private func setupImagePickerSidebar() {
+        view.addSubview(imagePickerSidebarContainer)
+        imagePickerSidebarContainer.addSubview(imagePickerSidebarSeparator)
+
+        imagePickerSidebarWidthConstraint = imagePickerSidebarContainer.widthAnchor.constraint(equalToConstant: 0)
+
+        NSLayoutConstraint.activate([
+            imagePickerSidebarContainer.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            imagePickerSidebarContainer.topAnchor.constraint(equalTo: colorSwatchToggleButton.bottomAnchor, constant: .su2),
+            imagePickerSidebarContainer.bottomAnchor.constraint(equalTo: keyboardOptionsView.topAnchor, constant: -.su2),
+            imagePickerSidebarWidthConstraint!,
+
+            imagePickerSidebarSeparator.trailingAnchor.constraint(equalTo: imagePickerSidebarContainer.trailingAnchor),
+            imagePickerSidebarSeparator.topAnchor.constraint(equalTo: imagePickerSidebarContainer.topAnchor),
+            imagePickerSidebarSeparator.bottomAnchor.constraint(equalTo: imagePickerSidebarContainer.bottomAnchor),
+            imagePickerSidebarSeparator.widthAnchor.constraint(equalToConstant: 0.5),
+        ])
+    }
+
+    @objc internal func selectBackgroundImage() {
+        if shouldUseSidebars {
+            toggleLeadingSidebar(.backgroundImage)
+        } else if shouldUseCompactBottomPanel {
+            toggleEditorPanel(.backgroundImage)
+        }
+    }
+
+    private func applyPickedBackgroundImage(_ image: UIImage) {
+        let imageName = UUID().uuidString
+        imageService.saveImageToDisk(
+            image,
+            addToInMemoryCache: true,
+            withName: imageName,
+            compressionQuality: 0.7
+        )
+        self.imageName = imageName
+        updateDesignImage()
+        updateAllToolbarButtonAppearances()
+    }
+
+    @objc private func importBackgroundFromWeb() {
+        if shouldUseSidebars {
+            toggleTrailingSidebar(.webImages)
+        } else if shouldUseCompactBottomPanel {
+            toggleEditorPanel(.webImport)
         }
     }
 
@@ -1793,52 +3477,56 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
     }
 
     func didSelectTextColorFromSwatch(_ color: UIColor) {
-        textColor = color
-        settingsManager.textColorHex = color.toHexString()
-        updateDesignImage()
-        if colorSwatchMode == .textColor {
-            colorSwatchIndicatorView.backgroundColor = color
-            refreshColorSwatches(currentColor: color)
-        }
+        setTextColor(color, isUserChosen: true)
     }
 
     func keyboardOptionsViewWillShowDesignControls() {
         enterDesignControlsMode()
+        updateAllToolbarButtonAppearances()
     }
 
     func keyboardOptionsViewDidDismissDesignControls() {
         exitDesignControlsMode()
+        updateAllToolbarButtonAppearances()
+    }
+
+    func keyboardOptionsView(_ view: KeyboardOptionsView, didSetBottomPanelExpanded expanded: Bool) {
+        guard usesMacCollapsibleBottomPanel else { return }
+
+        keyboardOptionsHeightConstraint?.constant = expanded ? macKeyboardOptionsExpandedHeight : 0
+        updateAllToolbarButtonAppearances()
+
+        UIView.animate(withDuration: 0.25) {
+            self.view.layoutIfNeeded()
+        }
+    }
+}
+
+extension EditDesignViewController: AspectRatioPickerDelegate {
+    func didSelectAspectRatio(width: Int, height: Int) {
+        let size = CanvasDimensions.pixelSize(forAspectWidth: width, height: height)
+        canvasWidth = size.width
+        canvasHeight = size.height
+        if var d = design {
+            d.width = canvasWidth
+            d.height = canvasHeight
+            design = d
+        }
+        embeddedAspectRatioPickerViewController?.selectedCanvasSize = CGSize(width: canvasWidth, height: canvasHeight)
+        keyboardOptionsView.update(with: currentDesign)
+        updateDesignImage()
+    }
+}
+
+extension EditDesignViewController: FilterStylesViewControllerDelegate {
+    func filterStylesViewController(
+        _ controller: FilterStylesViewController,
+        didSelect preset: FilterPreset
+    ) {
+        didApplyFilterPreset(preset)
     }
 }
 
 extension EditDesignViewController: SettingsReferenceable {
-    
-}
 
-extension EditDesignViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func imagePickerController(
-        _ picker: UIImagePickerController,
-        didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]
-    ) {
-        picker.dismiss(animated: true, completion: nil)
-        
-        guard let selectedImage = info[.originalImage] as? UIImage else {
-            return
-        }
-        
-        let imageName = UUID().uuidString
-        imageService.saveImageToDisk(
-            selectedImage,
-            addToInMemoryCache: true,
-            withName: imageName,
-            compressionQuality: 0.7
-        )
-        self.imageName = imageName
-        
-        updateDesignImage()
-    }
-    
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true, completion: nil)
-    }
 }

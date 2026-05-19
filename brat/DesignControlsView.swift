@@ -29,6 +29,37 @@ protocol DesignControlsDelegate: AnyObject {
     func didChangeBackgroundSharpen(_ sharpen: CGFloat)
     func didChangeBackgroundMonochrome(_ monochrome: CGFloat)
     func didChangeBackgroundVignette(_ vignette: CGFloat)
+
+    func didChangeHue(_ hue: CGFloat)
+    func didChangeHighlightAmount(_ amount: CGFloat)
+    func didChangeShadowAmount(_ amount: CGFloat)
+    func didChangeGrain(_ grain: CGFloat)
+    func didChangeBloom(_ bloom: CGFloat)
+    func didChangeDuotoneIntensity(_ intensity: CGFloat)
+    func didChangeVibrance(_ vibrance: CGFloat)
+    func didChangePosterizeLevels(_ levels: CGFloat)
+    func didChangeColorTemperature(_ temperature: CGFloat)
+    func didChangeColorTint(_ tint: CGFloat)
+    func didChangeHalftone(_ halftone: CGFloat)
+    func didChangeUnsharpMask(_ amount: CGFloat)
+
+    func didChangeBackgroundHue(_ hue: CGFloat)
+    func didChangeBackgroundHighlightAmount(_ amount: CGFloat)
+    func didChangeBackgroundShadowAmount(_ amount: CGFloat)
+    func didChangeBackgroundGrain(_ grain: CGFloat)
+    func didChangeBackgroundBloom(_ bloom: CGFloat)
+    func didChangeBackgroundDuotoneIntensity(_ intensity: CGFloat)
+    func didChangeBackgroundVibrance(_ vibrance: CGFloat)
+    func didChangeBackgroundPosterizeLevels(_ levels: CGFloat)
+    func didChangeBackgroundColorTemperature(_ temperature: CGFloat)
+    func didChangeBackgroundColorTint(_ tint: CGFloat)
+    func didChangeBackgroundHalftone(_ halftone: CGFloat)
+    func didChangeBackgroundUnsharpMask(_ amount: CGFloat)
+
+    func didApplyFilterPreset(_ preset: FilterPreset)
+    func didRequestCopyBackgroundFiltersToMain()
+    func didRequestResetMainImageFilters()
+    func didRequestResetBackgroundImageFilters()
     
     var currentDesign: Design { get }
 }
@@ -60,9 +91,21 @@ class DesignControlsView: UIView {
         case saturation
         case exposure
         case gamma
+        case hue
+        case vibrance
+        case highlightAmount
+        case shadowAmount
         case sepia
+        case duotoneIntensity
+        case grain
+        case bloom
+        case posterizeLevels
+        case colorTemperature
+        case colorTint
+        case halftone
         case pixelate
         case sharpen
+        case unsharpMask
         case monochrome
         case vignette
         case invert
@@ -80,12 +123,34 @@ class DesignControlsView: UIView {
         case contrast
         case saturation
         case gamma
-        case monochrome
+        case hue
+        case vibrance
+        case highlightAmount
+        case shadowAmount
         case sepia
+        case duotoneIntensity
+        case grain
+        case bloom
+        case posterizeLevels
+        case colorTemperature
+        case colorTint
+        case halftone
+        case monochrome
         case scale
         case sharpen
+        case unsharpMask
         case vignette
     }
+
+    private lazy var mainFooter = FilterActionsFooterView(
+        primaryTitle: NSLocalizedString("Reset Main Filters", comment: "Reset main image filters"),
+        secondaryTitle: NSLocalizedString("Copy Background → Main", comment: "Copy background filters to main")
+    )
+
+    private lazy var backgroundFooter = FilterActionsFooterView(
+        primaryTitle: NSLocalizedString("Reset Background Filters", comment: "Reset background image filters"),
+        secondaryTitle: ""
+    )
     
     init(
         design: Design,
@@ -128,6 +193,15 @@ class DesignControlsView: UIView {
             ControlSwitchTableViewCell.self,
             forCellReuseIdentifier: ControlSwitchTableViewCell.reuseIdentifier
         )
+        mainFooter.onPrimary = { [weak self] in
+            self?.delegate?.didRequestResetMainImageFilters()
+        }
+        mainFooter.onSecondary = { [weak self] in
+            self?.delegate?.didRequestCopyBackgroundFiltersToMain()
+        }
+        backgroundFooter.onPrimary = { [weak self] in
+            self?.delegate?.didRequestResetBackgroundImageFilters()
+        }
         addSubview(tableView)
         
         NSLayoutConstraint.activate([
@@ -262,6 +336,19 @@ extension DesignControlsView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 44.0
     }
+
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        switch Section(rawValue: section)! {
+        case .mainImage:
+            return mainFooter
+        case .backgroundImage:
+            return backgroundFooter
+        }
+    }
+
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 44
+    }
     
     private func switchProperties(for row: BackgroundImageRow) -> (String, Bool) {
         switch row {
@@ -300,6 +387,30 @@ extension DesignControlsView: UITableViewDelegate, UITableViewDataSource {
             return (NSLocalizedString("Exposure", comment: "Exposure"), Float(delegate?.currentDesign.exposure ?? design.exposure), -10, 10, 0, .alpha, UIImage(systemName: "lightbulb"))
         case .gamma:
             return (NSLocalizedString("Gamma", comment: "Gamma"), Float(delegate?.currentDesign.gamma ?? design.gamma), 0, 3, 1, .alpha, UIImage(systemName: "bolt"))
+        case .hue:
+            return (NSLocalizedString("Hue", comment: "Hue shift"), Float(delegate?.currentDesign.hue ?? design.hue), -180, 180, 0, .integer, UIImage(systemName: "circle.hexagongrid"))
+        case .vibrance:
+            return (NSLocalizedString("Vibrance", comment: "Vibrance"), Float(delegate?.currentDesign.vibrance ?? design.vibrance), -1, 1, 0, .alpha, UIImage(systemName: "wand.and.stars"))
+        case .highlightAmount:
+            return (NSLocalizedString("Highlights", comment: "Highlight amount"), Float(delegate?.currentDesign.highlightAmount ?? design.highlightAmount), 0, 2, 1, .alpha, UIImage(systemName: "sun.max.fill"))
+        case .shadowAmount:
+            return (NSLocalizedString("Shadows", comment: "Shadow amount"), Float(delegate?.currentDesign.shadowAmount ?? design.shadowAmount), -1, 1, 0, .alpha, UIImage(systemName: "moon.fill"))
+        case .duotoneIntensity:
+            return (NSLocalizedString("Duotone", comment: "Duotone intensity"), Float(delegate?.currentDesign.duotoneIntensity ?? design.duotoneIntensity), 0, 1, 0, .alpha, UIImage(systemName: "paintpalette"))
+        case .grain:
+            return (NSLocalizedString("Grain", comment: "Film grain"), Float(delegate?.currentDesign.grain ?? design.grain), 0, 1, 0, .alpha, UIImage(systemName: "sparkle"))
+        case .bloom:
+            return (NSLocalizedString("Bloom", comment: "Bloom glow"), Float(delegate?.currentDesign.bloom ?? design.bloom), 0, 1, 0, .alpha, UIImage(systemName: "rays"))
+        case .posterizeLevels:
+            return (NSLocalizedString("Posterize", comment: "Posterize levels"), Float(delegate?.currentDesign.posterizeLevels ?? design.posterizeLevels), 0, 12, 0, .integer, UIImage(systemName: "square.grid.3x3"))
+        case .colorTemperature:
+            return (NSLocalizedString("Temperature", comment: "Color temperature"), Float(delegate?.currentDesign.colorTemperature ?? design.colorTemperature), 4000, 10000, 6500, .integer, UIImage(systemName: "thermometer.medium"))
+        case .colorTint:
+            return (NSLocalizedString("Tint", comment: "Color tint"), Float(delegate?.currentDesign.colorTint ?? design.colorTint), -100, 100, 0, .integer, UIImage(systemName: "drop.halffull"))
+        case .halftone:
+            return (NSLocalizedString("Halftone", comment: "Halftone dots"), Float(delegate?.currentDesign.halftone ?? design.halftone), 0, 30, 0, .integer, UIImage(systemName: "circle.grid.2x2"))
+        case .unsharpMask:
+            return (NSLocalizedString("Unsharp Mask", comment: "Unsharp mask"), Float(delegate?.currentDesign.unsharpMask ?? design.unsharpMask), 0, 2, 0, .alpha, UIImage(systemName: "scope"))
         case .sepia:
             return (NSLocalizedString("Sepia", comment: "Sepia"), Float(delegate?.currentDesign.sepia ?? design.sepia), 0, 1, 0, .alpha, UIImage(systemName: "paintbrush"))
         case .pixelate:
@@ -410,6 +521,30 @@ extension DesignControlsView: UITableViewDelegate, UITableViewDataSource {
                 .alpha,
                 UIImage(systemName: "bolt")
             )
+        case .hue:
+            return (NSLocalizedString("Background Hue", comment: "Background hue"), Float(delegate?.currentDesign.backgroundHue ?? design.backgroundHue), -180, 180, 0, .integer, UIImage(systemName: "circle.hexagongrid"))
+        case .vibrance:
+            return (NSLocalizedString("Background Vibrance", comment: "Background vibrance"), Float(delegate?.currentDesign.backgroundVibrance ?? design.backgroundVibrance), -1, 1, 0, .alpha, UIImage(systemName: "wand.and.stars"))
+        case .highlightAmount:
+            return (NSLocalizedString("Background Highlights", comment: "Background highlights"), Float(delegate?.currentDesign.backgroundHighlightAmount ?? design.backgroundHighlightAmount), 0, 2, 1, .alpha, UIImage(systemName: "sun.max.fill"))
+        case .shadowAmount:
+            return (NSLocalizedString("Background Shadows", comment: "Background shadows"), Float(delegate?.currentDesign.backgroundShadowAmount ?? design.backgroundShadowAmount), -1, 1, 0, .alpha, UIImage(systemName: "moon.fill"))
+        case .duotoneIntensity:
+            return (NSLocalizedString("Background Duotone", comment: "Background duotone"), Float(delegate?.currentDesign.backgroundDuotoneIntensity ?? design.backgroundDuotoneIntensity), 0, 1, 0, .alpha, UIImage(systemName: "paintpalette"))
+        case .grain:
+            return (NSLocalizedString("Background Grain", comment: "Background grain"), Float(delegate?.currentDesign.backgroundGrain ?? design.backgroundGrain), 0, 1, 0, .alpha, UIImage(systemName: "sparkle"))
+        case .bloom:
+            return (NSLocalizedString("Background Bloom", comment: "Background bloom"), Float(delegate?.currentDesign.backgroundBloom ?? design.backgroundBloom), 0, 1, 0, .alpha, UIImage(systemName: "rays"))
+        case .posterizeLevels:
+            return (NSLocalizedString("Background Posterize", comment: "Background posterize"), Float(delegate?.currentDesign.backgroundPosterizeLevels ?? design.backgroundPosterizeLevels), 0, 12, 0, .integer, UIImage(systemName: "square.grid.3x3"))
+        case .colorTemperature:
+            return (NSLocalizedString("Background Temperature", comment: "Background temperature"), Float(delegate?.currentDesign.backgroundColorTemperature ?? design.backgroundColorTemperature), 4000, 10000, 6500, .integer, UIImage(systemName: "thermometer.medium"))
+        case .colorTint:
+            return (NSLocalizedString("Background Tint", comment: "Background tint"), Float(delegate?.currentDesign.backgroundColorTint ?? design.backgroundColorTint), -100, 100, 0, .integer, UIImage(systemName: "drop.halffull"))
+        case .halftone:
+            return (NSLocalizedString("Background Halftone", comment: "Background halftone"), Float(delegate?.currentDesign.backgroundHalftone ?? design.backgroundHalftone), 0, 30, 0, .integer, UIImage(systemName: "circle.grid.2x2"))
+        case .unsharpMask:
+            return (NSLocalizedString("Background Unsharp Mask", comment: "Background unsharp mask"), Float(delegate?.currentDesign.backgroundUnsharpMask ?? design.backgroundUnsharpMask), 0, 2, 0, .alpha, UIImage(systemName: "scope"))
         case .sepia:
             return (
                 NSLocalizedString("Background Sepia", comment: "Background Sepia"),
@@ -478,6 +613,30 @@ extension DesignControlsView: UITableViewDelegate, UITableViewDataSource {
             delegate?.didChangeExposure(newValue)
         case .gamma:
             delegate?.didChangeGamma(newValue)
+        case .hue:
+            delegate?.didChangeHue(newValue)
+        case .vibrance:
+            delegate?.didChangeVibrance(newValue)
+        case .highlightAmount:
+            delegate?.didChangeHighlightAmount(newValue)
+        case .shadowAmount:
+            delegate?.didChangeShadowAmount(newValue)
+        case .duotoneIntensity:
+            delegate?.didChangeDuotoneIntensity(newValue)
+        case .grain:
+            delegate?.didChangeGrain(newValue)
+        case .bloom:
+            delegate?.didChangeBloom(newValue)
+        case .posterizeLevels:
+            delegate?.didChangePosterizeLevels(newValue)
+        case .colorTemperature:
+            delegate?.didChangeColorTemperature(newValue)
+        case .colorTint:
+            delegate?.didChangeColorTint(newValue)
+        case .halftone:
+            delegate?.didChangeHalftone(newValue)
+        case .unsharpMask:
+            delegate?.didChangeUnsharpMask(newValue)
         case .sepia:
             delegate?.didChangeSepia(newValue)
         case .pixelate:
@@ -512,6 +671,30 @@ extension DesignControlsView: UITableViewDelegate, UITableViewDataSource {
             delegate?.didChangeBackgroundExposure(newValue)
         case .gamma:
             delegate?.didChangeBackgroundGamma(newValue)
+        case .hue:
+            delegate?.didChangeBackgroundHue(newValue)
+        case .vibrance:
+            delegate?.didChangeBackgroundVibrance(newValue)
+        case .highlightAmount:
+            delegate?.didChangeBackgroundHighlightAmount(newValue)
+        case .shadowAmount:
+            delegate?.didChangeBackgroundShadowAmount(newValue)
+        case .duotoneIntensity:
+            delegate?.didChangeBackgroundDuotoneIntensity(newValue)
+        case .grain:
+            delegate?.didChangeBackgroundGrain(newValue)
+        case .bloom:
+            delegate?.didChangeBackgroundBloom(newValue)
+        case .posterizeLevels:
+            delegate?.didChangeBackgroundPosterizeLevels(newValue)
+        case .colorTemperature:
+            delegate?.didChangeBackgroundColorTemperature(newValue)
+        case .colorTint:
+            delegate?.didChangeBackgroundColorTint(newValue)
+        case .halftone:
+            delegate?.didChangeBackgroundHalftone(newValue)
+        case .unsharpMask:
+            delegate?.didChangeBackgroundUnsharpMask(newValue)
         case .sepia:
             delegate?.didChangeBackgroundSepia(newValue)
         case .pixelate:
@@ -566,6 +749,8 @@ class ControlSliderTableViewCell: UITableViewCell {
 
     private let infoButton = UIButton(type: .system)
     private var infoButtonWidthConstraint: NSLayoutConstraint!
+    private let macIconImageView = UIImageView()
+    private lazy var macLayoutInstaller = SliderMacRowLayoutInstaller(iconImageView: macIconImageView)
 
     var showInfoButton: Bool = false {
         didSet {
@@ -580,7 +765,23 @@ class ControlSliderTableViewCell: UITableViewCell {
             guard oldValue != thumbImage else {
                 return
             }
-            if traitCollection.userInterfaceIdiom != .mac {
+            if SliderMacRowLayout.isEnabled(for: traitCollection) {
+                macLayoutInstaller.setIconImage(thumbImage, traitCollection: traitCollection)
+            } else {
+                slider.setThumbImage(thumbImage, for: .normal)
+            }
+        }
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if previousTraitCollection?.userInterfaceIdiom != traitCollection.userInterfaceIdiom {
+            macLayoutInstaller.update(for: traitCollection)
+            if SliderMacRowLayout.isEnabled(for: traitCollection) {
+                slider.setThumbImage(nil, for: .normal)
+                macLayoutInstaller.setIconImage(thumbImage, traitCollection: traitCollection)
+            } else {
+                macIconImageView.isHidden = true
                 slider.setThumbImage(thumbImage, for: .normal)
             }
         }
@@ -639,48 +840,16 @@ class ControlSliderTableViewCell: UITableViewCell {
         contentView.addSubview(valueLabel)
 
         infoButtonWidthConstraint = infoButton.widthAnchor.constraint(equalToConstant: 0)
+        NSLayoutConstraint.activate([infoButtonWidthConstraint])
 
-        NSLayoutConstraint.activate(
-            [
-                label.topAnchor.constraint(
-                    equalTo: contentView.topAnchor,
-                    constant: 8
-                ),
-                label.leadingAnchor.constraint(
-                    equalTo: contentView.leadingAnchor,
-                    constant: 8
-                ),
-                label.trailingAnchor.constraint(
-                    lessThanOrEqualTo: infoButton.leadingAnchor,
-                    constant: -4
-                ),
-
-                infoButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-                infoButton.centerYAnchor.constraint(equalTo: label.centerYAnchor),
-                infoButton.heightAnchor.constraint(equalToConstant: 28),
-                infoButtonWidthConstraint,
-
-                slider.topAnchor.constraint(
-                    equalTo: label.bottomAnchor,
-                    constant: 8
-                ),
-                slider.leadingAnchor.constraint(
-                    equalTo: contentView.leadingAnchor,
-                    constant: 8
-                ),
-                slider.trailingAnchor.constraint(
-                    equalTo: valueLabel.leadingAnchor,
-                    constant: -8
-                ),
-                slider.bottomAnchor.constraint(
-                    equalTo: contentView.bottomAnchor,
-                    constant: -8
-                ),
-
-                valueLabel.centerYAnchor.constraint(equalTo: slider.centerYAnchor),
-                valueLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-                valueLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 40)
-            ]
+        macLayoutInstaller.install(
+            in: contentView,
+            style: .control,
+            margin: 8,
+            label: label,
+            slider: slider,
+            valueLabel: valueLabel,
+            infoButton: infoButton
         )
 
         let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap(_:)))
@@ -749,7 +918,9 @@ extension ControlSliderTableViewCell: Themeable {
     func apply(_ colorModel: ColorModel) {
         backgroundColor = .clear
         valueLabel.applyColors(from: colorModel)
+        label.applyColors(from: colorModel)
         slider.applyColors(from: colorModel)
+        macIconImageView.tintColor = colorModel.textColor
     }
 }
 

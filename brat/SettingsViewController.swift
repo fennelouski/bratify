@@ -2,6 +2,14 @@ import UIKit
 
 class SettingsViewController: UITableViewController {
 
+    enum PresentationStyle {
+        case navigation
+        case sidebar
+    }
+
+    var presentationStyle: PresentationStyle = .navigation
+    var onDone: (() -> Void)?
+
     private let settingsManager: SettingsManager
 
     private enum CategorySection: Int, CaseIterable {
@@ -23,7 +31,7 @@ class SettingsViewController: UITableViewController {
 
         var items: [SettingItem] {
             switch self {
-            case .appearance: return [.themeSelection, .defaultTextColor, .defaultBackgroundColor]
+            case .appearance: return [.themingEnabled, .themeSelection, .defaultTextColor, .defaultBackgroundColor]
             case .typography: return [.preferredFontName, .preferredFontSize]
             case .canvas:     return [.aspectRatio, .pixelationScale, .extendedRange]
             case .behavior:   return [.autocorrectionEnabled, .forceLowercase, .saveWithoutTitle, .confirmBeforeDeleting, .showLabels, .eli5Mode]
@@ -44,8 +52,22 @@ class SettingsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = NSLocalizedString("Settings", comment: "The name of the settings menu.").localizedLowercase
-        navigationItem.largeTitleDisplayMode = .always
+        navigationItem.largeTitleDisplayMode = presentationStyle == .sidebar ? .never : .always
+        configureSidebarDoneButtonIfNeeded()
         apply(settingsManager.selectedTheme)
+    }
+
+    private func configureSidebarDoneButtonIfNeeded() {
+        guard presentationStyle == .sidebar, onDone != nil else { return }
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .done,
+            target: self,
+            action: #selector(sidebarDoneTapped)
+        )
+    }
+
+    @objc private func sidebarDoneTapped() {
+        onDone?()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -109,7 +131,11 @@ class SettingsViewController: UITableViewController {
     }
 
     @objc private func close() {
-        dismiss()
+        if presentationStyle == .sidebar {
+            onDone?()
+        } else {
+            dismiss()
+        }
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

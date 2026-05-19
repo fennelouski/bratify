@@ -48,6 +48,10 @@ public struct WebImagePickerConfiguration: Sendable, Hashable {
     /// Host apps can pre-seed several pages; invalid schemes are skipped. Discovery runs sequentially to keep ordering predictable.
     public var additionalPageURLs: [URL]
 
+    /// When `true`, the picker calls ``WebImagePickerViewModel/loadPage()`` automatically the first time it appears if
+    /// ``initialURLString`` (or ``additionalPageURLs``) provides a usable URL. Default `false`.
+    public var automaticallyLoadOnAppear: Bool
+
     /// Upper bound on how many images to keep from each page after discovery, before they are merged into the grid.
     ///
     /// When `nil` (the default), no truncation is applied. When set to a positive value, only the first N candidates from that page are kept **after** ``discoveredImageSort`` is applied (default ``DiscoveredImageSort/discoveryOrder`` matches extractor order; see package documentation for static HTML ordering). The cap applies **per page**: in multi-URL mode, each loaded page contributes at most N images (after per-page deduplication).
@@ -101,10 +105,6 @@ public struct WebImagePickerConfiguration: Sendable, Hashable {
     /// Session used for HTML fetches and image downloads. Defaults to `URLSession.shared`.
     public var urlSession: URLSession
 
-    /// When `true`, the picker starts loading discoverable page URLs automatically once on first appearance when
-    /// ``initialURLString``, ``additionalPageURLs``, or pre-filled extra rows provide a loadable URL. Default `false`.
-    public var automaticallyLoadOnAppear: Bool
-
     /// Creates a configuration with explicit limits and networking options.
     /// - Parameters:
     ///   - selectionLimit: Maximum selections; clamped to at least `1`.
@@ -117,6 +117,7 @@ public struct WebImagePickerConfiguration: Sendable, Hashable {
     ///   - extractionMode: ``WebImageExtractionMode/staticHTML`` or ``WebImageExtractionMode/webView``.
     ///   - initialURLString: Optional URL string shown in the entry field when the picker first appears.
     ///   - additionalPageURLs: Ordered extra pages to aggregate with the primary URL and any user-added URLs.
+    ///   - automaticallyLoadOnAppear: Begin discovery automatically on first appearance when URLs are available.
     ///   - maximumDiscoveredImagesPerPage: Optional maximum images retained per page after discovery; `nil` means unlimited.
     ///   - discoveredImageSort: Order applied per page after deduplication and before the per-page cap.
     ///   - similarImageDeduplication: How aggressively to merge URLs that may reference the same asset.
@@ -132,7 +133,6 @@ public struct WebImagePickerConfiguration: Sendable, Hashable {
     ///   - maximumConcurrentImageTextRecognition: Parallelism for OCR ranged GETs + Vision.
     ///   - excludedImageMetadataSubstrings: Substrings that hide matching images from the grid.
     ///   - excludedImageMetadataRegularExpressionPatterns: Regex patterns that hide matching images.
-    ///   - automaticallyLoadOnAppear: Begin discovery automatically on first appearance when URLs are available.
     ///   - cachePolicy: ``URLRequest`` cache policy plus optional discovered-image-list memo (count, TTL, per-domain).
     ///   - urlSession: Session used for fetches; defaults to `URLSession.shared`.
     public init(
@@ -146,6 +146,7 @@ public struct WebImagePickerConfiguration: Sendable, Hashable {
         extractionMode: WebImageExtractionMode = .staticHTML,
         initialURLString: String? = nil,
         additionalPageURLs: [URL] = [],
+        automaticallyLoadOnAppear: Bool = false,
         maximumDiscoveredImagesPerPage: Int? = nil,
         discoveredImageSort: DiscoveredImageSort = .discoveryOrder,
         similarImageDeduplication: SimilarImageDeduplicationStrategy = .disabled,
@@ -161,7 +162,6 @@ public struct WebImagePickerConfiguration: Sendable, Hashable {
         maximumConcurrentImageTextRecognition: Int = 2,
         excludedImageMetadataSubstrings: [String] = [],
         excludedImageMetadataRegularExpressionPatterns: [String] = [],
-        automaticallyLoadOnAppear: Bool = false,
         cachePolicy: WebImagePickerCachePolicy = .ephemeral,
         urlSession: URLSession = .shared
     ) {
@@ -175,6 +175,7 @@ public struct WebImagePickerConfiguration: Sendable, Hashable {
         self.extractionMode = extractionMode
         self.initialURLString = initialURLString
         self.additionalPageURLs = additionalPageURLs
+        self.automaticallyLoadOnAppear = automaticallyLoadOnAppear
         self.maximumDiscoveredImagesPerPage = maximumDiscoveredImagesPerPage.flatMap { $0 > 0 ? $0 : nil }
         self.discoveredImageSort = discoveredImageSort
         self.similarImageDeduplication = similarImageDeduplication
@@ -194,12 +195,23 @@ public struct WebImagePickerConfiguration: Sendable, Hashable {
         self.excludedImageMetadataRegularExpressionPatterns = excludedImageMetadataRegularExpressionPatterns
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
             .filter { !$0.isEmpty }
-        self.automaticallyLoadOnAppear = automaticallyLoadOnAppear
         self.cachePolicy = cachePolicy
         self.urlSession = urlSession
     }
 
     public static let `default` = WebImagePickerConfiguration()
+
+    /// HTTPS-only page and image URLs; identical to ``default``.
+    public static var httpsOnly: WebImagePickerConfiguration { .default }
+
+    /// Returns a copy of `basedOn` with both `http` and `https` in ``allowedURLSchemes``.
+    ///
+    /// Cleartext loads may still require App Transport Security (ATS) configuration in the host app on Apple platforms.
+    public static func allowingHTTPAndHTTPS(basedOn configuration: WebImagePickerConfiguration = .default) -> WebImagePickerConfiguration {
+        var copy = configuration
+        copy.allowedURLSchemes = ["http", "https"]
+        return copy
+    }
 
     public static func == (lhs: WebImagePickerConfiguration, rhs: WebImagePickerConfiguration) -> Bool {
         lhs.selectionLimit == rhs.selectionLimit
@@ -212,6 +224,7 @@ public struct WebImagePickerConfiguration: Sendable, Hashable {
             && lhs.extractionMode == rhs.extractionMode
             && lhs.initialURLString == rhs.initialURLString
             && lhs.additionalPageURLs == rhs.additionalPageURLs
+            && lhs.automaticallyLoadOnAppear == rhs.automaticallyLoadOnAppear
             && lhs.maximumDiscoveredImagesPerPage == rhs.maximumDiscoveredImagesPerPage
             && lhs.discoveredImageSort == rhs.discoveredImageSort
             && lhs.similarImageDeduplication == rhs.similarImageDeduplication
@@ -227,7 +240,6 @@ public struct WebImagePickerConfiguration: Sendable, Hashable {
             && lhs.maximumConcurrentImageTextRecognition == rhs.maximumConcurrentImageTextRecognition
             && lhs.excludedImageMetadataSubstrings == rhs.excludedImageMetadataSubstrings
             && lhs.excludedImageMetadataRegularExpressionPatterns == rhs.excludedImageMetadataRegularExpressionPatterns
-            && lhs.automaticallyLoadOnAppear == rhs.automaticallyLoadOnAppear
             && lhs.cachePolicy == rhs.cachePolicy
     }
 
@@ -242,6 +254,7 @@ public struct WebImagePickerConfiguration: Sendable, Hashable {
         hasher.combine(extractionMode)
         hasher.combine(initialURLString)
         hasher.combine(additionalPageURLs)
+        hasher.combine(automaticallyLoadOnAppear)
         hasher.combine(maximumDiscoveredImagesPerPage)
         hasher.combine(discoveredImageSort)
         hasher.combine(similarImageDeduplication)
@@ -257,7 +270,6 @@ public struct WebImagePickerConfiguration: Sendable, Hashable {
         hasher.combine(maximumConcurrentImageTextRecognition)
         hasher.combine(excludedImageMetadataSubstrings)
         hasher.combine(excludedImageMetadataRegularExpressionPatterns)
-        hasher.combine(automaticallyLoadOnAppear)
         hasher.combine(cachePolicy)
     }
 

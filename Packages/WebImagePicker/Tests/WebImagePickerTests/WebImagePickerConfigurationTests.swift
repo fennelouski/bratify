@@ -12,6 +12,18 @@ final class WebImagePickerConfigurationTests: XCTestCase {
         XCTAssertEqual(WebImagePickerConfiguration.default.allowedURLSchemes, ["https"])
     }
 
+    func testHTTPSOnlyPresetMatchesDefault() {
+        XCTAssertEqual(WebImagePickerConfiguration.httpsOnly, WebImagePickerConfiguration.default)
+    }
+
+    func testAllowingHTTPAndHTTPSAddsHTTPScheme() {
+        let custom = WebImagePickerConfiguration(selectionLimit: 3, extractionMode: .webView)
+        let both = WebImagePickerConfiguration.allowingHTTPAndHTTPS(basedOn: custom)
+        XCTAssertEqual(Set(both.allowedURLSchemes), Set(["http", "https"]))
+        XCTAssertEqual(both.selectionLimit, 3)
+        XCTAssertEqual(both.extractionMode, .webView)
+    }
+
     func testDefaultExtractionModeIsStaticHTML() {
         XCTAssertEqual(WebImagePickerConfiguration.default.extractionMode, .staticHTML)
     }

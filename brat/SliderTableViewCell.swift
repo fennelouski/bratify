@@ -23,6 +23,8 @@ class SliderTableViewCell: UITableViewCell, Themeable {
 
     private let infoButton = UIButton(type: .system)
     private var infoButtonWidthConstraint: NSLayoutConstraint!
+    private let macIconImageView = UIImageView()
+    private lazy var macLayoutInstaller = SliderMacRowLayoutInstaller(iconImageView: macIconImageView)
 
     var showInfoButton: Bool = false {
         didSet {
@@ -37,7 +39,23 @@ class SliderTableViewCell: UITableViewCell, Themeable {
             guard oldValue != thumbImage else {
                 return
             }
-            if traitCollection.userInterfaceIdiom != .mac {
+            if SliderMacRowLayout.isEnabled(for: traitCollection) {
+                macLayoutInstaller.setIconImage(thumbImage, traitCollection: traitCollection)
+            } else {
+                slider.setThumbImage(thumbImage, for: .normal)
+            }
+        }
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if previousTraitCollection?.userInterfaceIdiom != traitCollection.userInterfaceIdiom {
+            macLayoutInstaller.update(for: traitCollection)
+            if SliderMacRowLayout.isEnabled(for: traitCollection) {
+                slider.setThumbImage(nil, for: .normal)
+                macLayoutInstaller.setIconImage(thumbImage, traitCollection: traitCollection)
+            } else {
+                macIconImageView.isHidden = true
                 slider.setThumbImage(thumbImage, for: .normal)
             }
         }
@@ -61,6 +79,8 @@ class SliderTableViewCell: UITableViewCell, Themeable {
     private func setupViews() {
         label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.preferredFont(forTextStyle: .body)
+        label.adjustsFontForContentSizeCategory = true
         contentView.addSubview(label)
 
         let config = UIImage.SymbolConfiguration(pointSize: 15, weight: .regular)
@@ -86,58 +106,16 @@ class SliderTableViewCell: UITableViewCell, Themeable {
         contentView.addSubview(valueLabel)
 
         infoButtonWidthConstraint = infoButton.widthAnchor.constraint(equalToConstant: 0)
+        NSLayoutConstraint.activate([infoButtonWidthConstraint])
 
-        NSLayoutConstraint.activate(
-            [
-                label.topAnchor.constraint(
-                    equalTo: contentView.topAnchor,
-                    constant: .su
-                ),
-                label.leadingAnchor.constraint(
-                    equalTo: contentView.leadingAnchor,
-                    constant: .su
-                ),
-                label.trailingAnchor.constraint(
-                    lessThanOrEqualTo: infoButton.leadingAnchor,
-                    constant: -4
-                ),
-
-                infoButton.trailingAnchor.constraint(
-                    equalTo: contentView.trailingAnchor,
-                    constant: -.su
-                ),
-                infoButton.centerYAnchor.constraint(equalTo: label.centerYAnchor),
-                infoButton.heightAnchor.constraint(equalToConstant: 28),
-                infoButtonWidthConstraint,
-
-                slider.topAnchor.constraint(
-                    equalTo: label.bottomAnchor,
-                    constant: .su
-                ),
-                slider.leadingAnchor.constraint(
-                    equalTo: contentView.leadingAnchor,
-                    constant: .su2
-                ),
-                slider.bottomAnchor.constraint(
-                    equalTo: contentView.bottomAnchor,
-                    constant: -.su
-                ),
-
-                valueLabel.topAnchor.constraint(
-                    equalTo: slider.topAnchor,
-                    constant: .su
-                ),
-                valueLabel.leadingAnchor.constraint(
-                    equalTo: slider.trailingAnchor,
-                    constant: .su
-                ),
-                valueLabel.trailingAnchor.constraint(
-                    equalTo: contentView.trailingAnchor,
-                    constant: -.su
-                ),
-                valueLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: .su5),
-                valueLabel.bottomAnchor.constraint(equalTo: slider.bottomAnchor)
-            ]
+        macLayoutInstaller.install(
+            in: contentView,
+            style: .settings,
+            margin: .su,
+            label: label,
+            slider: slider,
+            valueLabel: valueLabel,
+            infoButton: infoButton
         )
     }
 
@@ -187,6 +165,7 @@ class SliderTableViewCell: UITableViewCell, Themeable {
         slider.applyColors(from: colorModel)
         valueLabel.applyColors(from: colorModel)
         label.applyColors(from: colorModel)
+        macIconImageView.tintColor = colorModel.textColor
         backgroundColor = .clear
         contentView.backgroundColor = .clear
     }

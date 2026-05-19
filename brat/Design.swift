@@ -4,6 +4,7 @@ struct Design: Codable {
     var text: String
     var backgroundColor: UIColor
     var textColor: UIColor = .white
+    var usesAutomaticTextColor: Bool = false
     var creationDate: Date
     var modifiedDate: Date
     var fontName: String
@@ -27,6 +28,20 @@ struct Design: Codable {
     var sharpen: CGFloat = 0.0
     var monochrome: CGFloat = 0.0
     var vignette: CGFloat = 0.0
+    var hue: CGFloat = 0.0
+    var highlightAmount: CGFloat = 1.0
+    var shadowAmount: CGFloat = 0.0
+    var grain: CGFloat = 0.0
+    var bloom: CGFloat = 0.0
+    var duotoneIntensity: CGFloat = 0.0
+    var duotoneColorHex: String = "8ACE00"
+    var vibrance: CGFloat = 0.0
+    var posterizeLevels: CGFloat = 0.0
+    var colorTemperature: CGFloat = 6500.0
+    var colorTint: CGFloat = 0.0
+    var photoEffect: FilterPhotoEffect?
+    var halftone: CGFloat = 0.0
+    var unsharpMask: CGFloat = 0.0
     
     // Background image properties
     var backgroundImageKey: String?
@@ -46,11 +61,26 @@ struct Design: Codable {
     var backgroundSharpen: CGFloat = 0.0
     var backgroundMonochrome: CGFloat = 0.0
     var backgroundVignette: CGFloat = 0.0
+    var backgroundHue: CGFloat = 0.0
+    var backgroundHighlightAmount: CGFloat = 1.0
+    var backgroundShadowAmount: CGFloat = 0.0
+    var backgroundGrain: CGFloat = 0.0
+    var backgroundBloom: CGFloat = 0.0
+    var backgroundDuotoneIntensity: CGFloat = 0.0
+    var backgroundDuotoneColorHex: String = "8ACE00"
+    var backgroundVibrance: CGFloat = 0.0
+    var backgroundPosterizeLevels: CGFloat = 0.0
+    var backgroundColorTemperature: CGFloat = 6500.0
+    var backgroundColorTint: CGFloat = 0.0
+    var backgroundPhotoEffect: FilterPhotoEffect?
+    var backgroundHalftone: CGFloat = 0.0
+    var backgroundUnsharpMask: CGFloat = 0.0
 
     enum CodingKeys: String, CodingKey {
         case text
         case backgroundColor
         case textColor
+        case usesAutomaticTextColor
         case creationDate
         case modifiedDate
         case fontName
@@ -72,6 +102,20 @@ struct Design: Codable {
         case sharpen
         case monochrome
         case vignette
+        case hue
+        case highlightAmount
+        case shadowAmount
+        case grain
+        case bloom
+        case duotoneIntensity
+        case duotoneColorHex
+        case vibrance
+        case posterizeLevels
+        case colorTemperature
+        case colorTint
+        case photoEffect
+        case halftone
+        case unsharpMask
         case backgroundImageKey
         case backgroundScale
         case backgroundFlipHorizontal
@@ -89,6 +133,20 @@ struct Design: Codable {
         case backgroundSharpen
         case backgroundMonochrome
         case backgroundVignette
+        case backgroundHue
+        case backgroundHighlightAmount
+        case backgroundShadowAmount
+        case backgroundGrain
+        case backgroundBloom
+        case backgroundDuotoneIntensity
+        case backgroundDuotoneColorHex
+        case backgroundVibrance
+        case backgroundPosterizeLevels
+        case backgroundColorTemperature
+        case backgroundColorTint
+        case backgroundPhotoEffect
+        case backgroundHalftone
+        case backgroundUnsharpMask
     }
 
     // Encoding the UIColor as a hex string
@@ -97,6 +155,7 @@ struct Design: Codable {
         try container.encode(text, forKey: .text)
         try container.encode(backgroundColor.toHexString(), forKey: .backgroundColor)
         try container.encode(textColor.toHexString(), forKey: .textColor)
+        try container.encode(usesAutomaticTextColor, forKey: .usesAutomaticTextColor)
         try container.encode(creationDate, forKey: .creationDate)
         try container.encode(modifiedDate, forKey: .modifiedDate)
         try container.encode(fontName, forKey: .fontName)
@@ -118,6 +177,20 @@ struct Design: Codable {
         try container.encode(sharpen, forKey: .sharpen)
         try container.encode(monochrome, forKey: .monochrome)
         try container.encode(vignette, forKey: .vignette)
+        try container.encode(hue, forKey: .hue)
+        try container.encode(highlightAmount, forKey: .highlightAmount)
+        try container.encode(shadowAmount, forKey: .shadowAmount)
+        try container.encode(grain, forKey: .grain)
+        try container.encode(bloom, forKey: .bloom)
+        try container.encode(duotoneIntensity, forKey: .duotoneIntensity)
+        try container.encode(duotoneColorHex, forKey: .duotoneColorHex)
+        try container.encode(vibrance, forKey: .vibrance)
+        try container.encode(posterizeLevels, forKey: .posterizeLevels)
+        try container.encode(colorTemperature, forKey: .colorTemperature)
+        try container.encode(colorTint, forKey: .colorTint)
+        try container.encode(photoEffect, forKey: .photoEffect)
+        try container.encode(halftone, forKey: .halftone)
+        try container.encode(unsharpMask, forKey: .unsharpMask)
         try container.encode(backgroundImageKey, forKey: .backgroundImageKey)
         try container.encode(backgroundScale, forKey: .backgroundScale)
         try container.encode(backgroundFlipHorizontal, forKey: .backgroundFlipHorizontal)
@@ -135,12 +208,27 @@ struct Design: Codable {
         try container.encode(backgroundSharpen, forKey: .backgroundSharpen)
         try container.encode(backgroundMonochrome, forKey: .backgroundMonochrome)
         try container.encode(backgroundVignette, forKey: .backgroundVignette)
+        try container.encode(backgroundHue, forKey: .backgroundHue)
+        try container.encode(backgroundHighlightAmount, forKey: .backgroundHighlightAmount)
+        try container.encode(backgroundShadowAmount, forKey: .backgroundShadowAmount)
+        try container.encode(backgroundGrain, forKey: .backgroundGrain)
+        try container.encode(backgroundBloom, forKey: .backgroundBloom)
+        try container.encode(backgroundDuotoneIntensity, forKey: .backgroundDuotoneIntensity)
+        try container.encode(backgroundDuotoneColorHex, forKey: .backgroundDuotoneColorHex)
+        try container.encode(backgroundVibrance, forKey: .backgroundVibrance)
+        try container.encode(backgroundPosterizeLevels, forKey: .backgroundPosterizeLevels)
+        try container.encode(backgroundColorTemperature, forKey: .backgroundColorTemperature)
+        try container.encode(backgroundColorTint, forKey: .backgroundColorTint)
+        try container.encode(backgroundPhotoEffect, forKey: .backgroundPhotoEffect)
+        try container.encode(backgroundHalftone, forKey: .backgroundHalftone)
+        try container.encode(backgroundUnsharpMask, forKey: .backgroundUnsharpMask)
     }
 
     init(
         text: String,
         backgroundColor: UIColor,
         textColor: UIColor = .white,
+        usesAutomaticTextColor: Bool = true,
         creationDate: Date,
         modifiedDate: Date? = nil,
         fontName: String,
@@ -161,6 +249,20 @@ struct Design: Codable {
         sharpen: CGFloat = 0.0,
         monochrome: CGFloat = 0.0,
         vignette: CGFloat = 0.0,
+        hue: CGFloat = 0.0,
+        highlightAmount: CGFloat = 1.0,
+        shadowAmount: CGFloat = 0.0,
+        grain: CGFloat = 0.0,
+        bloom: CGFloat = 0.0,
+        duotoneIntensity: CGFloat = 0.0,
+        duotoneColorHex: String = "8ACE00",
+        vibrance: CGFloat = 0.0,
+        posterizeLevels: CGFloat = 0.0,
+        colorTemperature: CGFloat = 6500.0,
+        colorTint: CGFloat = 0.0,
+        photoEffect: FilterPhotoEffect? = nil,
+        halftone: CGFloat = 0.0,
+        unsharpMask: CGFloat = 0.0,
         backgroundImageKey: String? = nil,
         backgroundScale: CGFloat = 1.0,
         backgroundFlipHorizontal: Bool = false,
@@ -178,11 +280,26 @@ struct Design: Codable {
         backgroundSharpen: CGFloat = 0.0,
         backgroundMonochrome: CGFloat = 0.0,
         backgroundVignette: CGFloat = 0.0,
+        backgroundHue: CGFloat = 0.0,
+        backgroundHighlightAmount: CGFloat = 1.0,
+        backgroundShadowAmount: CGFloat = 0.0,
+        backgroundGrain: CGFloat = 0.0,
+        backgroundBloom: CGFloat = 0.0,
+        backgroundDuotoneIntensity: CGFloat = 0.0,
+        backgroundDuotoneColorHex: String = "8ACE00",
+        backgroundVibrance: CGFloat = 0.0,
+        backgroundPosterizeLevels: CGFloat = 0.0,
+        backgroundColorTemperature: CGFloat = 6500.0,
+        backgroundColorTint: CGFloat = 0.0,
+        backgroundPhotoEffect: FilterPhotoEffect? = nil,
+        backgroundHalftone: CGFloat = 0.0,
+        backgroundUnsharpMask: CGFloat = 0.0,
         id: UUID = UUID()
     ) {
         self.text = text
         self.backgroundColor = backgroundColor
         self.textColor = textColor
+        self.usesAutomaticTextColor = usesAutomaticTextColor
         self.creationDate = creationDate
         self.modifiedDate = modifiedDate ?? creationDate
         self.fontName = fontName
@@ -204,6 +321,20 @@ struct Design: Codable {
         self.sharpen = sharpen
         self.monochrome = monochrome
         self.vignette = vignette
+        self.hue = hue
+        self.highlightAmount = highlightAmount
+        self.shadowAmount = shadowAmount
+        self.grain = grain
+        self.bloom = bloom
+        self.duotoneIntensity = duotoneIntensity
+        self.duotoneColorHex = duotoneColorHex
+        self.vibrance = vibrance
+        self.posterizeLevels = posterizeLevels
+        self.colorTemperature = colorTemperature
+        self.colorTint = colorTint
+        self.photoEffect = photoEffect
+        self.halftone = halftone
+        self.unsharpMask = unsharpMask
         self.backgroundImageKey = backgroundImageKey
         self.backgroundScale = backgroundScale
         self.backgroundFlipHorizontal = backgroundFlipHorizontal
@@ -221,6 +352,20 @@ struct Design: Codable {
         self.backgroundSharpen = backgroundSharpen
         self.backgroundMonochrome = backgroundMonochrome
         self.backgroundVignette = backgroundVignette
+        self.backgroundHue = backgroundHue
+        self.backgroundHighlightAmount = backgroundHighlightAmount
+        self.backgroundShadowAmount = backgroundShadowAmount
+        self.backgroundGrain = backgroundGrain
+        self.backgroundBloom = backgroundBloom
+        self.backgroundDuotoneIntensity = backgroundDuotoneIntensity
+        self.backgroundDuotoneColorHex = backgroundDuotoneColorHex
+        self.backgroundVibrance = backgroundVibrance
+        self.backgroundPosterizeLevels = backgroundPosterizeLevels
+        self.backgroundColorTemperature = backgroundColorTemperature
+        self.backgroundColorTint = backgroundColorTint
+        self.backgroundPhotoEffect = backgroundPhotoEffect
+        self.backgroundHalftone = backgroundHalftone
+        self.backgroundUnsharpMask = backgroundUnsharpMask
     }
 
     // Decoding the UIColor from a hex string
@@ -235,6 +380,7 @@ struct Design: Codable {
         backgroundColor = UIColor(hexString: colorHex)
         let textColorHex = try container.decodeIfPresent(String.self, forKey: .textColor)
         textColor = textColorHex.map { UIColor(hexString: $0) } ?? .white
+        usesAutomaticTextColor = try container.decodeIfPresent(Bool.self, forKey: .usesAutomaticTextColor) ?? true
         creationDate = try container.decode(Date.self, forKey: .creationDate)
         modifiedDate = try container.decodeIfPresent(Date.self, forKey: .modifiedDate) ?? creationDate
         fontName = try container.decode(String.self, forKey: .fontName)
@@ -256,6 +402,20 @@ struct Design: Codable {
         sharpen = try container.decodeIfPresent(CGFloat.self, forKey: .sharpen) ?? 0.0
         monochrome = try container.decodeIfPresent(CGFloat.self, forKey: .monochrome) ?? 0.0
         vignette = try container.decodeIfPresent(CGFloat.self, forKey: .vignette) ?? 0.0
+        hue = try container.decodeIfPresent(CGFloat.self, forKey: .hue) ?? 0.0
+        highlightAmount = try container.decodeIfPresent(CGFloat.self, forKey: .highlightAmount) ?? 1.0
+        shadowAmount = try container.decodeIfPresent(CGFloat.self, forKey: .shadowAmount) ?? 0.0
+        grain = try container.decodeIfPresent(CGFloat.self, forKey: .grain) ?? 0.0
+        bloom = try container.decodeIfPresent(CGFloat.self, forKey: .bloom) ?? 0.0
+        duotoneIntensity = try container.decodeIfPresent(CGFloat.self, forKey: .duotoneIntensity) ?? 0.0
+        duotoneColorHex = try container.decodeIfPresent(String.self, forKey: .duotoneColorHex) ?? "8ACE00"
+        vibrance = try container.decodeIfPresent(CGFloat.self, forKey: .vibrance) ?? 0.0
+        posterizeLevels = try container.decodeIfPresent(CGFloat.self, forKey: .posterizeLevels) ?? 0.0
+        colorTemperature = try container.decodeIfPresent(CGFloat.self, forKey: .colorTemperature) ?? 6500.0
+        colorTint = try container.decodeIfPresent(CGFloat.self, forKey: .colorTint) ?? 0.0
+        photoEffect = try container.decodeIfPresent(FilterPhotoEffect.self, forKey: .photoEffect)
+        halftone = try container.decodeIfPresent(CGFloat.self, forKey: .halftone) ?? 0.0
+        unsharpMask = try container.decodeIfPresent(CGFloat.self, forKey: .unsharpMask) ?? 0.0
         backgroundImageKey = try container.decodeIfPresent(String.self, forKey: .backgroundImageKey)
         backgroundScale = try container.decodeIfPresent(CGFloat.self, forKey: .backgroundScale) ?? 1.0
         backgroundFlipHorizontal = try container.decodeIfPresent(Bool.self, forKey: .backgroundFlipHorizontal) ?? false
@@ -273,13 +433,52 @@ struct Design: Codable {
         backgroundSharpen = try container.decodeIfPresent(CGFloat.self, forKey: .backgroundSharpen) ?? 0.0
         backgroundMonochrome = try container.decodeIfPresent(CGFloat.self, forKey: .backgroundMonochrome) ?? 0.0
         backgroundVignette = try container.decodeIfPresent(CGFloat.self, forKey: .backgroundVignette) ?? 0.0
+        backgroundHue = try container.decodeIfPresent(CGFloat.self, forKey: .backgroundHue) ?? 0.0
+        backgroundHighlightAmount = try container.decodeIfPresent(CGFloat.self, forKey: .backgroundHighlightAmount) ?? 1.0
+        backgroundShadowAmount = try container.decodeIfPresent(CGFloat.self, forKey: .backgroundShadowAmount) ?? 0.0
+        backgroundGrain = try container.decodeIfPresent(CGFloat.self, forKey: .backgroundGrain) ?? 0.0
+        backgroundBloom = try container.decodeIfPresent(CGFloat.self, forKey: .backgroundBloom) ?? 0.0
+        backgroundDuotoneIntensity = try container.decodeIfPresent(CGFloat.self, forKey: .backgroundDuotoneIntensity) ?? 0.0
+        backgroundDuotoneColorHex = try container.decodeIfPresent(String.self, forKey: .backgroundDuotoneColorHex) ?? "8ACE00"
+        backgroundVibrance = try container.decodeIfPresent(CGFloat.self, forKey: .backgroundVibrance) ?? 0.0
+        backgroundPosterizeLevels = try container.decodeIfPresent(CGFloat.self, forKey: .backgroundPosterizeLevels) ?? 0.0
+        backgroundColorTemperature = try container.decodeIfPresent(CGFloat.self, forKey: .backgroundColorTemperature) ?? 6500.0
+        backgroundColorTint = try container.decodeIfPresent(CGFloat.self, forKey: .backgroundColorTint) ?? 0.0
+        backgroundPhotoEffect = try container.decodeIfPresent(FilterPhotoEffect.self, forKey: .backgroundPhotoEffect)
+        backgroundHalftone = try container.decodeIfPresent(CGFloat.self, forKey: .backgroundHalftone) ?? 0.0
+        backgroundUnsharpMask = try container.decodeIfPresent(CGFloat.self, forKey: .backgroundUnsharpMask) ?? 0.0
+    }
+
+    func resolvedTextColor(for traits: UITraitCollection, view: UIView? = nil) -> UIColor {
+        DesignTextColor.resolved(self, traits: traits, view: view)
+    }
+
+    func resolvedTextColor(for userInterfaceStyle: UIUserInterfaceStyle) -> UIColor {
+        DesignTextColor.resolved(self, userInterfaceStyle: userInterfaceStyle)
+    }
+
+    func imageCacheKey(
+        userInterfaceStyle style: UIUserInterfaceStyle = .unspecified,
+        traitCollection: UITraitCollection? = nil,
+        view: UIView? = nil
+    ) -> String {
+        var key = description
+        if usesAutomaticTextColor {
+            let resolved = DesignTextColor.resolvedUserInterfaceStyle(
+                style,
+                traitCollection: traitCollection,
+                view: view
+            )
+            key += "-appearance-\(resolved.rawValue)"
+        }
+        return key
     }
 
     var description: String {
-        var descriptionString = "\(text)\(backgroundColor.toHexString())\(textColor.toHexString())\(fontName)\(Int(fontSize))\(Int(pixelationScale))\(Int(stretch*25))\(Int(blur))\(Int(width))\(Int(height))\(Int(brightness*100))\(Int(contrast*100))\(Int(saturation*100))\(Int(exposure*100))\(Int(gamma*100))\(Int(sepia*100))\(invert ? 1 : 0)\(Int(pixelate*100))\(Int(sharpen*100))\(Int(monochrome*100))\(Int(vignette*100))\(backgroundImageKey ?? "")"
+        var descriptionString = "\(text)\(backgroundColor.toHexString())\(textColor.toHexString())\(usesAutomaticTextColor ? 1 : 0)\(fontName)\(Int(fontSize))\(Int(pixelationScale))\(Int(stretch*25))\(Int(blur))\(Int(width))\(Int(height))\(mainImageFilters.cacheKeyFragment())\(backgroundImageKey ?? "")"
         
         if let backgroundImageKey = backgroundImageKey {
-            descriptionString += "\(backgroundImageKey)\(Int(backgroundBrightness*100))\(Int(backgroundContrast*100))\(Int(backgroundSaturation*100))\(Int(backgroundExposure*100))\(Int(backgroundGamma*100))\(Int(backgroundSepia*100))\(backgroundInvert ? 1 : 0)\(Int(backgroundPixelate*100))\(Int(backgroundSharpen*100))\(Int(backgroundMonochrome*100))\(Int(backgroundVignette*100))\(Int(backgroundScale*100))\(backgroundFlipHorizontal ? 1 : 0)\(backgroundFlipVertical ? 1 : 0)\(Int(backgroundBlur*100))\(Int(backgroundAlpha*100))"
+            descriptionString += "\(backgroundImageKey)\(backgroundImageFilters.cacheKeyFragment())\(Int(backgroundScale*100))\(backgroundFlipHorizontal ? 1 : 0)\(backgroundFlipVertical ? 1 : 0)\(Int(backgroundBlur*100))\(Int(backgroundAlpha*100))"
         }
         
         return descriptionString
@@ -291,6 +490,7 @@ extension Design {
         .init(
             text: "",
             backgroundColor: .blue,
+            usesAutomaticTextColor: true,
             creationDate: Date(),
             fontName: "",
             fontSize: 64,

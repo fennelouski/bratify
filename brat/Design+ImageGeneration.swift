@@ -3,15 +3,41 @@ import UIKit
 extension Design {
     func generateImage(
         with imageService: ImageService,
+        userInterfaceStyle requestedStyle: UIUserInterfaceStyle = .unspecified,
+        traitCollection: UITraitCollection? = nil,
+        view: UIView? = nil,
         onBackgroundImageLoadFailed: (() -> Void)? = nil,
         callback: @escaping (UIImage?, String) -> Void
     ) {
         let size = CGSize(width: width, height: height)
+        let userInterfaceStyle = DesignTextColor.resolvedUserInterfaceStyle(
+            requestedStyle,
+            traitCollection: traitCollection,
+            view: view
+        )
+        let cacheKey = imageCacheKey(
+            userInterfaceStyle: requestedStyle,
+            traitCollection: traitCollection,
+            view: view
+        )
 
-        if let cachedImage = imageService.memoryCache.object(forKey: description as NSString),
+        if let cachedImage = imageService.memoryCache.object(forKey: cacheKey as NSString),
            isValidImage(cachedImage, expectedSize: size) {
-            callback(cachedImage, description)
+            callback(cachedImage, cacheKey)
             return
+        }
+
+        func applyAppearance(to designView: DesignView) {
+            switch userInterfaceStyle {
+            case .dark:
+                designView.overrideUserInterfaceStyle = .dark
+            case .light:
+                designView.overrideUserInterfaceStyle = .light
+            case .unspecified:
+                designView.overrideUserInterfaceStyle = .unspecified
+            @unknown default:
+                designView.overrideUserInterfaceStyle = .unspecified
+            }
         }
 
 #if !targetEnvironment(macCatalyst)
@@ -28,6 +54,8 @@ extension Design {
                 imageService: imageService
             )
             designView.onBackgroundImageLoadFailed = onBackgroundImageLoadFailed
+            applyAppearance(to: designView)
+            designView.layoutIfNeeded()
             designView.configure(
                 with: lowercasedText,
                 backgroundColor: backgroundColor,
@@ -50,28 +78,16 @@ extension Design {
                         finalImage = finalImage?.applyBlur(self.blur)
                     }
 
-                    finalImage = finalImage?.applyFilters(
-                        brightness: self.brightness,
-                        contrast: self.contrast,
-                        saturation: self.saturation,
-                        exposure: self.exposure,
-                        gamma: self.gamma,
-                        sepia: self.sepia,
-                        invert: self.invert,
-                        pixelate: self.pixelate,
-                        sharpen: self.sharpen,
-                        monochrome: self.monochrome,
-                        vignette: self.vignette
-                    )
+                    finalImage = finalImage?.applyFilters(self.mainImageFilters)
 
                     DispatchQueue.main.async {
-                        callback(finalImage, self.description)
+                        callback(finalImage, cacheKey)
                     }
 
                     if let finalImage = finalImage {
                         imageService.memoryCache.setObject(
                             finalImage,
-                            forKey: self.description as NSString
+                            forKey: cacheKey as NSString
                         )
                     }
                 }
@@ -92,6 +108,7 @@ extension Design {
         )
 
         designView.onBackgroundImageLoadFailed = onBackgroundImageLoadFailed
+        applyAppearance(to: designView)
 
         let lowercasedText = self.text.localizedLowercase
 
@@ -104,6 +121,7 @@ extension Design {
             imageName: self.backgroundImageKey,
             design: self
         ) { updatedDesignView in
+            updatedDesignView.layoutIfNeeded()
             let designViewBounds = updatedDesignView.bounds.size
 
             let renderer = UIGraphicsImageRenderer(size: designViewBounds)
@@ -114,26 +132,14 @@ extension Design {
             DispatchQueue.global(qos: .userInitiated).async {
                 var finalImage = image.fastScaled(by: self.pixelationScale, blur: self.blur)
 
-                finalImage = finalImage?.applyFilters(
-                    brightness: self.brightness,
-                    contrast: self.contrast,
-                    saturation: self.saturation,
-                    exposure: self.exposure,
-                    gamma: self.gamma,
-                    sepia: self.sepia,
-                    invert: self.invert,
-                    pixelate: self.pixelate,
-                    sharpen: self.sharpen,
-                    monochrome: self.monochrome,
-                    vignette: self.vignette
-                )
+                finalImage = finalImage?.applyFilters(self.mainImageFilters)
 
                 if let finalImage = finalImage {
-                    imageService.memoryCache.setObject(finalImage, forKey: self.description as NSString)
+                    imageService.memoryCache.setObject(finalImage, forKey: cacheKey as NSString)
                 }
 
                 DispatchQueue.main.async {
-                    callback(finalImage, description)
+                    callback(finalImage, cacheKey)
                 }
             }
         }

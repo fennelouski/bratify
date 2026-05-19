@@ -253,4 +253,144 @@ extension DesignControlsViewController: DesignControlsDelegate {
             didUpdateDesign: design
         )
     }
+
+    func didChangeHue(_ hue: CGFloat) {
+        design.hue = hue
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
+
+    func didChangeHighlightAmount(_ amount: CGFloat) {
+        design.highlightAmount = amount
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
+
+    func didChangeShadowAmount(_ amount: CGFloat) {
+        design.shadowAmount = amount
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
+
+    func didChangeGrain(_ grain: CGFloat) {
+        design.grain = grain
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
+
+    func didChangeBloom(_ bloom: CGFloat) {
+        design.bloom = bloom
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
+
+    func didChangeDuotoneIntensity(_ intensity: CGFloat) {
+        design.duotoneIntensity = intensity
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
+
+    func didChangeVibrance(_ vibrance: CGFloat) {
+        design.vibrance = vibrance
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
+
+    func didChangePosterizeLevels(_ levels: CGFloat) {
+        design.posterizeLevels = levels
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
+
+    func didChangeColorTemperature(_ temperature: CGFloat) {
+        design.colorTemperature = temperature
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
+
+    func didChangeColorTint(_ tint: CGFloat) {
+        design.colorTint = tint
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
+
+    func didChangeHalftone(_ halftone: CGFloat) {
+        design.halftone = halftone
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
+
+    func didChangeUnsharpMask(_ amount: CGFloat) {
+        design.unsharpMask = amount
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
+
+    func didChangeBackgroundHue(_ hue: CGFloat) {
+        design.backgroundHue = hue
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
+
+    func didChangeBackgroundHighlightAmount(_ amount: CGFloat) {
+        design.backgroundHighlightAmount = amount
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
+
+    func didChangeBackgroundShadowAmount(_ amount: CGFloat) {
+        design.backgroundShadowAmount = amount
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
+
+    func didChangeBackgroundGrain(_ grain: CGFloat) {
+        design.backgroundGrain = grain
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
+
+    func didChangeBackgroundBloom(_ bloom: CGFloat) {
+        design.backgroundBloom = bloom
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
+
+    func didChangeBackgroundDuotoneIntensity(_ intensity: CGFloat) {
+        design.backgroundDuotoneIntensity = intensity
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
+
+    func didChangeBackgroundVibrance(_ vibrance: CGFloat) {
+        design.backgroundVibrance = vibrance
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
+
+    func didChangeBackgroundPosterizeLevels(_ levels: CGFloat) {
+        design.backgroundPosterizeLevels = levels
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
+
+    func didChangeBackgroundColorTemperature(_ temperature: CGFloat) {
+        design.backgroundColorTemperature = temperature
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
+
+    func didChangeBackgroundColorTint(_ tint: CGFloat) {
+        design.backgroundColorTint = tint
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
+
+    func didChangeBackgroundHalftone(_ halftone: CGFloat) {
+        design.backgroundHalftone = halftone
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
+
+    func didChangeBackgroundUnsharpMask(_ amount: CGFloat) {
+        design.backgroundUnsharpMask = amount
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
+
+    func didApplyFilterPreset(_ preset: FilterPreset) {
+        preset.apply(to: &design)
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
+
+    func didRequestCopyBackgroundFiltersToMain() {
+        design.mainImageFilters = design.backgroundImageFilters
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
+
+    func didRequestResetMainImageFilters() {
+        design.mainImageFilters = .default
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
+
+    func didRequestResetBackgroundImageFilters() {
+        design.backgroundImageFilters = .default
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
 }

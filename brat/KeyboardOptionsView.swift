@@ -12,6 +12,7 @@ protocol KeyboardOptionsViewDelegate: DesignControlsViewControllerDelegate, Desi
     func didSelectTextColorFromSwatch(_ color: UIColor)
     func keyboardOptionsViewWillShowDesignControls()
     func keyboardOptionsViewDidDismissDesignControls()
+    func keyboardOptionsView(_ view: KeyboardOptionsView, didSetBottomPanelExpanded expanded: Bool)
 }
 
 class KeyboardOptionsView: UIView {
@@ -19,6 +20,41 @@ class KeyboardOptionsView: UIView {
     weak var delegate: KeyboardOptionsViewDelegate?
     private let settingsManager: SettingsManager
     private var designControlsView: DesignControlsView?
+    private var isMacPrimarySlidersVisible = false
+
+    var isMacPrimarySlidersShowing: Bool {
+        isMacPrimarySlidersVisible
+    }
+
+    var isMacDesignControlsShowing: Bool {
+        designControlsView != nil
+    }
+
+    func setMacPrimarySlidersVisible(_ visible: Bool, persist: Bool = true) {
+        guard usesInlineMacDesignControls else { return }
+        guard isMacPrimarySlidersVisible != visible else { return }
+
+        if visible, designControlsView != nil {
+            dismissMacDesignControls()
+        }
+
+        isMacPrimarySlidersVisible = visible
+        if persist {
+            settingsManager.macPrimarySlidersVisible = visible
+        }
+        updateMacBottomPanelLayout()
+    }
+
+    func toggleMacPrimarySliders() {
+        setMacPrimarySlidersVisible(!isMacPrimarySlidersVisible)
+    }
+
+    func dismissInlineEditingPanels() {
+        guard usesInlineMacDesignControls else { return }
+        dismissMacDesignControls()
+        isMacPrimarySlidersVisible = false
+        updateMacBottomPanelLayout()
+    }
 
     func update(with design: Design) {
         fontSizeSlider.value = Float(design.fontSize)
@@ -87,6 +123,23 @@ class KeyboardOptionsView: UIView {
     private lazy var stretchInfoButton: UIButton = createInfoButton(key: "stretch")
     private lazy var blurInfoButton: UIButton = createInfoButton(key: "blur")
 
+    private lazy var fontSizeIconView = createSliderIconView(systemName: "textformat.size")
+    private lazy var pixelationIconView = createSliderIconView(systemName: "rectangle.checkered")
+    private lazy var stretchIconView = createSliderIconView(systemName: "arrow.left.and.right.righttriangle.left.righttriangle.right")
+    private lazy var blurIconView = createSliderIconView(systemName: "drop.circle")
+
+    private var usesMacSliderRowLayout: Bool {
+        SliderMacRowLayout.isEnabled(for: traitCollection)
+    }
+
+    private var usesInlineMacDesignControls: Bool {
+        #if targetEnvironment(macCatalyst)
+        return true
+        #else
+        return traitCollection.userInterfaceIdiom == .mac
+        #endif
+    }
+
     init(settingsManager: SettingsManager) {
         self.settingsManager = settingsManager
         super.init(frame: .zero)
@@ -121,7 +174,13 @@ class KeyboardOptionsView: UIView {
         addSubview(stretchSlider)
         addSubview(blurSlider)
 
-        if settingsManager.showLabels {
+        let showsSliderLabels = settingsManager.showLabels || usesMacSliderRowLayout
+
+        if usesMacSliderRowLayout {
+            [fontSizeIconView, pixelationIconView, stretchIconView, blurIconView].forEach { addSubview($0) }
+        }
+
+        if showsSliderLabels {
             addSubview(fontSizeLabel)
             addSubview(fontSizeValueLabel)
             addSubview(pixelationLabel)
@@ -147,27 +206,33 @@ class KeyboardOptionsView: UIView {
         stretchInfoButton.translatesAutoresizingMaskIntoConstraints = false
         blurInfoButton.translatesAutoresizingMaskIntoConstraints = false
 
+        if showsSliderLabels {
+            activateLabeledSliderConstraints()
+        } else {
+            NSLayoutConstraint.activate([
+                fontSizeSlider.topAnchor.constraint(equalTo: topAnchor, constant: 12),
+                fontSizeSlider.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+                fontSizeSlider.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+
+                pixelationSlider.topAnchor.constraint(equalTo: fontSizeSlider.bottomAnchor, constant: 20),
+                pixelationSlider.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+                pixelationSlider.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+                pixelationSlider.heightAnchor.constraint(equalTo: fontSizeSlider.heightAnchor),
+
+                stretchSlider.topAnchor.constraint(equalTo: pixelationSlider.bottomAnchor, constant: 20),
+                stretchSlider.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+                stretchSlider.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+                stretchSlider.heightAnchor.constraint(equalTo: fontSizeSlider.heightAnchor),
+
+                blurSlider.topAnchor.constraint(equalTo: stretchSlider.bottomAnchor, constant: 20),
+                blurSlider.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+                blurSlider.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+                blurSlider.heightAnchor.constraint(equalTo: fontSizeSlider.heightAnchor),
+                blurSlider.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20),
+            ])
+        }
+
         NSLayoutConstraint.activate([
-            fontSizeSlider.topAnchor.constraint(equalTo: topAnchor, constant: 12),
-            fontSizeSlider.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            fontSizeSlider.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-
-            pixelationSlider.topAnchor.constraint(equalTo: fontSizeSlider.bottomAnchor, constant: 20),
-            pixelationSlider.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            pixelationSlider.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-            pixelationSlider.heightAnchor.constraint(equalTo: fontSizeSlider.heightAnchor),
-
-            stretchSlider.topAnchor.constraint(equalTo: pixelationSlider.bottomAnchor, constant: 20),
-            stretchSlider.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            stretchSlider.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-            stretchSlider.heightAnchor.constraint(equalTo: fontSizeSlider.heightAnchor),
-
-            blurSlider.topAnchor.constraint(equalTo: stretchSlider.bottomAnchor, constant: 20),
-            blurSlider.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            blurSlider.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-            blurSlider.heightAnchor.constraint(equalTo: fontSizeSlider.heightAnchor),
-            blurSlider.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20),
-
             fontSizeInfoButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -4),
             fontSizeInfoButton.centerYAnchor.constraint(equalTo: fontSizeSlider.centerYAnchor),
             fontSizeInfoButton.widthAnchor.constraint(equalToConstant: 28),
@@ -189,53 +254,45 @@ class KeyboardOptionsView: UIView {
             blurInfoButton.heightAnchor.constraint(equalToConstant: 28),
         ])
 
-        if settingsManager.showLabels {
-            fontSizeLabel.translatesAutoresizingMaskIntoConstraints = false
-            fontSizeValueLabel.translatesAutoresizingMaskIntoConstraints = false
-            pixelationLabel.translatesAutoresizingMaskIntoConstraints = false
-            pixelationValueLabel.translatesAutoresizingMaskIntoConstraints = false
-            stretchLabel.translatesAutoresizingMaskIntoConstraints = false
-            stretchValueLabel.translatesAutoresizingMaskIntoConstraints = false
-            blurLabel.translatesAutoresizingMaskIntoConstraints = false
-            blurValueLabel.translatesAutoresizingMaskIntoConstraints = false
-
-            NSLayoutConstraint.activate([
-                fontSizeLabel.centerYAnchor.constraint(equalTo: fontSizeSlider.centerYAnchor),
-                fontSizeLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-                fontSizeSlider.leadingAnchor.constraint(equalTo: fontSizeLabel.trailingAnchor, constant: 10),
-                fontSizeValueLabel.leadingAnchor.constraint(equalTo: fontSizeSlider.trailingAnchor, constant: 20),
-                fontSizeValueLabel.centerYAnchor.constraint(equalTo: fontSizeLabel.centerYAnchor),
-                fontSizeValueLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-
-                pixelationLabel.centerYAnchor.constraint(equalTo: pixelationSlider.centerYAnchor),
-                pixelationLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-                pixelationSlider.leadingAnchor.constraint(equalTo: pixelationLabel.trailingAnchor, constant: 10),
-                pixelationValueLabel.leadingAnchor.constraint(equalTo: pixelationSlider.trailingAnchor, constant: 20),
-                pixelationValueLabel.centerYAnchor.constraint(equalTo: pixelationSlider.centerYAnchor),
-                pixelationValueLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-
-                stretchLabel.centerYAnchor.constraint(equalTo: stretchSlider.centerYAnchor),
-                stretchLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-                stretchSlider.leadingAnchor.constraint(equalTo: stretchLabel.trailingAnchor, constant: 10),
-                stretchValueLabel.leadingAnchor.constraint(equalTo: stretchSlider.trailingAnchor, constant: 20),
-                stretchValueLabel.centerYAnchor.constraint(equalTo: stretchSlider.centerYAnchor),
-                stretchValueLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-
-                blurLabel.centerYAnchor.constraint(equalTo: blurSlider.centerYAnchor),
-                blurLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-                blurSlider.leadingAnchor.constraint(equalTo: blurLabel.trailingAnchor, constant: 10),
-                blurValueLabel.leadingAnchor.constraint(equalTo: blurSlider.trailingAnchor, constant: 20),
-                blurValueLabel.centerYAnchor.constraint(equalTo: blurSlider.centerYAnchor),
-                blurValueLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-            ])
-        }
-
         fontSizeSlider.addTarget(self, action: #selector(fontSizeChanged), for: .valueChanged)
         pixelationSlider.addTarget(self, action: #selector(pixelationChanged), for: .valueChanged)
         stretchSlider.addTarget(self, action: #selector(stretchChanged), for: .valueChanged)
         blurSlider.addTarget(self, action: #selector(blurChanged), for: .valueChanged)
 
         updateSliderRanges()
+
+        if usesInlineMacDesignControls {
+            updateMacBottomPanelLayout(notifyDelegate: false)
+        }
+    }
+
+    private var macPrimaryControlViews: [UIView] {
+        var views: [UIView] = [
+            fontSizeSlider, pixelationSlider, stretchSlider, blurSlider,
+            fontSizeInfoButton, pixelationInfoButton, stretchInfoButton, blurInfoButton,
+        ]
+        if usesMacSliderRowLayout {
+            views += [fontSizeIconView, pixelationIconView, stretchIconView, blurIconView]
+        }
+        if settingsManager.showLabels || usesMacSliderRowLayout {
+            views += [
+                fontSizeLabel, fontSizeValueLabel, pixelationLabel, pixelationValueLabel,
+                stretchLabel, stretchValueLabel, blurLabel, blurValueLabel,
+            ]
+        }
+        return views
+    }
+
+    private func updateMacBottomPanelLayout(notifyDelegate: Bool = true) {
+        guard usesInlineMacDesignControls else { return }
+
+        macPrimaryControlViews.forEach { $0.isHidden = !isMacPrimarySlidersVisible }
+        updateInfoButtonVisibility()
+
+        let needsExpandedHeight = isMacPrimarySlidersVisible || designControlsView != nil
+        if notifyDelegate {
+            delegate?.keyboardOptionsView(self, didSetBottomPanelExpanded: needsExpandedHeight)
+        }
     }
 
     private func updateSliderRanges() {
@@ -265,6 +322,117 @@ class KeyboardOptionsView: UIView {
         updateInfoButtonVisibility()
     }
     
+    private func activateLabeledSliderConstraints() {
+        let labeledViews = [
+            fontSizeLabel, fontSizeValueLabel, pixelationLabel, pixelationValueLabel,
+            stretchLabel, stretchValueLabel, blurLabel, blurValueLabel,
+        ]
+        labeledViews.forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
+
+        if usesMacSliderRowLayout {
+            [fontSizeIconView, pixelationIconView, stretchIconView, blurIconView].forEach {
+                $0.translatesAutoresizingMaskIntoConstraints = false
+            }
+        }
+
+        let margin: CGFloat = 20
+        let rowSpacing: CGFloat = 20
+        let accessorySpacing: CGFloat = 6
+
+        func rowConstraints(
+            icon: UIImageView?,
+            label: UILabel,
+            slider: UISlider,
+            valueLabel: UILabel,
+            infoButton: UIButton,
+            below anchor: NSLayoutYAxisAnchor
+        ) -> [NSLayoutConstraint] {
+            var constraints: [NSLayoutConstraint] = [
+                slider.centerYAnchor.constraint(equalTo: label.centerYAnchor),
+                slider.trailingAnchor.constraint(equalTo: valueLabel.leadingAnchor, constant: -10),
+                valueLabel.centerYAnchor.constraint(equalTo: label.centerYAnchor),
+                valueLabel.trailingAnchor.constraint(lessThanOrEqualTo: infoButton.leadingAnchor, constant: -4),
+            ]
+
+            if let icon {
+                constraints += [
+                    icon.leadingAnchor.constraint(equalTo: leadingAnchor, constant: margin),
+                    icon.centerYAnchor.constraint(equalTo: label.centerYAnchor),
+                    icon.widthAnchor.constraint(equalToConstant: 22),
+                    icon.heightAnchor.constraint(equalToConstant: 22),
+                    label.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: accessorySpacing),
+                ]
+            } else {
+                constraints.append(
+                    label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: margin)
+                )
+            }
+
+            constraints += [
+                label.centerYAnchor.constraint(equalTo: slider.centerYAnchor),
+                slider.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: 10),
+            ]
+
+            if anchor === topAnchor {
+                constraints.append(slider.topAnchor.constraint(equalTo: topAnchor, constant: 12))
+            } else {
+                constraints.append(slider.topAnchor.constraint(equalTo: anchor, constant: rowSpacing))
+            }
+
+            return constraints
+        }
+
+        var constraints = rowConstraints(
+            icon: usesMacSliderRowLayout ? fontSizeIconView : nil,
+            label: fontSizeLabel,
+            slider: fontSizeSlider,
+            valueLabel: fontSizeValueLabel,
+            infoButton: fontSizeInfoButton,
+            below: topAnchor
+        )
+        constraints += rowConstraints(
+            icon: usesMacSliderRowLayout ? pixelationIconView : nil,
+            label: pixelationLabel,
+            slider: pixelationSlider,
+            valueLabel: pixelationValueLabel,
+            infoButton: pixelationInfoButton,
+            below: fontSizeSlider.bottomAnchor
+        )
+        constraints += rowConstraints(
+            icon: usesMacSliderRowLayout ? stretchIconView : nil,
+            label: stretchLabel,
+            slider: stretchSlider,
+            valueLabel: stretchValueLabel,
+            infoButton: stretchInfoButton,
+            below: pixelationSlider.bottomAnchor
+        )
+        constraints += rowConstraints(
+            icon: usesMacSliderRowLayout ? blurIconView : nil,
+            label: blurLabel,
+            slider: blurSlider,
+            valueLabel: blurValueLabel,
+            infoButton: blurInfoButton,
+            below: stretchSlider.bottomAnchor
+        )
+        constraints.append(blurSlider.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -margin))
+        constraints.append(pixelationSlider.heightAnchor.constraint(equalTo: fontSizeSlider.heightAnchor))
+        constraints.append(stretchSlider.heightAnchor.constraint(equalTo: fontSizeSlider.heightAnchor))
+        constraints.append(blurSlider.heightAnchor.constraint(equalTo: fontSizeSlider.heightAnchor))
+
+        NSLayoutConstraint.activate(constraints)
+    }
+
+    private func createSliderIconView(systemName: String) -> UIImageView {
+        let config = UIImage.SymbolConfiguration(pointSize: 15, weight: .regular)
+        let imageView = UIImageView(image: UIImage(systemName: systemName, withConfiguration: config))
+        imageView.tintColor = .secondaryLabel
+        imageView.contentMode = .scaleAspectFit
+        imageView.setContentHuggingPriority(.required, for: .horizontal)
+        imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
+        imageView.isAccessibilityElement = false
+        return imageView
+    }
+
     private func createLabel(withText text: String) -> UILabel {
         let label = UILabel()
         label.text = text
@@ -289,10 +457,11 @@ class KeyboardOptionsView: UIView {
 
     func updateInfoButtonVisibility() {
         let show = settingsManager.eli5Mode
-        fontSizeInfoButton.isHidden = !show
-        pixelationInfoButton.isHidden = !show
-        stretchInfoButton.isHidden = !show
-        blurInfoButton.isHidden = !show
+        let hiddenByMacPanel = usesInlineMacDesignControls && !isMacPrimarySlidersVisible
+        fontSizeInfoButton.isHidden = hiddenByMacPanel || !show
+        pixelationInfoButton.isHidden = hiddenByMacPanel || !show
+        stretchInfoButton.isHidden = hiddenByMacPanel || !show
+        blurInfoButton.isHidden = hiddenByMacPanel || !show
     }
     
     private lazy var closeButton = UIButton(type: .system)
@@ -360,26 +529,14 @@ class KeyboardOptionsView: UIView {
         guard let currentDesign = delegate?.currentDesign else {
             return
         }
-        
-        if traitCollection.userInterfaceIdiom == .mac {
-            // Add the DesignControlsView as a subview
-            let designControlsView = DesignControlsView(
-                design: currentDesign,
-                settingsManager: settingsManager
-            )
-            designControlsView.delegate = delegate
-            designControlsView.translatesAutoresizingMaskIntoConstraints = false
-            addSubview(designControlsView)
-            self.designControlsView = designControlsView
-            
-            NSLayoutConstraint.activate([
-                designControlsView.topAnchor.constraint(equalTo: topAnchor, constant: .su2),
-                designControlsView.leadingAnchor.constraint(equalTo: leadingAnchor),
-                designControlsView.trailingAnchor.constraint(equalTo: trailingAnchor),
-                designControlsView.bottomAnchor.constraint(equalTo: bottomAnchor)
-            ])
-            
-            setupCloseButton()
+
+        if usesInlineMacDesignControls {
+            if designControlsView != nil {
+                dismissMacDesignControls()
+            } else {
+                presentMacDesignControls(for: currentDesign)
+            }
+            return
         } else {
             // Present the view controller for design controls
             let designControlsVC = DesignControlsViewController(
@@ -423,12 +580,49 @@ class KeyboardOptionsView: UIView {
         }
     }
     
+    private func presentMacDesignControls(for design: Design) {
+        if isMacPrimarySlidersVisible {
+            setMacPrimarySlidersVisible(false, persist: true)
+        }
+
+        let designControlsView = DesignControlsView(
+            design: design,
+            settingsManager: settingsManager
+        )
+        designControlsView.delegate = delegate
+        designControlsView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(designControlsView)
+        self.designControlsView = designControlsView
+
+        NSLayoutConstraint.activate([
+            designControlsView.topAnchor.constraint(equalTo: topAnchor, constant: .su2),
+            designControlsView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            designControlsView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            designControlsView.bottomAnchor.constraint(equalTo: bottomAnchor),
+        ])
+
+        setupCloseButton()
+        updateMacBottomPanelLayout()
+    }
+
+    private func dismissMacDesignControls() {
+        designControlsView?.removeFromSuperview()
+        closeButton.removeFromSuperview()
+        designControlsView = nil
+        updateMacBottomPanelLayout()
+    }
+
     @objc private func closeDesignControls() {
+        if usesInlineMacDesignControls {
+            dismissMacDesignControls()
+            return
+        }
+
         designControlsView?.removeFromSuperview()
         closeButton.removeFromSuperview()
         designControlsView = nil
     }
-    
+
     private var viewController: UIViewController? {
         return (self.next as? UIViewController) ?? (self.next?.next as? UIViewController)
     }

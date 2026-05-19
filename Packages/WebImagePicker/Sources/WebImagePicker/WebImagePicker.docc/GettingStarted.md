@@ -27,7 +27,19 @@ struct ContentView: View {
 
 ## Configure limits and extraction
 
-Build a ``WebImagePickerConfiguration`` to tune selection count (default **1** for single-tap pick; raise the limit for multi-select), network limits, URL schemes, and ``WebImageExtractionMode`` (static HTML vs. WebView). Pass it into ``View/webImagePicker(isPresented:configuration:onPick:)`` or ``WebImagePicker/init(configuration:onCancel:onPick:)``. Set ``WebImagePickerConfiguration/automaticallyLoadOnAppear`` to `true` together with ``WebImagePickerConfiguration/initialURLString`` (or ``WebImagePickerConfiguration/additionalPageURLs``) to skip the manual “Load page” tap when the picker opens.
+Build a ``WebImagePickerConfiguration`` to tune selection count (default **1** for single-tap pick; raise the limit for multi-select), network limits, URL schemes, and ``WebImageExtractionMode`` (static HTML vs. WebView). Pass it into ``View/webImagePicker(isPresented:configuration:onPick:)`` or ``WebImagePicker/init(configuration:onCancel:onPick:)``. Set ``WebImagePickerConfiguration/automaticallyLoadOnAppear`` to `true` together with ``WebImagePickerConfiguration/initialURLString`` (or ``WebImagePickerConfiguration/additionalPageURLs``) to skip the manual load action when the picker opens (toolbar and form actions use SF Symbols with localized accessibility labels such as **Load page**, **Cancel**, and **Done**).
+
+### UI testing
+
+XCUITest should query **accessibility labels**, not visible symbol titles. For example, `app.buttons["Cancel"]` and `app.buttons["Load page"]` in English. Stable identifiers include `webimage.imageMetadataSearch`, `webimage.aggregationNotice`, and `webimage.browsingDownloadError`. Pin the app language in tests when you assert label strings.
+
+### HTTPS, optional HTTP, and App Transport Security
+
+By default, ``WebImagePickerConfiguration/allowedURLSchemes`` is **HTTPS only** for both **page** URLs and **discovered image** URLs. If the user enters an `http:` page URL, the picker shows a clear error instead of a generic failure. If an HTTPS page references `http:` images and HTTP is not allowed, those images are omitted and a notice explains how many were skipped.
+
+To allow cleartext `http:` for pages and images, include `"http"` in ``WebImagePickerConfiguration/allowedURLSchemes`` or use ``WebImagePickerConfiguration/allowingHTTPAndHTTPS(basedOn:)`` (see also ``WebImagePickerConfiguration/httpsOnly`` as an alias for the default).
+
+On Apple platforms, loading HTTP still requires the **host app** to satisfy [App Transport Security](https://developer.apple.com/documentation/bundleresources/information-property-list/nsapptransportsecurity): for example per-domain exceptions under `NSExceptionDomains`, or `NSAllowsArbitraryLoads` (broad and usually discouraged). The package does not change ATS for you.
 
 ## Use the selection
 

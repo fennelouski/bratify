@@ -320,8 +320,13 @@ class SettingsCategoryViewController: UITableViewController {
         case .defaultTextColor:
             let cell = tableView.dequeueReusableCell(withIdentifier: "DefaultCell", for: indexPath)
             cell.textLabel?.text = NSLocalizedString("Default Text Color", comment: "A label for the control that sets the default text color.").localizedLowercase
-            cell.detailTextLabel?.text = nil
-            cell.accessoryView = colorSwatch(for: UIColor(hexString: settingsManager.textColorHex))
+            if settingsManager.usesAutomaticDefaultTextColor {
+                cell.detailTextLabel?.text = NSLocalizedString("Automatic", comment: "Default text color follows light/dark mode").localizedLowercase
+                cell.accessoryView = nil
+            } else {
+                cell.detailTextLabel?.text = nil
+                cell.accessoryView = colorSwatch(for: UIColor(hexString: settingsManager.textColorHex))
+            }
             cell.apply(settingsManager.selectedTheme)
             return cell
 
@@ -365,9 +370,7 @@ class SettingsCategoryViewController: UITableViewController {
             showLabelPicker(at: indexPath)
 
         case .defaultTextColor:
-            activeColorPicker = .textColor
-            let initial = UIColor(hexString: settingsManager.textColorHex)
-            showColorPicker(initialColor: initial, at: indexPath)
+            showDefaultTextColorOptions(at: indexPath)
 
         case .defaultBackgroundColor:
             activeColorPicker = .backgroundColor
@@ -473,6 +476,37 @@ class SettingsCategoryViewController: UITableViewController {
         present(alert, animated: true)
     }
 
+    private func showDefaultTextColorOptions(at indexPath: IndexPath) {
+        let alert = UIAlertController(
+            title: NSLocalizedString("Default Text Color", comment: "Title for default text color options"),
+            message: nil,
+            preferredStyle: .actionSheet
+        )
+        let automaticTitle = settingsManager.usesAutomaticDefaultTextColor
+            ? "✓ \(NSLocalizedString("Automatic", comment: "Default text color follows light/dark mode"))"
+            : NSLocalizedString("Automatic", comment: "Default text color follows light/dark mode")
+        alert.addAction(UIAlertAction(title: automaticTitle, style: .default) { [weak self] _ in
+            guard let self else { return }
+            settingsManager.usesAutomaticDefaultTextColor = true
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+        })
+        alert.addAction(UIAlertAction(
+            title: NSLocalizedString("Choose Color…", comment: "Pick a fixed default text color"),
+            style: .default
+        ) { [weak self] _ in
+            guard let self else { return }
+            activeColorPicker = .textColor
+            let initial = UIColor(hexString: settingsManager.textColorHex)
+            showColorPicker(initialColor: initial, at: indexPath)
+        })
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel action"), style: .cancel))
+        if let popover = alert.popoverPresentationController, let cell = tableView.cellForRow(at: indexPath) {
+            popover.sourceView = cell
+            popover.sourceRect = cell.bounds
+        }
+        present(alert, animated: true)
+    }
+
     private func showColorPicker(initialColor: UIColor, at indexPath: IndexPath) {
         let colorPicker = UIColorPickerViewController()
         colorPicker.selectedColor = initialColor
@@ -505,6 +539,7 @@ extension SettingsCategoryViewController: UIColorPickerViewControllerDelegate {
     private func applySelectedColor(_ color: UIColor) {
         switch activeColorPicker {
         case .textColor:
+            settingsManager.usesAutomaticDefaultTextColor = false
             settingsManager.textColorHex = color.toHexString()
             if let idx = items.firstIndex(of: .defaultTextColor) {
                 tableView.reloadRows(at: [IndexPath(row: 0, section: idx)], with: .none)
@@ -522,24 +557,8 @@ extension SettingsCategoryViewController: UIColorPickerViewControllerDelegate {
 
 extension SettingsCategoryViewController: AspectRatioPickerDelegate {
     func didSelectAspectRatio(width: Int, height: Int) {
-        let maxDimension: CGFloat = 512.0
-        let maxPixels: CGFloat = 500_000.0
-
-        var newWidth = CGFloat(width)
-        var newHeight = CGFloat(height)
-
-        if newWidth > maxDimension || newHeight > maxDimension || (newWidth * newHeight > maxPixels) {
-            let aspectRatio = newWidth / newHeight
-            if newWidth > newHeight {
-                newWidth = min(maxDimension, sqrt(maxPixels * aspectRatio))
-                newHeight = newWidth / aspectRatio
-            } else {
-                newHeight = min(maxDimension, sqrt(maxPixels / aspectRatio))
-                newWidth = newHeight * aspectRatio
-            }
-        }
-
-        settingsManager.setCanvasDimensions(width: newWidth, height: newHeight)
+        let size = CanvasDimensions.pixelSize(forAspectWidth: width, height: height)
+        settingsManager.setCanvasDimensions(width: size.width, height: size.height)
 
         if let idx = items.firstIndex(of: .aspectRatio) {
             tableView.reloadRows(at: [IndexPath(row: 0, section: idx)], with: .automatic)
@@ -548,6 +567,13 @@ extension SettingsCategoryViewController: AspectRatioPickerDelegate {
 }
 
 enum ELI5Descriptions {
+    static func forFilterPresetNone() -> String {
+        NSLocalizedString(
+            "Clears filter looks and resets background zoom, flip, blur, and transparency",
+            comment: "ELI5 explanation when user selects None filter preset"
+        )
+    }
+
     static func forSetting(_ item: SettingItem) -> String {
         switch item {
         case .eli5Mode:
@@ -615,6 +641,30 @@ enum ELI5Descriptions {
             return "darkens the corners and edges of the image, drawing focus to the center"
         case "invert":
             return "flips every color to its opposite — like a photo negative"
+        case "hue":
+            return "rotates all colors around the color wheel — great for shifting greens and yellows"
+        case "vibrance":
+            return "boosts muted colors without oversaturating everything"
+        case "highlights":
+            return "brightens or dims the brightest parts of the image"
+        case "shadows":
+            return "lifts or deepens the darkest parts of the image"
+        case "grain":
+            return "adds film-like noise texture"
+        case "bloom":
+            return "adds a soft glow around bright areas"
+        case "duotone":
+            return "maps shadows and highlights into two colors for a poster look"
+        case "posterize":
+            return "reduces the number of color levels for a graphic poster effect"
+        case "temperature":
+            return "shifts the image warmer or cooler"
+        case "tint":
+            return "adds a green or magenta color cast"
+        case "halftone":
+            return "simulates printed dot patterns"
+        case "unsharp mask":
+            return "sharpens edges with a controllable mask"
         case "background scale":
             return "zooms the background image in or out to fill or fit the canvas"
         case "background blur":

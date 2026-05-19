@@ -1,0 +1,26 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "8CF5FC1B-895B-4CAF-86F9-2A6FDE463277",
+        "deviceName" : "iPad Pro 13-inch (M5)",
+        "exportedFileName" : "5142FE43-FCBA-4722-AF4A-12656CD72A39.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "03_settings_0_B515343A-2970-4111-A5CF-280718F8757D.png",
+        "timestamp" : 1779029591.603
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "8CF5FC1B-895B-4CAF-86F9-2A6FDE463277",
+        "deviceName" : "iPad Pro 13-inch (M5)",
+        "exportedFileName" : "B7C409CB-14D1-4A42-86F8-2867B83054A7.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "01_main_0_89341535-7CDA-4EEA-9CBE-B8A5A7197A7C.png",
+        "timestamp" : 1779029564.782
+      }
+    ],
+    "testIdentifier" : "ScreenshotTests/testCaptureScreenshots()",
+    "testIdentifierURL" : "test://com.apple.xcode/brat/bratUITests/ScreenshotTests/testCaptureScreenshots"
+  }
+]

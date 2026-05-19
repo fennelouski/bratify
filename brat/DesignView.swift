@@ -87,7 +87,7 @@ class DesignView: UIView {
         textLabel.text = text
         textLabel.font = UIFont(name: fontName, size: fontSize)
         self.backgroundColor = backgroundColor
-        textLabel.textColor = design.textColor
+        textLabel.textColor = design.resolvedTextColor(for: traitCollection, view: self)
         textLabel.adjustsFontSizeToFitWidth = true
         
         var widthMultiplier: CGFloat = 0.1
@@ -135,19 +135,7 @@ class DesignView: UIView {
 
         if let image = imageService.memoryCache.object(forKey: imageName as NSString) {
             let resizedImage = image.resized(to: CGSize(width: design.width, height: design.height))
-            let filteredImage = resizedImage.applyFilters(
-                brightness: design.backgroundBrightness,
-                contrast: design.backgroundContrast,
-                saturation: design.backgroundSaturation,
-                exposure: design.backgroundExposure,
-                gamma: design.backgroundGamma,
-                sepia: design.backgroundSepia,
-                invert: design.backgroundInvert,
-                pixelate: design.backgroundPixelate,
-                sharpen: design.backgroundSharpen,
-                monochrome: design.backgroundMonochrome,
-                vignette: design.backgroundVignette
-            )?.fastScaled(
+            let filteredImage = resizedImage.applyFilters(design.backgroundImageFilters)?.fastScaled(
                 by: design.backgroundScale,
                 flipHorizontal: design.backgroundFlipHorizontal,
                 flipVertical: design.backgroundFlipVertical,
@@ -158,19 +146,7 @@ class DesignView: UIView {
             DispatchQueue.global(qos: .background).async { [weak self] in
                 if let image = self?.imageService.loadImageFromDisk(with: imageName) {
                     let resizedImage = image.resized(to: CGSize(width: design.width, height: design.height))
-                    let filteredImage = resizedImage.applyFilters(
-                        brightness: design.backgroundBrightness,
-                        contrast: design.backgroundContrast,
-                        saturation: design.backgroundSaturation,
-                        exposure: design.backgroundExposure,
-                        gamma: design.backgroundGamma,
-                        sepia: design.backgroundSepia,
-                        invert: design.backgroundInvert,
-                        pixelate: design.backgroundPixelate,
-                        sharpen: design.backgroundSharpen,
-                        monochrome: design.backgroundMonochrome,
-                        vignette: design.backgroundVignette
-                    )?.fastScaled(
+                    let filteredImage = resizedImage.applyFilters(design.backgroundImageFilters)?.fastScaled(
                         by: design.backgroundScale,
                         flipHorizontal: design.backgroundFlipHorizontal,
                         flipVertical: design.backgroundFlipVertical,

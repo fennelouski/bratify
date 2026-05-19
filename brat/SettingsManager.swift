@@ -59,6 +59,7 @@ class SettingsManager {
         case showLabels
         case backgroundColorHex
         case textColorHex
+        case usesAutomaticDefaultTextColor
         case pixelationScale
         case xDimension
         case yDimension
@@ -99,6 +100,7 @@ class SettingsManager {
         case extendedRange
         case eli5Mode
         case themingEnabled
+        case macPrimarySlidersVisible
     }
     
     // Properties with default values and persistence
@@ -793,6 +795,23 @@ class SettingsManager {
         }
     }
 
+    /// macOS editor: font size, pixelation, stretch, and blur sliders beneath the preview.
+    var macPrimarySlidersVisible: Bool {
+        get {
+            queue.sync {
+                if UserDefaults.standard.object(forKey: UserDefaultsKeys.macPrimarySlidersVisible.rawValue) == nil {
+                    return false
+                }
+                return UserDefaults.standard.bool(forKey: UserDefaultsKeys.macPrimarySlidersVisible.rawValue)
+            }
+        }
+        set {
+            queue.async(flags: .barrier) {
+                UserDefaults.standard.set(newValue, forKey: UserDefaultsKeys.macPrimarySlidersVisible.rawValue)
+            }
+        }
+    }
+
     var autocorrectionEnabled: Bool {
         get {
             queue.sync {
@@ -856,6 +875,22 @@ class SettingsManager {
         set {
             queue.async(flags: .barrier) {
                 UserDefaults.standard.set(newValue, forKey: UserDefaultsKeys.textColorHex.rawValue)
+            }
+        }
+    }
+
+    var usesAutomaticDefaultTextColor: Bool {
+        get {
+            queue.sync {
+                if UserDefaults.standard.object(forKey: UserDefaultsKeys.usesAutomaticDefaultTextColor.rawValue) == nil {
+                    return true
+                }
+                return UserDefaults.standard.bool(forKey: UserDefaultsKeys.usesAutomaticDefaultTextColor.rawValue)
+            }
+        }
+        set {
+            queue.async(flags: .barrier) {
+                UserDefaults.standard.set(newValue, forKey: UserDefaultsKeys.usesAutomaticDefaultTextColor.rawValue)
             }
         }
     }

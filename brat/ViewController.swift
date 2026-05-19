@@ -222,12 +222,20 @@ class ViewController: UIViewController {
         )
         NotificationCenter.default.addObserver(
             self,
+            selector: #selector(handleDesignsInitialSyncDidComplete),
+            name: .designsInitialSyncDidComplete,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
             selector: #selector(handleDesignsDidSync),
             name: .designsDidSync,
             object: nil
         )
 
-        loadDesigns()
+        designs = sorted(DesignManager.shared.getAllDesigns())
+        collectionView.reloadData()
+        updateEmptyState()
 
     }
     
@@ -307,7 +315,15 @@ class ViewController: UIViewController {
         }
     }
 
+    @objc private func handleDesignsInitialSyncDidComplete() {
+        refreshGalleryAfterSync()
+    }
+
     @objc private func handleDesignsDidSync() {
+        refreshGalleryAfterSync()
+    }
+
+    private func refreshGalleryAfterSync() {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             designs = sorted(DesignManager.shared.getAllDesigns())
