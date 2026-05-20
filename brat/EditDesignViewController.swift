@@ -103,8 +103,7 @@ class EditDesignViewController: UIViewController {
     private var colorSwatchIsTextMode: Bool { colorSwatchMode == .textColor }
     private var customPickedColors: [UIColor] = []
     private var toolsStackWidthConstraint: NSLayoutConstraint?
-    private var scrollViewLeadingNormal: NSLayoutConstraint?
-    private var scrollViewLeadingFull: NSLayoutConstraint?
+    private var colorSwatchScrollLeadingConstraint: NSLayoutConstraint?
 
     private let fontPickerSidebarContainer: UIView = {
         let view = UIView()
@@ -947,13 +946,14 @@ class EditDesignViewController: UIViewController {
         view.addSubview(colorSwatchScrollView)
         colorSwatchToggleButton.addTarget(self, action: #selector(cycleSwatchMode), for: .touchUpInside)
 
-        let leadingNormal = colorSwatchScrollView.leadingAnchor.constraint(equalTo: colorSwatchToggleButton.trailingAnchor, constant: 8)
-        let leadingFull = colorSwatchScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 12)
-        scrollViewLeadingNormal = leadingNormal
-        scrollViewLeadingFull = leadingFull
-        leadingNormal.isActive = true
+        let scrollLeading = colorSwatchScrollView.leadingAnchor.constraint(
+            equalTo: colorSwatchToggleButton.trailingAnchor,
+            constant: 8
+        )
+        colorSwatchScrollLeadingConstraint = scrollLeading
 
         NSLayoutConstraint.activate([
+            scrollLeading,
             colorSwatchToggleButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
             colorSwatchToggleButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 12),
             colorSwatchToggleButton.widthAnchor.constraint(equalToConstant: 30),
@@ -1109,7 +1109,7 @@ class EditDesignViewController: UIViewController {
         textView.backgroundColor = .clear
 
         // Populate the swatch row with tool buttons immediately
-        refreshToolButtons()
+        applySwatchMode()
         if usesMacCollapsibleBottomPanel {
             applyMacEditorInitialState()
         } else {
@@ -1905,8 +1905,8 @@ extension EditDesignViewController {
         let accessLabel: String
         switch colorSwatchMode {
         case .tools:
-            iconName = "ellipsis"
-            accessLabel = NSLocalizedString("show tools", comment: "")
+            iconName = "paintpalette"
+            accessLabel = NSLocalizedString("Color Mode", comment: "Cycles between tools, background color, and text color")
         case .backgroundColor:
             iconName = "square.fill"
             accessLabel = NSLocalizedString("color swatches: background", comment: "")
@@ -1938,22 +1938,24 @@ extension EditDesignViewController {
     private func refreshToolButtons() {
         colorSwatchStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
 
+        colorSwatchScrollLeadingConstraint?.constant = 0
         colorSwatchStackView.distribution = .equalSpacing
         colorSwatchStackView.spacing = 0
         toolsStackWidthConstraint = colorSwatchStackView.widthAnchor.constraint(equalTo: colorSwatchScrollView.widthAnchor)
         toolsStackWidthConstraint?.isActive = true
 
-        scrollViewLeadingNormal?.isActive = false
-        scrollViewLeadingFull?.isActive = true
-        colorSwatchToggleButton.isHidden = true
-        colorSwatchIndicatorView.isHidden = true
+        // Zero-width spacer lets equalSpacing insert the same gap before the first toolbar icon.
+        let leadingSpacer = UIView()
+        leadingSpacer.isUserInteractionEnabled = false
+        leadingSpacer.translatesAutoresizingMaskIntoConstraints = false
+        leadingSpacer.widthAnchor.constraint(equalToConstant: 0).isActive = true
+        colorSwatchStackView.addArrangedSubview(leadingSpacer)
 
         var items: [(String, String, Selector)] = []
         if usesMacCollapsibleBottomPanel {
             items.append(("gearshape", "Settings", #selector(openSettingsFromEditor)))
         }
         items.append(contentsOf: [
-            ("paintpalette",        "Color Mode",        #selector(cycleSwatchMode)),
             ("photo",               "Background Image",  #selector(selectBackgroundImage)),
             ("camera.filters",      "Styles",            #selector(toggleFilterStyles)),
         ])
@@ -2106,15 +2108,11 @@ extension EditDesignViewController {
     private func refreshColorSwatches(currentColor: UIColor) {
         colorSwatchStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
 
+        colorSwatchScrollLeadingConstraint?.constant = 8
         toolsStackWidthConstraint?.isActive = false
         toolsStackWidthConstraint = nil
         colorSwatchStackView.distribution = .fill
         colorSwatchStackView.spacing = 8
-
-        scrollViewLeadingFull?.isActive = false
-        scrollViewLeadingNormal?.isActive = true
-        colorSwatchToggleButton.isHidden = false
-        colorSwatchIndicatorView.isHidden = false
 
         if colorSwatchIsTextMode {
             colorSwatchStackView.addArrangedSubview(makeAutomaticTextColorSwatchButton())

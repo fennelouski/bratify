@@ -27,11 +27,7 @@ struct ContentView: View {
 
 ## Configure limits and extraction
 
-Build a ``WebImagePickerConfiguration`` to tune selection count (default **1** for single-tap pick; raise the limit for multi-select), network limits, URL schemes, and ``WebImageExtractionMode`` (static HTML vs. WebView). Pass it into ``View/webImagePicker(isPresented:configuration:onPick:)`` or ``WebImagePicker/init(configuration:onCancel:onPick:)``. Set ``WebImagePickerConfiguration/automaticallyLoadOnAppear`` to `true` together with ``WebImagePickerConfiguration/initialURLString`` (or ``WebImagePickerConfiguration/additionalPageURLs``) to skip the manual load action when the picker opens (toolbar and form actions use SF Symbols with localized accessibility labels such as **Load page**, **Cancel**, and **Done**).
-
-### UI testing
-
-XCUITest should query **accessibility labels**, not visible symbol titles. For example, `app.buttons["Cancel"]` and `app.buttons["Load page"]` in English. Stable identifiers include `webimage.imageMetadataSearch`, `webimage.aggregationNotice`, and `webimage.browsingDownloadError`. Pin the app language in tests when you assert label strings.
+Build a ``WebImagePickerConfiguration`` to tune selection count (default **1** for single-tap pick; raise the limit for multi-select), network limits, URL schemes, and ``WebImageExtractionMode`` (static HTML vs. WebView). Pass it into ``View/webImagePicker(isPresented:configuration:onPick:)`` or ``WebImagePicker/init(configuration:onCancel:onPick:)``. Set ``WebImagePickerConfiguration/isMultiplePageEntryEnabled`` to `true` to let users add several page URLs and to honor ``WebImagePickerConfiguration/additionalPageURLs`` (default `false`). Set ``WebImagePickerConfiguration/automaticallyLoadOnAppear`` to `true` together with ``WebImagePickerConfiguration/initialURLString`` (or, when multi-page entry is enabled, ``WebImagePickerConfiguration/additionalPageURLs``) to skip the manual “Load page” tap when the picker opens.
 
 ### HTTPS, optional HTTP, and App Transport Security
 
