@@ -88,6 +88,8 @@
 		E3FLT00000000004CAFECAFE /* FilterPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT00000000003CAFECAFE /* FilterPreset.swift */; };
 		E3FLT00000000006CAFECAFE /* FilterPresetPickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT00000000005CAFECAFE /* FilterPresetPickerCell.swift */; };
 		E3FLT0000000000BCAFECAFE /* FilterPresetPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT0000000000ACAFECAFE2 /* FilterPresetPickerView.swift */; };
+		E3FLT0000000000ECAFECAFE /* FilterPresetCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT0000000000DCAFECAFE2 /* FilterPresetCardCell.swift */; };
+		E3FLT0000000000FCAFECAFE /* FilterPresetPreviewProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT0000000000FCAFECAFE2 /* FilterPresetPreviewProvider.swift */; };
 		E3FLT0000000000DCAFECAFE /* FilterStylesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT0000000000CCAFECAFE /* FilterStylesViewController.swift */; };
 		E3FLT00000000008CAFECAFE /* DesignFilterStateSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT00000000007CAFECAFE /* DesignFilterStateSync.swift */; };
 		E3FLT0000000000ACAFECAFE /* ImageFilterSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT00000000009CAFECAFE /* ImageFilterSettingsTests.swift */; };
@@ -221,6 +223,8 @@
 		E3FLT00000000003CAFECAFE /* FilterPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterPreset.swift; sourceTree = "<group>"; };
 		E3FLT00000000005CAFECAFE /* FilterPresetPickerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterPresetPickerCell.swift; sourceTree = "<group>"; };
 		E3FLT0000000000ACAFECAFE2 /* FilterPresetPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterPresetPickerView.swift; sourceTree = "<group>"; };
+		E3FLT0000000000DCAFECAFE2 /* FilterPresetCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterPresetCardCell.swift; sourceTree = "<group>"; };
+		E3FLT0000000000FCAFECAFE2 /* FilterPresetPreviewProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterPresetPreviewProvider.swift; sourceTree = "<group>"; };
 		E3FLT0000000000CCAFECAFE /* FilterStylesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterStylesViewController.swift; sourceTree = "<group>"; };
 		E3FLT00000000007CAFECAFE /* DesignFilterStateSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignFilterStateSync.swift; sourceTree = "<group>"; };
 		E3FLT00000000009CAFECAFE /* ImageFilterSettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFilterSettingsTests.swift; sourceTree = "<group>"; };
@@ -307,6 +311,8 @@
 				80F4589A2C61D3160039C385 /* UIImage+Filters.swift */,
 				E3FLT00000000001CAFECAFE /* ImageFilterSettings.swift */,
 				E3FLT00000000003CAFECAFE /* FilterPreset.swift */,
+				E3FLT0000000000FCAFECAFE2 /* FilterPresetPreviewProvider.swift */,
+				E3FLT0000000000DCAFECAFE2 /* FilterPresetCardCell.swift */,
 				E3FLT00000000005CAFECAFE /* FilterPresetPickerCell.swift */,
 				E3FLT0000000000ACAFECAFE2 /* FilterPresetPickerView.swift */,
 				E3FLT0000000000CCAFECAFE /* FilterStylesViewController.swift */,
@@ -631,6 +637,8 @@
 				80F4589B2C61D3160039C385 /* UIImage+Filters.swift in Sources */,
 				E3FLT00000000002CAFECAFE /* ImageFilterSettings.swift in Sources */,
 				E3FLT00000000004CAFECAFE /* FilterPreset.swift in Sources */,
+				E3FLT0000000000FCAFECAFE /* FilterPresetPreviewProvider.swift in Sources */,
+				E3FLT0000000000ECAFECAFE /* FilterPresetCardCell.swift in Sources */,
 				E3FLT00000000006CAFECAFE /* FilterPresetPickerCell.swift in Sources */,
 				E3FLT0000000000BCAFECAFE /* FilterPresetPickerView.swift in Sources */,
 				E3FLT0000000000DCAFECAFE /* FilterStylesViewController.swift in Sources */,

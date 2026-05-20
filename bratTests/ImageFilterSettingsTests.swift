@@ -121,4 +121,61 @@ final class ImageFilterSettingsTests: XCTestCase {
         b.hue = 10
         XCTAssertNotEqual(a.cacheKeyFragment(), b.cacheKeyFragment())
     }
+
+    func testBuiltInPresetsHaveValidSymbolsAndLayoutRatios() {
+        for preset in FilterPreset.builtIn {
+            XCTAssertFalse(preset.symbolName.isEmpty, preset.id)
+            XCTAssertNotNil(
+                UIImage(systemName: preset.symbolName),
+                "Missing SF Symbol for \(preset.id): \(preset.symbolName)"
+            )
+            XCTAssertGreaterThan(preset.layoutAspectRatio, 0.5, preset.id)
+            XCTAssertLessThan(preset.layoutAspectRatio, 1.5, preset.id)
+        }
+    }
+
+    func testBuiltInPresetIDsAreUnique() {
+        let ids = FilterPreset.builtIn.map(\.id)
+        XCTAssertEqual(ids.count, Set(ids).count, "Duplicate preset IDs: \(ids)")
+    }
+
+    func testBuiltInPresetsHavePreviewSettingsExceptNone() {
+        for preset in FilterPreset.builtIn where preset.id != "none" {
+            XCTAssertNotNil(
+                preset.previewFilterSettings,
+                "Preset \(preset.id) should expose preview settings"
+            )
+        }
+        let none = FilterPreset.builtIn.first { $0.id == "none" }!
+        XCTAssertNotNil(none.main)
+        XCTAssertNotNil(none.background)
+    }
+
+    func testWarmFadeUsesBackgroundSettingsForPreview() {
+        let warmFade = FilterPreset.builtIn.first { $0.id == "warm_fade" }!
+        XCTAssertNil(warmFade.main)
+        XCTAssertNotNil(warmFade.background)
+        XCTAssertEqual(warmFade.previewFilterSettings, warmFade.background)
+    }
+
+    func testFilterPresetPreviewProviderReturnsImages() {
+        let none = FilterPreset.builtIn.first { $0.id == "none" }!
+        let bratPunch = FilterPreset.builtIn.first { $0.id == "brat_punch" }!
+
+        let noneExpectation = expectation(description: "none preview")
+        FilterPresetPreviewProvider.preview(for: none) { image in
+            XCTAssertNotNil(image)
+            noneExpectation.fulfill()
+        }
+
+        let punchExpectation = expectation(description: "brat punch preview")
+        FilterPresetPreviewProvider.preview(for: bratPunch) { image in
+            XCTAssertNotNil(image)
+            punchExpectation.fulfill()
+        }
+
+        wait(for: [noneExpectation, punchExpectation], timeout: 10)
+        XCTAssertNotNil(FilterPresetPreviewProvider.cachedPreview(for: "none"))
+        XCTAssertNotNil(FilterPresetPreviewProvider.cachedPreview(for: "brat_punch"))
+    }
 }

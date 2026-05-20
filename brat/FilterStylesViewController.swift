@@ -7,6 +7,7 @@ import UIKit
 
 protocol FilterStylesViewControllerDelegate: AnyObject {
     func filterStylesViewController(_ controller: FilterStylesViewController, didSelect preset: FilterPreset)
+    func filterStylesViewControllerDidDeselectStyle(_ controller: FilterStylesViewController)
 }
 
 /// Preset-only panel for filter looks (embeddable in sidebar or popover).
@@ -77,6 +78,9 @@ final class FilterStylesViewController: UIViewController {
         pickerView.onSelectPreset = { [weak self] preset in
             self?.handlePresetSelected(preset)
         }
+        pickerView.onDeselectPreset = { [weak self] in
+            self?.handlePresetDeselected()
+        }
         view.addSubview(pickerView)
         reloadSelection(selectedPresetID: selectedPresetID)
 
@@ -91,6 +95,7 @@ final class FilterStylesViewController: UIViewController {
             pickerView.topAnchor.constraint(equalTo: topAnchor, constant: showsSidebarChrome ? .su2 : 16),
             pickerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
             pickerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+            pickerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
     }
 
@@ -151,6 +156,12 @@ final class FilterStylesViewController: UIViewController {
         }
 
         delegate?.filterStylesViewController(self, didSelect: preset)
+    }
+
+    private func handlePresetDeselected() {
+        selectedPresetID = nil
+        pickerView.updateSelection(selectedPresetID: nil)
+        delegate?.filterStylesViewControllerDidDeselectStyle(self)
     }
 
     private func showNoneELI5Toast() {

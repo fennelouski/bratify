@@ -89,6 +89,63 @@ final class TrailingSidebarLayoutTests: XCTestCase {
                 usesMacCollapsibleBottomPanel: true
             )
         )
+        XCTAssertFalse(
+            TrailingSidebarLayout.shouldUseSidebars(
+                idiom: .mac,
+                width: 800,
+                height: 600,
+                usesMacCollapsibleBottomPanel: true
+            )
+        )
+        XCTAssertTrue(
+            TrailingSidebarLayout.shouldUseSettingsLeadingSidebar(
+                idiom: .mac,
+                width: 800,
+                height: 600,
+                usesMacCollapsibleBottomPanel: true
+            )
+        )
+        XCTAssertTrue(
+            TrailingSidebarLayout.shouldUseEditorSidebars(
+                idiom: .mac,
+                width: 800,
+                height: 600,
+                usesMacCollapsibleBottomPanel: true
+            )
+        )
+    }
+
+    func testMacCollapsibleChromeNarrowWindowDoesNotUseEditorSidebars() {
+        XCTAssertFalse(
+            TrailingSidebarLayout.shouldUseEditorSidebars(
+                idiom: .mac,
+                width: 699,
+                height: 600,
+                usesMacCollapsibleBottomPanel: true
+            )
+        )
+    }
+
+    func testPadPortraitDoesNotUseSettingsLeadingSidebar() {
+        XCTAssertFalse(
+            TrailingSidebarLayout.shouldUseSettingsLeadingSidebar(
+                idiom: .pad,
+                width: 1032,
+                height: 1376,
+                usesMacCollapsibleBottomPanel: false
+            )
+        )
+    }
+
+    func testPadLandscapeUsesSettingsLeadingSidebar() {
+        XCTAssertTrue(
+            TrailingSidebarLayout.shouldUseSettingsLeadingSidebar(
+                idiom: .pad,
+                width: 1376,
+                height: 1032,
+                usesMacCollapsibleBottomPanel: false
+            )
+        )
     }
 
     func testMacWideWindowUsesSidebarsWhenNotCollapsibleChrome() {

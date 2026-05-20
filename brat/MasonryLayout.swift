@@ -5,6 +5,9 @@ protocol MasonryLayoutDelegate: AnyObject {
 }
 
 class MasonryLayout: UICollectionViewLayout {
+    /// Footer band height as a fraction of column inner width (symbol + title).
+    static let labelHeightFraction: CGFloat = 0.25
+
     weak var delegate: MasonryLayoutDelegate?
     var numberOfColumns: Int = 2
     var cellPadding: CGFloat = 5
@@ -36,7 +39,7 @@ class MasonryLayout: UICollectionViewLayout {
             let shortestColumn = yOffsets.enumerated().min(by: { $0.element < $1.element })?.offset ?? 0
             let innerWidth = columnWidth - cellPadding * 2
             let imageHeight = innerWidth / aspectRatio
-            let labelHeight = innerWidth * 0.25
+            let labelHeight = innerWidth * Self.labelHeightFraction
             let height = imageHeight + labelHeight + cellPadding * 2
 
             let frame = CGRect(

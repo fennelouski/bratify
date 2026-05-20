@@ -15,7 +15,7 @@ enum TrailingSidebarLayout {
     static let width: CGFloat = 280
     static let minimumWindowWidth: CGFloat = 700
 
-    static let compactPanelHeightFilterStyles: CGFloat = 140
+    static let compactPanelHeightFilterStyles: CGFloat = 240
     static let compactPanelHeightFontPicker: CGFloat = 280
     static let compactPanelHeightAspectRatio: CGFloat = 300
     static let compactPanelHeightBackgroundImage: CGFloat = 320
@@ -92,6 +92,44 @@ enum TrailingSidebarLayout {
             height: height,
             usesMacCollapsibleBottomPanel: usesMacCollapsibleBottomPanel
         ) == .sidebars
+    }
+
+    /// Picker panels (background, styles, font, web, aspect) use sidebars when the window is wide enough, including on Mac with collapsible bottom chrome.
+    static func shouldUseEditorSidebars(
+        idiom: UIUserInterfaceIdiom,
+        width: CGFloat,
+        height: CGFloat,
+        usesMacCollapsibleBottomPanel: Bool
+    ) -> Bool {
+        if shouldUseSidebars(
+            idiom: idiom,
+            width: width,
+            height: height,
+            usesMacCollapsibleBottomPanel: usesMacCollapsibleBottomPanel
+        ) {
+            return true
+        }
+        return usesMacCollapsibleBottomPanel
+            && isEnabled(for: idiom)
+            && isEligible(width: width)
+    }
+
+    /// Settings from the editor detail view use the leading sidebar on Mac and wide iPad landscape.
+    static func shouldUseSettingsLeadingSidebar(
+        idiom: UIUserInterfaceIdiom,
+        width: CGFloat,
+        height: CGFloat,
+        usesMacCollapsibleBottomPanel: Bool
+    ) -> Bool {
+        if usesMacCollapsibleBottomPanel, isEnabled(for: idiom) {
+            return true
+        }
+        return shouldUseSidebars(
+            idiom: idiom,
+            width: width,
+            height: height,
+            usesMacCollapsibleBottomPanel: usesMacCollapsibleBottomPanel
+        )
     }
 
     static func compactPanelHeight(

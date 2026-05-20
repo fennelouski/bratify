@@ -14,9 +14,16 @@ enum FilterPresetTarget {
 struct FilterPreset: Identifiable {
     let id: String
     let name: String
+    let symbolName: String
+    let layoutAspectRatio: CGFloat
     let target: FilterPresetTarget
     let main: ImageFilterSettings?
     let background: ImageFilterSettings?
+
+    /// Settings used for card preview thumbnails (main when present, otherwise background).
+    var previewFilterSettings: ImageFilterSettings? {
+        main ?? background
+    }
 
     func apply(to design: inout Design) {
         switch target {
@@ -40,6 +47,8 @@ struct FilterPreset: Identifiable {
         FilterPreset(
             id: "none",
             name: NSLocalizedString("None", comment: "Filter preset: reset"),
+            symbolName: "photo",
+            layoutAspectRatio: 1.0,
             target: .both,
             main: .default,
             background: .default
@@ -47,6 +56,8 @@ struct FilterPreset: Identifiable {
         FilterPreset(
             id: "brat_punch",
             name: NSLocalizedString("Brat Punch", comment: "Filter preset name"),
+            symbolName: "bolt.fill",
+            layoutAspectRatio: 1.15,
             target: .both,
             main: settings {
                 $0.contrast = 1.35
@@ -70,6 +81,8 @@ struct FilterPreset: Identifiable {
         FilterPreset(
             id: "soft_dream",
             name: NSLocalizedString("Soft Dream", comment: "Filter preset name"),
+            symbolName: "sparkles",
+            layoutAspectRatio: 0.9,
             target: .both,
             main: settings {
                 $0.saturation = 0.85
@@ -86,6 +99,8 @@ struct FilterPreset: Identifiable {
         FilterPreset(
             id: "zine",
             name: NSLocalizedString("Zine", comment: "Filter preset name"),
+            symbolName: "newspaper",
+            layoutAspectRatio: 1.1,
             target: .both,
             main: settings {
                 $0.contrast = 1.5
@@ -104,6 +119,8 @@ struct FilterPreset: Identifiable {
         FilterPreset(
             id: "photo_noir",
             name: NSLocalizedString("Photo Noir", comment: "Filter preset name"),
+            symbolName: "moon.stars",
+            layoutAspectRatio: 0.85,
             target: .both,
             main: settings {
                 $0.photoEffect = .noir
@@ -120,6 +137,8 @@ struct FilterPreset: Identifiable {
         FilterPreset(
             id: "negative_pop",
             name: NSLocalizedString("Negative Pop", comment: "Filter preset name"),
+            symbolName: "arrow.triangle.2.circlepath",
+            layoutAspectRatio: 1.05,
             target: .main,
             main: settings {
                 $0.invert = true
@@ -132,6 +151,8 @@ struct FilterPreset: Identifiable {
         FilterPreset(
             id: "warm_fade",
             name: NSLocalizedString("Warm Fade", comment: "Filter preset name"),
+            symbolName: "sun.haze",
+            layoutAspectRatio: 0.95,
             target: .background,
             main: nil,
             background: settings {
@@ -144,11 +165,192 @@ struct FilterPreset: Identifiable {
         FilterPreset(
             id: "chrome_pop",
             name: NSLocalizedString("Chrome Pop", comment: "Filter preset name"),
+            symbolName: "camera.filters",
+            layoutAspectRatio: 1.12,
             target: .main,
             main: settings {
                 $0.photoEffect = .chrome
                 $0.vibrance = 0.5
                 $0.sharpen = 0.35
+            },
+            background: nil
+        ),
+        FilterPreset(
+            id: "cool_ice",
+            name: NSLocalizedString("Cool Ice", comment: "Filter preset name"),
+            symbolName: "snowflake",
+            layoutAspectRatio: 0.88,
+            target: .both,
+            main: settings {
+                $0.colorTemperature = 4200
+                $0.colorTint = -18
+                $0.saturation = 0.88
+                $0.exposure = -0.2
+                $0.hue = -12
+                $0.vignette = 4
+                $0.highlightAmount = 1.15
+            },
+            background: settings {
+                $0.colorTemperature = 4500
+                $0.colorTint = -12
+                $0.saturation = 0.9
+                $0.bloom = 0.3
+                $0.vignette = 5
+            }
+        ),
+        FilterPreset(
+            id: "instant_vintage",
+            name: NSLocalizedString("Instant", comment: "Filter preset name"),
+            symbolName: "photo.on.rectangle.angled",
+            layoutAspectRatio: 1.08,
+            target: .both,
+            main: settings {
+                $0.photoEffect = .instant
+                $0.sepia = 0.12
+                $0.vignette = 5
+                $0.grain = 0.2
+                $0.colorTemperature = 6800
+            },
+            background: settings {
+                $0.photoEffect = .instant
+                $0.sepia = 0.1
+                $0.vignette = 6
+                $0.grain = 0.22
+            }
+        ),
+        FilterPreset(
+            id: "pastel_glow",
+            name: NSLocalizedString("Pastel", comment: "Filter preset name"),
+            symbolName: "cloud.sun.fill",
+            layoutAspectRatio: 0.92,
+            target: .both,
+            main: settings {
+                $0.brightness = 0.12
+                $0.exposure = 0.2
+                $0.saturation = 0.72
+                $0.contrast = 0.92
+                $0.bloom = 0.45
+                $0.vignette = 2
+            },
+            background: settings {
+                $0.brightness = 0.1
+                $0.exposure = 0.15
+                $0.saturation = 0.78
+                $0.bloom = 0.5
+            }
+        ),
+        FilterPreset(
+            id: "teal_dusk",
+            name: NSLocalizedString("Teal Dusk", comment: "Filter preset name"),
+            symbolName: "sunset.fill",
+            layoutAspectRatio: 1.14,
+            target: .both,
+            main: settings {
+                $0.contrast = 1.28
+                $0.shadowAmount = 0.35
+                $0.vignette = 6
+                $0.duotoneIntensity = 0.38
+                $0.duotoneColorHex = "E85D04"
+                $0.saturation = 1.1
+            },
+            background: settings {
+                $0.hue = 195
+                $0.colorTint = 14
+                $0.contrast = 1.22
+                $0.colorTemperature = 5600
+                $0.vignette = 7
+            }
+        ),
+        FilterPreset(
+            id: "vhs_lofi",
+            name: NSLocalizedString("VHS", comment: "Filter preset name"),
+            symbolName: "tv",
+            layoutAspectRatio: 1.0,
+            target: .both,
+            main: settings {
+                $0.pixelate = 8
+                $0.grain = 0.28
+                $0.saturation = 0.68
+                $0.contrast = 1.12
+                $0.colorTemperature = 7100
+                $0.hue = 8
+            },
+            background: settings {
+                $0.pixelate = 6
+                $0.grain = 0.3
+                $0.saturation = 0.72
+                $0.colorTemperature = 7400
+            }
+        ),
+        FilterPreset(
+            id: "editorial_grain",
+            name: NSLocalizedString("Editorial", comment: "Filter preset name"),
+            symbolName: "camera.aperture",
+            layoutAspectRatio: 0.87,
+            target: .both,
+            main: settings {
+                $0.monochrome = 1
+                $0.grain = 0.32
+                $0.contrast = 1.45
+                $0.unsharpMask = 0.5
+                $0.vignette = 7
+                $0.photoEffect = .tonal
+            },
+            background: settings {
+                $0.monochrome = 1
+                $0.grain = 0.35
+                $0.contrast = 1.4
+                $0.vignette = 8
+            }
+        ),
+        FilterPreset(
+            id: "sunset_duotone",
+            name: NSLocalizedString("Sunset", comment: "Filter preset name"),
+            symbolName: "circle.lefthalf.filled",
+            layoutAspectRatio: 1.06,
+            target: .both,
+            main: settings {
+                $0.duotoneIntensity = 0.55
+                $0.duotoneColorHex = "FF6B35"
+                $0.contrast = 1.22
+                $0.saturation = 0.95
+                $0.vignette = 4
+            },
+            background: settings {
+                $0.duotoneIntensity = 0.45
+                $0.duotoneColorHex = "C44569"
+                $0.contrast = 1.18
+                $0.vignette = 5
+            }
+        ),
+        FilterPreset(
+            id: "mist_haze",
+            name: NSLocalizedString("Mist", comment: "Filter preset name"),
+            symbolName: "cloud.fog.fill",
+            layoutAspectRatio: 0.93,
+            target: .background,
+            main: nil,
+            background: settings {
+                $0.photoEffect = .fade
+                $0.colorTemperature = 5800
+                $0.bloom = 0.5
+                $0.exposure = -0.15
+                $0.vignette = 3
+            }
+        ),
+        FilterPreset(
+            id: "silk_punch",
+            name: NSLocalizedString("Silk Punch", comment: "Filter preset name"),
+            symbolName: "star.fill",
+            layoutAspectRatio: 1.13,
+            target: .main,
+            main: settings {
+                $0.contrast = 1.55
+                $0.saturation = 1.4
+                $0.sharpen = 0.5
+                $0.vibrance = 0.6
+                $0.highlightAmount = 1.2
+                $0.unsharpMask = 0.35
             },
             background: nil
         )

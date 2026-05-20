@@ -2013,7 +2013,7 @@ extension EditDesignViewController {
     }
 
     @objc private func toggleFilterStyles() {
-        if shouldUseSidebars {
+        if shouldUseEditorSidebars {
             toggleLeadingSidebar(.filterStyles)
         } else if shouldUseCompactBottomPanel {
             toggleEditorPanel(.filterStyles)
@@ -2096,7 +2096,7 @@ extension EditDesignViewController {
     }
 
     @objc private func toggleAspectRatioSidebar() {
-        if shouldUseSidebars {
+        if shouldUseEditorSidebars {
             toggleTrailingSidebar(.aspectRatio)
         } else if shouldUseCompactBottomPanel {
             toggleEditorPanel(.aspectRatio)
@@ -2736,7 +2736,7 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
     }
     
     @objc func openSettingsFromEditor() {
-        if shouldUseSidebars {
+        if shouldUseSettingsLeadingSidebar {
             toggleLeadingSidebar(.settings)
         } else {
             openSettings()
@@ -2744,7 +2744,7 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
     }
 
     @objc func selectFont() {
-        if shouldUseSidebars {
+        if shouldUseEditorSidebars {
             toggleTrailingSidebar(.fontPicker)
         } else if shouldUseCompactBottomPanel {
             toggleEditorPanel(.fontPicker)
@@ -2765,14 +2765,33 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
         )
     }
 
-    private var shouldUseSidebars: Bool {
+    private var shouldUseEditorSidebars: Bool {
         guard isViewLoaded else { return false }
-        return TrailingSidebarLayout.shouldUseSidebars(
+        return TrailingSidebarLayout.shouldUseEditorSidebars(
             idiom: traitCollection.userInterfaceIdiom,
             width: view.bounds.width,
             height: view.bounds.height,
             usesMacCollapsibleBottomPanel: usesMacCollapsibleBottomPanel
         )
+    }
+
+    private var shouldUseSettingsLeadingSidebar: Bool {
+        guard isViewLoaded else { return false }
+        return TrailingSidebarLayout.shouldUseSettingsLeadingSidebar(
+            idiom: traitCollection.userInterfaceIdiom,
+            width: view.bounds.width,
+            height: view.bounds.height,
+            usesMacCollapsibleBottomPanel: usesMacCollapsibleBottomPanel
+        )
+    }
+
+    private func canUseLeadingSidebar(for content: LeadingSidebarContent) -> Bool {
+        switch content {
+        case .settings:
+            return shouldUseSettingsLeadingSidebar
+        case .backgroundImage, .filterStyles:
+            return shouldUseEditorSidebars
+        }
     }
 
     private var editorMiddleBandHeight: CGFloat {
@@ -2801,7 +2820,7 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
     }
 
     private func toggleTrailingSidebar(_ content: TrailingSidebarContent) {
-        guard shouldUseSidebars else { return }
+        guard shouldUseEditorSidebars else { return }
         if activeTrailingSidebar == content {
             dismissTrailingSidebar(animated: true)
         } else {
@@ -2810,7 +2829,7 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
     }
 
     private func presentTrailingSidebar(_ content: TrailingSidebarContent) {
-        guard shouldUseSidebars, activeTrailingSidebar != content else { return }
+        guard shouldUseEditorSidebars, activeTrailingSidebar != content else { return }
 
         if activeTrailingSidebar != nil {
             dismissTrailingSidebar(animated: false)
@@ -3057,10 +3076,10 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
     }
 
     private func updateEditorPanelLayoutMode() {
-        if isTrailingSidebarVisible, !shouldUseSidebars {
+        if isTrailingSidebarVisible, !shouldUseEditorSidebars {
             dismissTrailingSidebar(animated: false)
         }
-        if isLeadingSidebarVisible, !shouldUseSidebars {
+        if let leadingContent = activeLeadingSidebar, !canUseLeadingSidebar(for: leadingContent) {
             dismissLeadingSidebar(animated: false)
         }
         if isEditorBottomPanelVisible, !shouldUseCompactBottomPanel {
@@ -3197,7 +3216,7 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
     }
 
     private func toggleLeadingSidebar(_ content: LeadingSidebarContent) {
-        guard shouldUseSidebars else { return }
+        guard canUseLeadingSidebar(for: content) else { return }
         if activeLeadingSidebar == content {
             dismissLeadingSidebar(animated: true)
         } else {
@@ -3206,7 +3225,7 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
     }
 
     private func presentLeadingSidebar(_ content: LeadingSidebarContent) {
-        guard shouldUseSidebars, activeLeadingSidebar != content else { return }
+        guard canUseLeadingSidebar(for: content), activeLeadingSidebar != content else { return }
 
         if activeLeadingSidebar != nil {
             dismissLeadingSidebar(animated: false)
@@ -3437,7 +3456,7 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
     }
 
     @objc internal func selectBackgroundImage() {
-        if shouldUseSidebars {
+        if shouldUseEditorSidebars {
             toggleLeadingSidebar(.backgroundImage)
         } else if shouldUseCompactBottomPanel {
             toggleEditorPanel(.backgroundImage)
@@ -3458,7 +3477,7 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
     }
 
     @objc private func importBackgroundFromWeb() {
-        if shouldUseSidebars {
+        if shouldUseEditorSidebars {
             toggleTrailingSidebar(.webImages)
         } else if shouldUseCompactBottomPanel {
             toggleEditorPanel(.webImport)
@@ -3541,6 +3560,13 @@ extension EditDesignViewController: FilterStylesViewControllerDelegate {
         didSelect preset: FilterPreset
     ) {
         didApplyFilterPreset(preset)
+    }
+
+    func filterStylesViewControllerDidDeselectStyle(_ controller: FilterStylesViewController) {
+        guard let none = FilterPreset.builtIn.first(where: { $0.id == "none" }) else { return }
+        didApplyFilterPreset(none)
+        lastAppliedPresetID = nil
+        refreshFilterStylesSelection()
     }
 }
 
