@@ -512,6 +512,230 @@ struct FilterPreset: Identifiable {
                 $0.vignette = 4
             },
             background: nil
+        ),
+        FilterPreset(
+            id: "transfer_paint",
+            name: NSLocalizedString("transfer", comment: "Filter preset name"),
+            symbolName: "paintbrush.pointed.fill",
+            layoutAspectRatio: 1.03,
+            target: .both,
+            main: settings {
+                $0.photoEffect = .transfer
+                $0.contrast = 1.14
+                $0.saturation = 1.08
+                $0.vibrance = 0.25
+                $0.vignette = 4
+                $0.grain = 0.17
+            },
+            background: settings {
+                $0.photoEffect = .transfer
+                $0.contrast = 1.1
+                $0.saturation = 1.04
+                $0.vignette = 5
+                $0.grain = 0.19
+            }
+        ),
+        FilterPreset(
+            id: "rose_emerald",
+            name: NSLocalizedString("rose emerald", comment: "Filter preset name"),
+            symbolName: "leaf.fill",
+            layoutAspectRatio: 0.91,
+            target: .both,
+            main: settings {
+                $0.duotoneIntensity = 0.52
+                $0.duotoneColorHex = "F72585"
+                $0.contrast = 1.2
+                $0.saturation = 1.06
+                $0.colorTint = 6
+                $0.vignette = 3
+            },
+            background: settings {
+                $0.duotoneIntensity = 0.46
+                $0.duotoneColorHex = "06D6A0"
+                $0.contrast = 1.15
+                $0.colorTemperature = 5400
+                $0.vignette = 4
+            }
+        ),
+        FilterPreset(
+            id: "infrared_pop",
+            name: NSLocalizedString("infrared", comment: "Filter preset name"),
+            symbolName: "viewfinder.circle",
+            layoutAspectRatio: 1.04,
+            target: .main,
+            main: settings {
+                $0.hue = 95
+                $0.saturation = 1.48
+                $0.vibrance = 0.55
+                $0.contrast = 1.24
+                $0.colorTemperature = 5800
+                $0.colorTint = 12
+                $0.vignette = 4
+            },
+            background: nil
+        ),
+        FilterPreset(
+            id: "ethereal_bloom",
+            name: NSLocalizedString("ethereal", comment: "Filter preset name"),
+            symbolName: "wand.and.stars",
+            layoutAspectRatio: 0.97,
+            target: .background,
+            main: nil,
+            background: settings {
+                $0.bloom = 0.65
+                $0.contrast = 0.82
+                $0.saturation = 0.86
+                $0.exposure = 0.2
+                $0.brightness = 0.06
+                $0.vignette = 2
+            }
+        ),
+        FilterPreset(
+            id: "matte_crush",
+            name: NSLocalizedString("matte", comment: "Filter preset name"),
+            symbolName: "circle.hexagongrid.fill",
+            layoutAspectRatio: 1.08,
+            target: .both,
+            main: settings {
+                $0.gamma = 1.38
+                $0.brightness = -0.12
+                $0.contrast = 0.88
+                $0.shadowAmount = 0.62
+                $0.saturation = 0.9
+                $0.vignette = 6
+                $0.grain = 0.18
+            },
+            background: settings {
+                $0.gamma = 1.42
+                $0.brightness = -0.1
+                $0.contrast = 0.85
+                $0.shadowAmount = 0.58
+                $0.saturation = 0.86
+                $0.vignette = 7
+                $0.grain = 0.2
+            }
+        ),
+        FilterPreset(
+            id: "candlelight",
+            name: NSLocalizedString("Candlelight", comment: "Filter preset name"),
+            symbolName: "flame.fill",
+            layoutAspectRatio: 0.98,
+            target: .background,
+            main: nil,
+            background: settings {
+                $0.colorTemperature = 7600
+                $0.sepia = 0.18
+                $0.exposure = -0.4
+                $0.brightness = -0.05
+                $0.saturation = 0.92
+                $0.vignette = 3
+                $0.bloom = 0.2
+            }
+        ),
+        FilterPreset(
+            id: "polaroid_snap",
+            name: NSLocalizedString("Polaroid", comment: "Filter preset name"),
+            symbolName: "rectangle.portrait",
+            layoutAspectRatio: 1.1,
+            target: .both,
+            main: settings {
+                $0.photoEffect = .instant
+                $0.contrast = 1.32
+                $0.saturation = 0.88
+                $0.sepia = 0.08
+                $0.exposure = -0.1
+                $0.vignette = 4
+                $0.grain = 0.16
+            },
+            background: settings {
+                $0.photoEffect = .instant
+                $0.contrast = 1.28
+                $0.saturation = 0.85
+                $0.sepia = 0.1
+                $0.vignette = 5
+                $0.grain = 0.18
+            }
+        ),
+        FilterPreset(
+            id: "midnight_blue",
+            name: NSLocalizedString("Midnight Blue", comment: "Filter preset name"),
+            symbolName: "moon.circle.fill",
+            layoutAspectRatio: 0.88,
+            target: .both,
+            main: settings {
+                $0.duotoneIntensity = 0.5
+                $0.duotoneColorHex = "1E3A8A"
+                $0.contrast = 1.26
+                $0.saturation = 0.78
+                $0.colorTemperature = 4800
+                $0.colorTint = -8
+                $0.exposure = -0.25
+                $0.vignette = 5
+            },
+            background: settings {
+                $0.duotoneIntensity = 0.44
+                $0.duotoneColorHex = "312E81"
+                $0.contrast = 1.2
+                $0.saturation = 0.72
+                $0.colorTemperature = 5000
+                $0.vignette = 6
+            }
+        ),
+        FilterPreset(
+            id: "overexposed",
+            name: NSLocalizedString("Overexposed", comment: "Filter preset name"),
+            symbolName: "sun.max",
+            layoutAspectRatio: 1.12,
+            target: .both,
+            main: settings {
+                $0.exposure = 0.45
+                $0.brightness = 0.1
+                $0.contrast = 0.84
+                $0.saturation = 0.8
+                $0.bloom = 0.58
+                $0.highlightAmount = 1.35
+                $0.vignette = 2
+            },
+            background: settings {
+                $0.exposure = 0.38
+                $0.brightness = 0.08
+                $0.contrast = 0.86
+                $0.saturation = 0.82
+                $0.bloom = 0.52
+                $0.highlightAmount = 1.3
+            }
+        ),
+        FilterPreset(
+            id: "punch_mono",
+            name: NSLocalizedString("Punch Mono", comment: "Filter preset name"),
+            symbolName: "square.fill.on.square.fill",
+            layoutAspectRatio: 0.87,
+            target: .main,
+            main: settings {
+                $0.monochrome = 1
+                $0.contrast = 1.58
+                $0.grain = 0.24
+                $0.sharpen = 0.3
+                $0.vignette = 5
+                $0.unsharpMask = 0.25
+            },
+            background: nil
+        ),
+        FilterPreset(
+            id: "tonal_lift",
+            name: NSLocalizedString("Tonal Lift", comment: "Filter preset name"),
+            symbolName: "slider.horizontal.3",
+            layoutAspectRatio: 1.05,
+            target: .main,
+            main: settings {
+                $0.photoEffect = .tonal
+                $0.vibrance = 0.22
+                $0.contrast = 1.12
+                $0.saturation = 1.04
+                $0.brightness = 0.04
+                $0.exposure = 0.08
+            },
+            background: nil
         )
     ]
 }

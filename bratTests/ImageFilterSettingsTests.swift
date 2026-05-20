@@ -140,7 +140,22 @@ final class ImageFilterSettingsTests: XCTestCase {
     }
 
     func testBuiltInPresetCount() {
-        XCTAssertEqual(FilterPreset.builtIn.count, 25)
+        XCTAssertEqual(FilterPreset.builtIn.count, 36)
+    }
+
+    func testNewBuiltInPresetIDsArePresent() {
+        let newIDs = [
+            "candlelight",
+            "polaroid_snap",
+            "midnight_blue",
+            "overexposed",
+            "punch_mono",
+            "tonal_lift"
+        ]
+        let builtInIDs = Set(FilterPreset.builtIn.map(\.id))
+        for id in newIDs {
+            XCTAssertTrue(builtInIDs.contains(id), "Missing preset: \(id)")
+        }
     }
 
     func testBuiltInPresetsHavePreviewSettingsExceptNone() {
@@ -181,5 +196,15 @@ final class ImageFilterSettingsTests: XCTestCase {
         wait(for: [noneExpectation, punchExpectation], timeout: 10)
         XCTAssertNotNil(FilterPresetPreviewProvider.cachedPreview(for: "none"))
         XCTAssertNotNil(FilterPresetPreviewProvider.cachedPreview(for: "brat_punch"))
+    }
+
+    func testNewPresetPreviewGeneratesImage() {
+        let midnightBlue = FilterPreset.builtIn.first { $0.id == "midnight_blue" }!
+        let expectation = expectation(description: "midnight blue preview")
+        FilterPresetPreviewProvider.preview(for: midnightBlue) { image in
+            XCTAssertNotNil(image)
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 10)
     }
 }
