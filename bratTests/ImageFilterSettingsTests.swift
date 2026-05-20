@@ -139,6 +139,10 @@ final class ImageFilterSettingsTests: XCTestCase {
         XCTAssertEqual(ids.count, Set(ids).count, "Duplicate preset IDs: \(ids)")
     }
 
+    func testBuiltInPresetCount() {
+        XCTAssertEqual(FilterPreset.builtIn.count, 25)
+    }
+
     func testBuiltInPresetsHavePreviewSettingsExceptNone() {
         for preset in FilterPreset.builtIn where preset.id != "none" {
             XCTAssertNotNil(

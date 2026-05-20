@@ -353,6 +353,165 @@ struct FilterPreset: Identifiable {
                 $0.unsharpMask = 0.35
             },
             background: nil
+        ),
+        FilterPreset(
+            id: "process_film",
+            name: NSLocalizedString("process", comment: "Filter preset name"),
+            symbolName: "film",
+            layoutAspectRatio: 1.02,
+            target: .both,
+            main: settings {
+                $0.photoEffect = .process
+                $0.contrast = 1.18
+                $0.saturation = 1.08
+                $0.vignette = 4
+                $0.grain = 0.18
+            },
+            background: settings {
+                $0.photoEffect = .process
+                $0.contrast = 1.12
+                $0.saturation = 1.05
+                $0.vignette = 5
+                $0.grain = 0.2
+            }
+        ),
+        FilterPreset(
+            id: "lavender_cobalt",
+            name: NSLocalizedString("lavender", comment: "Filter preset name"),
+            symbolName: "paintpalette.fill",
+            layoutAspectRatio: 0.89,
+            target: .both,
+            main: settings {
+                $0.duotoneIntensity = 0.48
+                $0.duotoneColorHex = "9B5DE5"
+                $0.contrast = 1.2
+                $0.saturation = 0.92
+                $0.colorTint = 8
+                $0.vignette = 3
+            },
+            background: settings {
+                $0.duotoneIntensity = 0.42
+                $0.duotoneColorHex = "3A86FF"
+                $0.contrast = 1.16
+                $0.colorTemperature = 5200
+                $0.vignette = 4
+            }
+        ),
+        FilterPreset(
+            id: "acid_neon",
+            name: NSLocalizedString("acid", comment: "Filter preset name"),
+            symbolName: "bolt.circle.fill",
+            layoutAspectRatio: 1.11,
+            target: .main,
+            main: settings {
+                $0.contrast = 1.62
+                $0.saturation = 1.55
+                $0.hue = 88
+                $0.vibrance = 0.75
+                $0.sharpen = 0.45
+                $0.duotoneIntensity = 0.28
+                $0.duotoneColorHex = "39FF14"
+                $0.vignette = 3
+            },
+            background: nil
+        ),
+        FilterPreset(
+            id: "bleach_fade",
+            name: NSLocalizedString("bleach", comment: "Filter preset name"),
+            symbolName: "drop.halffull",
+            layoutAspectRatio: 0.96,
+            target: .both,
+            main: settings {
+                $0.contrast = 1.48
+                $0.saturation = 0.55
+                $0.exposure = 0.15
+                $0.highlightAmount = 1.25
+                $0.shadowAmount = 0.4
+                $0.vignette = 5
+                $0.grain = 0.16
+            },
+            background: settings {
+                $0.contrast = 1.42
+                $0.saturation = 0.5
+                $0.exposure = 0.1
+                $0.highlightAmount = 1.2
+                $0.vignette = 6
+                $0.grain = 0.18
+            }
+        ),
+        FilterPreset(
+            id: "radio_static",
+            name: NSLocalizedString("radio", comment: "Filter preset name"),
+            symbolName: "antenna.radiowaves.left.and.right",
+            layoutAspectRatio: 1.07,
+            target: .both,
+            main: settings {
+                $0.posterizeLevels = 8
+                $0.halftone = 6
+                $0.contrast = 1.28
+                $0.saturation = 0.82
+                $0.grain = 0.22
+                $0.colorTemperature = 6400
+            },
+            background: settings {
+                $0.posterizeLevels = 7
+                $0.halftone = 5
+                $0.contrast = 1.22
+                $0.saturation = 0.78
+                $0.grain = 0.24
+            }
+        ),
+        FilterPreset(
+            id: "deep_noir",
+            name: NSLocalizedString("deep noir", comment: "Filter preset name"),
+            symbolName: "moon.fill",
+            layoutAspectRatio: 0.86,
+            target: .background,
+            main: nil,
+            background: settings {
+                $0.photoEffect = .noir
+                $0.contrast = 1.35
+                $0.brightness = -0.08
+                $0.exposure = -0.3
+                $0.vignette = 9
+                $0.grain = 0.26
+                $0.shadowAmount = 0.55
+            }
+        ),
+        FilterPreset(
+            id: "golden_hour",
+            name: NSLocalizedString("golden", comment: "Filter preset name"),
+            symbolName: "sun.max.fill",
+            layoutAspectRatio: 1.09,
+            target: .background,
+            main: nil,
+            background: settings {
+                $0.photoEffect = .fade
+                $0.colorTemperature = 7800
+                $0.sepia = 0.22
+                $0.exposure = 0.12
+                $0.bloom = 0.35
+                $0.vignette = 4
+                $0.saturation = 1.12
+            }
+        ),
+        FilterPreset(
+            id: "cyber_cut",
+            name: NSLocalizedString("cyber", comment: "Filter preset name"),
+            symbolName: "cpu",
+            layoutAspectRatio: 0.94,
+            target: .main,
+            main: settings {
+                $0.sharpen = 0.55
+                $0.unsharpMask = 0.45
+                $0.contrast = 1.38
+                $0.colorTemperature = 4400
+                $0.colorTint = -22
+                $0.saturation = 0.9
+                $0.hue = -18
+                $0.vignette = 4
+            },
+            background: nil
         )
     ]
 }
