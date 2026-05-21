@@ -10,9 +10,28 @@ enum FilterPresetPreviewProvider {
 
     private static let sampleSize = CGSize(width: 80, height: 120)
     private static var sampleImage: UIImage?
+    private static var canvasImage: UIImage?
     private static var cache: [String: UIImage] = [:]
     private static let lock = NSLock()
     private static let renderQueue = DispatchQueue(label: "com.brat.filterPresetPreview", qos: .userInitiated)
+
+    static func setCanvasImage(_ image: UIImage?) {
+        let thumbnail: UIImage?
+        if let image {
+            let maxDim: CGFloat = 200
+            let scale = min(maxDim / image.size.width, maxDim / image.size.height, 1)
+            let thumbSize = CGSize(width: image.size.width * scale, height: image.size.height * scale)
+            thumbnail = UIGraphicsImageRenderer(size: thumbSize).image { _ in
+                image.draw(in: CGRect(origin: .zero, size: thumbSize))
+            }
+        } else {
+            thumbnail = nil
+        }
+        lock.lock()
+        canvasImage = thumbnail
+        cache.removeAll()
+        lock.unlock()
+    }
 
     static func preview(for preset: FilterPreset, completion: @escaping (UIImage?) -> Void) {
         if let cached = cachedImage(for: preset.id) {
@@ -42,14 +61,14 @@ enum FilterPresetPreviewProvider {
     }
 
     private static func renderPreview(for preset: FilterPreset) -> UIImage? {
-        let sample = baseSampleImage()
-        if preset.id == "none" {
-            return sample
-        }
-        guard let settings = preset.previewFilterSettings else {
-            return sample
-        }
-        return sample.applyFilters(settings)
+        lock.lock()
+        let sourceSnapshot = canvasImage
+        lock.unlock()
+
+        let source = sourceSnapshot ?? baseSampleImage()
+        if preset.id == "none" { return source }
+        guard let settings = preset.previewFilterSettings else { return source }
+        return source.applyFilters(settings)
     }
 
     private static func baseSampleImage() -> UIImage {

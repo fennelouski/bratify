@@ -73,6 +73,10 @@ final class FilterPresetPickerView: UIView {
         collectionView.reloadData()
     }
 
+    func reloadPreviews() {
+        collectionView.reloadData()
+    }
+
     func updateSelection(selectedPresetID: String?) {
         self.selectedPresetID = selectedPresetID
         for cell in collectionView.visibleCells {

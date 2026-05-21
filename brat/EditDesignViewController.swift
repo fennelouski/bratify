@@ -60,6 +60,7 @@ class EditDesignViewController: UIViewController {
     private var lastAppliedPreset: FilterPreset?
     private var currentFilterTarget: FilterPresetTarget = .both
     private var currentFilterIntensity: CGFloat = 1.0
+    private var stylesPreviewWorkItem: DispatchWorkItem?
     private weak var settingsNavBarButton: UIBarButtonItem?
 
     private enum ColorSwatchMode { case tools, backgroundColor, textColor }
@@ -1713,10 +1714,12 @@ class EditDesignViewController: UIViewController {
             }
             if Thread.isMainThread {
                 self.previewImageView.image = returnedImage
+                self.scheduleStylesPreviewUpdate()
             } else {
                 DispatchQueue.main.async {
                     guard generationID == self.previewImageGenerationID else { return }
                     self.previewImageView.image = returnedImage
+                    self.scheduleStylesPreviewUpdate()
                 }
             }
         }
@@ -2337,6 +2340,20 @@ extension EditDesignViewController {
 
     private func refreshFilterStylesSelection() {
         embeddedFilterStylesViewController?.reloadSelection(selectedPresetID: lastAppliedPresetID)
+    }
+
+    private func pushCanvasImageToStylesVC() {
+        embeddedFilterStylesViewController?.updateCanvasImage(previewImageView.image)
+    }
+
+    private func scheduleStylesPreviewUpdate() {
+        guard embeddedFilterStylesViewController != nil, isFilterStylesVisible else { return }
+        stylesPreviewWorkItem?.cancel()
+        let work = DispatchWorkItem { [weak self] in
+            self?.pushCanvasImageToStylesVC()
+        }
+        stylesPreviewWorkItem = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: work)
     }
 
     private var isDesignControlsToolbarSelected: Bool {
@@ -3770,6 +3787,7 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
                 childView.bottomAnchor.constraint(equalTo: container.bottomAnchor),
             ]
         }
+        pushCanvasImageToStylesVC()
     }
 
     private func dismissLeadingSidebar(animated: Bool) {

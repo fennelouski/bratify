@@ -158,6 +158,11 @@ final class FilterStylesViewController: UIViewController {
         reloadSelection(selectedPresetID: selectedPresetID)
     }
 
+    func updateCanvasImage(_ image: UIImage?) {
+        FilterPresetPreviewProvider.setCanvasImage(image)
+        pickerView.reloadPreviews()
+    }
+
     func reloadSelection(selectedPresetID: String?) {
         self.selectedPresetID = selectedPresetID
         intensitySlider.isEnabled = selectedPresetID != nil
