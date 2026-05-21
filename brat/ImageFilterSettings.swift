@@ -85,6 +85,37 @@ struct ImageFilterSettings: Codable, Equatable {
         self == .default
     }
 
+    func lerped(toward other: ImageFilterSettings, amount: CGFloat) -> ImageFilterSettings {
+        let t = max(0, min(1, amount))
+        var r = self
+        r.brightness = brightness + (other.brightness - brightness) * t
+        r.contrast = contrast + (other.contrast - contrast) * t
+        r.saturation = saturation + (other.saturation - saturation) * t
+        r.exposure = exposure + (other.exposure - exposure) * t
+        r.gamma = gamma + (other.gamma - gamma) * t
+        r.sepia = sepia + (other.sepia - sepia) * t
+        r.pixelate = pixelate + (other.pixelate - pixelate) * t
+        r.sharpen = sharpen + (other.sharpen - sharpen) * t
+        r.monochrome = monochrome + (other.monochrome - monochrome) * t
+        r.vignette = vignette + (other.vignette - vignette) * t
+        r.hue = hue + (other.hue - hue) * t
+        r.highlightAmount = highlightAmount + (other.highlightAmount - highlightAmount) * t
+        r.shadowAmount = shadowAmount + (other.shadowAmount - shadowAmount) * t
+        r.grain = grain + (other.grain - grain) * t
+        r.bloom = bloom + (other.bloom - bloom) * t
+        r.duotoneIntensity = duotoneIntensity + (other.duotoneIntensity - duotoneIntensity) * t
+        r.vibrance = vibrance + (other.vibrance - vibrance) * t
+        r.posterizeLevels = posterizeLevels + (other.posterizeLevels - posterizeLevels) * t
+        r.colorTemperature = colorTemperature + (other.colorTemperature - colorTemperature) * t
+        r.colorTint = colorTint + (other.colorTint - colorTint) * t
+        r.halftone = halftone + (other.halftone - halftone) * t
+        r.unsharpMask = unsharpMask + (other.unsharpMask - unsharpMask) * t
+        r.invert = t > 0 ? other.invert : invert
+        r.photoEffect = t > 0 ? other.photoEffect : photoEffect
+        r.duotoneColorHex = t > 0 ? other.duotoneColorHex : duotoneColorHex
+        return r
+    }
+
     /// Stable fragment for design cache keys.
     func cacheKeyFragment() -> String {
         var parts: [String] = []

@@ -4,8 +4,8 @@ import WebImagePicker
 
 class EditDesignViewController: UIViewController {
 
-    private lazy var textView: UITextView = {
-        let textView = UITextView(frame: CGRect(x: -500, y: -500, width: 0, height: 0))
+    private lazy var textView: NonUndoableTextView = {
+        let textView = NonUndoableTextView(frame: CGRect(x: -500, y: -500, width: 0, height: 0))
         textView.textAlignment = .center
         textView.autocapitalizationType = .none
         textView.autocorrectionType = .no
@@ -57,6 +57,9 @@ class EditDesignViewController: UIViewController {
     private weak var backgroundImageToolbarButton: UIButton?
     private weak var settingsToolbarButton: UIButton?
     private var lastAppliedPresetID: String?
+    private var lastAppliedPreset: FilterPreset?
+    private var currentFilterTarget: FilterPresetTarget = .both
+    private var currentFilterIntensity: CGFloat = 1.0
     private weak var settingsNavBarButton: UIBarButtonItem?
 
     private enum ColorSwatchMode { case tools, backgroundColor, textColor }
@@ -210,6 +213,39 @@ class EditDesignViewController: UIViewController {
         activeEditorPanel != nil
     }
 
+    private var compactKeyboardOptionsMinHeight: CGFloat {
+        switch traitCollection.userInterfaceIdiom {
+        case .phone:
+            return 240
+        case .pad:
+            return 160
+        default:
+            return macKeyboardOptionsExpandedHeight
+        }
+    }
+
+    /// Keeps primary sliders hidden while a compact bottom panel is open so they do not stack on the panel.
+    private func syncCompactBottomPanelSlidersVisibility() {
+        guard isViewLoaded, !usesMacCollapsibleBottomPanel else { return }
+        let suppress = shouldUseCompactBottomPanel && isEditorBottomPanelVisible
+        keyboardOptionsView.setPrimaryControlsSuppressedByBottomPanel(suppress)
+        keyboardOptionsView.isHidden = suppress
+        keyboardOptionsHeightConstraint?.constant = suppress ? 0 : compactKeyboardOptionsMinHeight
+    }
+
+    /// Saved open-panel state while ⌘0 has collapsed the editor chrome for a larger preview.
+    private struct CollapsedEditorPanelsSnapshot {
+        var colorSwatchMode: ColorSwatchMode?
+        var leadingSidebar: LeadingSidebarContent?
+        var trailingSidebar: TrailingSidebarContent?
+        var editorPanel: EditorPanel?
+        var macPrimarySlidersVisible = false
+        var macDesignControlsVisible = false
+        var isDesignControlsModeActive = false
+    }
+
+    private var collapsedEditorPanelsSnapshot: CollapsedEditorPanelsSnapshot?
+
     // MARK: - Focus mode
     private enum FocusState { case editing, distractionFree, fullScreen }
     private var focusState: FocusState = .editing
@@ -255,6 +291,18 @@ class EditDesignViewController: UIViewController {
     private var usesAutomaticTextColor = true
     private var customTextColor: UIColor = .white
 
+    // MARK: - Undo / Redo
+    private var isApplyingSnapshot = false
+    private var undoController: DesignUndoController?
+    private weak var undoBarButton: UIBarButtonItem?
+    private weak var redoBarButton: UIBarButtonItem?
+
+    /// Calls keyboardOptionsView.update only when not in the middle of applyDesignSnapshot.
+    private func updateKeyboardOptionsIfNeeded() {
+        guard !isApplyingSnapshot else { return }
+        keyboardOptionsView.update(with: currentDesign)
+    }
+
     /// Resolved light/dark appearance for the editor chrome and preview rendering.
     private var resolvedInterfaceStyle: UIUserInterfaceStyle {
         DesignTextColor.resolvedUserInterfaceStyle(
@@ -280,12 +328,14 @@ class EditDesignViewController: UIViewController {
 
     private func setTextColor(_ color: UIColor, isUserChosen: Bool) {
         if isUserChosen {
+            undoController?.record(currentDesign)
+            refreshUndoRedoButtons()
             usesAutomaticTextColor = false
             customTextColor = color
             settingsManager.textColorHex = color.toHexString()
             settingsManager.usesAutomaticDefaultTextColor = false
         }
-        keyboardOptionsView.update(with: currentDesign)
+        updateKeyboardOptionsIfNeeded()
         if colorSwatchMode == .textColor {
             colorSwatchIndicatorView.backgroundColor = resolvedEditingTextColor
             refreshColorSwatches(currentColor: resolvedEditingTextColor)
@@ -295,8 +345,10 @@ class EditDesignViewController: UIViewController {
 
     private func setAutomaticTextColor() {
         guard !usesAutomaticTextColor else { return }
+        undoController?.record(currentDesign)
+        refreshUndoRedoButtons()
         usesAutomaticTextColor = true
-        keyboardOptionsView.update(with: currentDesign)
+        updateKeyboardOptionsIfNeeded()
         if colorSwatchMode == .textColor {
             colorSwatchIndicatorView.backgroundColor = resolvedEditingTextColor
             refreshColorSwatches(currentColor: resolvedEditingTextColor)
@@ -306,13 +358,13 @@ class EditDesignViewController: UIViewController {
 
     private lazy var fontName: String = design?.fontName ?? settingsManager.preferredFontName {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
     
     private lazy var imageName: String = design?.backgroundImageKey ?? "" {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
             reloadAspectRatioSidebarNativeImageIfNeeded()
         }
     }
@@ -326,7 +378,7 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
@@ -338,7 +390,7 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
@@ -350,13 +402,13 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
     private lazy var pixelationScale: CGFloat = CGFloat(design?.pixelationScale ?? CGFloat(settingsManager.pixelationScale)) {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
@@ -368,7 +420,7 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
@@ -380,7 +432,7 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
@@ -392,7 +444,7 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
@@ -404,7 +456,7 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
@@ -416,7 +468,7 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
@@ -428,7 +480,7 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
@@ -440,7 +492,7 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
@@ -452,7 +504,7 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
@@ -464,7 +516,7 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
@@ -476,7 +528,7 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
@@ -488,47 +540,47 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
     private lazy var hue: CGFloat = design?.hue ?? 0 {
-        didSet { keyboardOptionsView.update(with: currentDesign) }
+        didSet { updateKeyboardOptionsIfNeeded() }
     }
     private lazy var highlightAmount: CGFloat = design?.highlightAmount ?? 1 {
-        didSet { keyboardOptionsView.update(with: currentDesign) }
+        didSet { updateKeyboardOptionsIfNeeded() }
     }
     private lazy var shadowAmount: CGFloat = design?.shadowAmount ?? 0 {
-        didSet { keyboardOptionsView.update(with: currentDesign) }
+        didSet { updateKeyboardOptionsIfNeeded() }
     }
     private lazy var grain: CGFloat = design?.grain ?? 0 {
-        didSet { keyboardOptionsView.update(with: currentDesign) }
+        didSet { updateKeyboardOptionsIfNeeded() }
     }
     private lazy var bloom: CGFloat = design?.bloom ?? 0 {
-        didSet { keyboardOptionsView.update(with: currentDesign) }
+        didSet { updateKeyboardOptionsIfNeeded() }
     }
     private lazy var duotoneIntensity: CGFloat = design?.duotoneIntensity ?? 0 {
-        didSet { keyboardOptionsView.update(with: currentDesign) }
+        didSet { updateKeyboardOptionsIfNeeded() }
     }
     private lazy var duotoneColorHex: String = design?.duotoneColorHex ?? "8ACE00"
     private lazy var vibrance: CGFloat = design?.vibrance ?? 0 {
-        didSet { keyboardOptionsView.update(with: currentDesign) }
+        didSet { updateKeyboardOptionsIfNeeded() }
     }
     private lazy var posterizeLevels: CGFloat = design?.posterizeLevels ?? 0 {
-        didSet { keyboardOptionsView.update(with: currentDesign) }
+        didSet { updateKeyboardOptionsIfNeeded() }
     }
     private lazy var colorTemperature: CGFloat = design?.colorTemperature ?? 6500 {
-        didSet { keyboardOptionsView.update(with: currentDesign) }
+        didSet { updateKeyboardOptionsIfNeeded() }
     }
     private lazy var colorTint: CGFloat = design?.colorTint ?? 0 {
-        didSet { keyboardOptionsView.update(with: currentDesign) }
+        didSet { updateKeyboardOptionsIfNeeded() }
     }
     private lazy var photoEffect: FilterPhotoEffect? = design?.photoEffect
     private lazy var halftone: CGFloat = design?.halftone ?? 0 {
-        didSet { keyboardOptionsView.update(with: currentDesign) }
+        didSet { updateKeyboardOptionsIfNeeded() }
     }
     private lazy var unsharpMask: CGFloat = design?.unsharpMask ?? 0 {
-        didSet { keyboardOptionsView.update(with: currentDesign) }
+        didSet { updateKeyboardOptionsIfNeeded() }
     }
     
     private lazy var backgroundBrightness: CGFloat = {
@@ -539,7 +591,7 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
@@ -551,7 +603,7 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
@@ -563,7 +615,7 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
@@ -575,7 +627,7 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
@@ -587,7 +639,7 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
@@ -599,7 +651,7 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
@@ -611,7 +663,7 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
@@ -623,7 +675,7 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
@@ -635,7 +687,7 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
@@ -647,7 +699,7 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
@@ -659,47 +711,47 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
     private lazy var backgroundHue: CGFloat = design?.backgroundHue ?? 0 {
-        didSet { keyboardOptionsView.update(with: currentDesign) }
+        didSet { updateKeyboardOptionsIfNeeded() }
     }
     private lazy var backgroundHighlightAmount: CGFloat = design?.backgroundHighlightAmount ?? 1 {
-        didSet { keyboardOptionsView.update(with: currentDesign) }
+        didSet { updateKeyboardOptionsIfNeeded() }
     }
     private lazy var backgroundShadowAmount: CGFloat = design?.backgroundShadowAmount ?? 0 {
-        didSet { keyboardOptionsView.update(with: currentDesign) }
+        didSet { updateKeyboardOptionsIfNeeded() }
     }
     private lazy var backgroundGrain: CGFloat = design?.backgroundGrain ?? 0 {
-        didSet { keyboardOptionsView.update(with: currentDesign) }
+        didSet { updateKeyboardOptionsIfNeeded() }
     }
     private lazy var backgroundBloom: CGFloat = design?.backgroundBloom ?? 0 {
-        didSet { keyboardOptionsView.update(with: currentDesign) }
+        didSet { updateKeyboardOptionsIfNeeded() }
     }
     private lazy var backgroundDuotoneIntensity: CGFloat = design?.backgroundDuotoneIntensity ?? 0 {
-        didSet { keyboardOptionsView.update(with: currentDesign) }
+        didSet { updateKeyboardOptionsIfNeeded() }
     }
     private lazy var backgroundDuotoneColorHex: String = design?.backgroundDuotoneColorHex ?? "8ACE00"
     private lazy var backgroundVibrance: CGFloat = design?.backgroundVibrance ?? 0 {
-        didSet { keyboardOptionsView.update(with: currentDesign) }
+        didSet { updateKeyboardOptionsIfNeeded() }
     }
     private lazy var backgroundPosterizeLevels: CGFloat = design?.backgroundPosterizeLevels ?? 0 {
-        didSet { keyboardOptionsView.update(with: currentDesign) }
+        didSet { updateKeyboardOptionsIfNeeded() }
     }
     private lazy var backgroundColorTemperature: CGFloat = design?.backgroundColorTemperature ?? 6500 {
-        didSet { keyboardOptionsView.update(with: currentDesign) }
+        didSet { updateKeyboardOptionsIfNeeded() }
     }
     private lazy var backgroundColorTint: CGFloat = design?.backgroundColorTint ?? 0 {
-        didSet { keyboardOptionsView.update(with: currentDesign) }
+        didSet { updateKeyboardOptionsIfNeeded() }
     }
     private lazy var backgroundPhotoEffect: FilterPhotoEffect? = design?.backgroundPhotoEffect
     private lazy var backgroundHalftone: CGFloat = design?.backgroundHalftone ?? 0 {
-        didSet { keyboardOptionsView.update(with: currentDesign) }
+        didSet { updateKeyboardOptionsIfNeeded() }
     }
     private lazy var backgroundUnsharpMask: CGFloat = design?.backgroundUnsharpMask ?? 0 {
-        didSet { keyboardOptionsView.update(with: currentDesign) }
+        didSet { updateKeyboardOptionsIfNeeded() }
     }
     
     private lazy var backgroundScale: CGFloat = {
@@ -710,7 +762,7 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
@@ -722,7 +774,7 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
@@ -734,7 +786,7 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
@@ -746,7 +798,7 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
@@ -758,7 +810,7 @@ class EditDesignViewController: UIViewController {
         }
     }() {
         didSet {
-            keyboardOptionsView.update(with: currentDesign)
+            updateKeyboardOptionsIfNeeded()
         }
     }
 
@@ -939,6 +991,35 @@ class EditDesignViewController: UIViewController {
             navigationItem.rightBarButtonItems = rightBarButtonItems
         }
 
+        // Setup undo / redo bar buttons and controller
+        let undoBtn = UIBarButtonItem(
+            image: UIImage(systemName: "arrow.uturn.backward"),
+            style: .plain,
+            target: self,
+            action: #selector(performUndo)
+        )
+        undoBtn.accessibilityLabel = NSLocalizedString("Undo", comment: "Undo the last edit")
+        undoBtn.isEnabled = false
+        undoBarButton = undoBtn
+
+        let redoBtn = UIBarButtonItem(
+            image: UIImage(systemName: "arrow.uturn.forward"),
+            style: .plain,
+            target: self,
+            action: #selector(performRedo)
+        )
+        redoBtn.accessibilityLabel = NSLocalizedString("Redo", comment: "Redo the last undone edit")
+        redoBtn.isEnabled = false
+        redoBarButton = redoBtn
+
+        navigationItem.leftBarButtonItems = [undoBtn, redoBtn]
+
+        if let design {
+            let history = DesignUndoHistoryStore.shared.load(for: design.id)
+            undoController = DesignUndoController(history: history, maxSteps: settingsManager.undoStepCount)
+        }
+        refreshUndoRedoButtons()
+
         // Setup color swatch row — toggle always visible on left, content scrolls in on right
         colorSwatchScrollView.addSubview(colorSwatchStackView)
         view.addSubview(colorSwatchToggleButton)
@@ -1117,6 +1198,15 @@ class EditDesignViewController: UIViewController {
         }
 
         updateDesignImage()
+
+        registerForTraitChanges([
+            UITraitUserInterfaceStyle.self,
+            UITraitHorizontalSizeClass.self,
+            UITraitVerticalSizeClass.self,
+            UITraitUserInterfaceIdiom.self,
+        ]) { (self: EditDesignViewController, previousTraitCollection: UITraitCollection) in
+            self.handleTraitCollectionUpdate(previousTraitCollection: previousTraitCollection)
+        }
     }
 
     override func viewDidLayoutSubviews() {
@@ -1132,17 +1222,14 @@ class EditDesignViewController: UIViewController {
         updateAllToolbarButtonAppearances()
     }
 
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
+    private func handleTraitCollectionUpdate(previousTraitCollection: UITraitCollection) {
         updateEditorPanelLayoutMode()
 
-        let previousStyle = previousTraitCollection.map {
-            DesignTextColor.resolvedUserInterfaceStyle(
-                $0.userInterfaceStyle,
-                traitCollection: previousTraitCollection,
-                view: isViewLoaded ? view : nil
-            )
-        }
+        let previousStyle = DesignTextColor.resolvedUserInterfaceStyle(
+            previousTraitCollection.userInterfaceStyle,
+            traitCollection: previousTraitCollection,
+            view: isViewLoaded ? view : nil
+        )
         guard previousStyle != resolvedInterfaceStyle else {
             return
         }
@@ -1159,29 +1246,230 @@ class EditDesignViewController: UIViewController {
         }
     }
 
-    override var canBecomeFirstResponder: Bool {
-        isTrailingSidebarVisible || isLeadingSidebarVisible || isEditorBottomPanelVisible
+    override var canBecomeFirstResponder: Bool { true }
+
+    /// Left-to-right toolbar order (palette, then `refreshToolButtons` items).
+    private var toolbarKeyCommandActions: [Selector] {
+        var actions: [Selector] = [#selector(cycleSwatchMode)]
+        if usesMacCollapsibleBottomPanel {
+            actions.append(#selector(openSettingsFromEditor))
+        }
+        actions.append(contentsOf: [
+            #selector(selectBackgroundImage),
+            #selector(toggleFilterStyles),
+        ])
+        if usesMacCollapsibleBottomPanel {
+            actions.append(#selector(togglePrimarySlidersFromToolbar))
+        }
+        actions.append(contentsOf: [
+            #selector(showControlsFromToolbar),
+            #selector(toggleAspectRatioSidebar),
+            #selector(selectFont),
+            #selector(importBackgroundFromWeb),
+        ])
+        return actions
+    }
+
+    private var toolbarKeyCommandTitles: [String] {
+        var titles = [
+            NSLocalizedString("Color Mode", comment: "Cycles between tools, background color, and text color"),
+        ]
+        if usesMacCollapsibleBottomPanel {
+            titles.append(NSLocalizedString("Settings", comment: ""))
+        }
+        titles.append(contentsOf: [
+            NSLocalizedString("Background Image", comment: ""),
+            NSLocalizedString("Styles", comment: ""),
+        ])
+        if usesMacCollapsibleBottomPanel {
+            titles.append(NSLocalizedString("Primary Sliders", comment: ""))
+        }
+        titles.append(contentsOf: [
+            NSLocalizedString("Controls", comment: ""),
+            NSLocalizedString("Aspect Ratio", comment: ""),
+            NSLocalizedString("Font Picker", comment: ""),
+            NSLocalizedString("Import from web", comment: ""),
+        ])
+        return titles
+    }
+
+    private var toolbarKeyCommands: [UIKeyCommand] {
+        let digits = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        let actions = toolbarKeyCommandActions
+        let titles = toolbarKeyCommandTitles
+        return zip(actions, titles).enumerated().compactMap { index, pair in
+            guard index < digits.count else { return nil }
+            let command = UIKeyCommand(
+                title: pair.1,
+                action: #selector(performToolbarKeyCommand(_:)),
+                input: digits[index],
+                modifierFlags: .command,
+                propertyList: index
+            )
+            if #available(iOS 15.0, *) {
+                command.wantsPriorityOverSystemBehavior = true
+            }
+            return command
+        }
     }
 
     override var keyCommands: [UIKeyCommand]? {
-        guard isTrailingSidebarVisible || isLeadingSidebarVisible || isEditorBottomPanelVisible else {
-            return super.keyCommands
+        var commands = toolbarKeyCommands
+        let togglePanels = UIKeyCommand(
+            title: NSLocalizedString("Toggle Panels", comment: "Show or hide all open editor panels"),
+            action: #selector(toggleSelectedEditorPanelsFromKeyCommand),
+            input: "0",
+            modifierFlags: .command,
+            propertyList: nil
+        )
+        if #available(iOS 15.0, *) {
+            togglePanels.wantsPriorityOverSystemBehavior = true
         }
-        return [
-            UIKeyCommand(
-                title: NSLocalizedString("Close", comment: "Title for close key command"),
-                action: #selector(dismissEditorPanelsFromKeyCommand),
-                input: UIKeyCommand.inputEscape,
-                modifierFlags: [.shift],
-                propertyList: nil
-            ),
-        ]
+        commands.append(togglePanels)
+        if isTrailingSidebarVisible || isLeadingSidebarVisible || isEditorBottomPanelVisible {
+            commands.append(
+                UIKeyCommand(
+                    title: NSLocalizedString("Close", comment: "Title for close key command"),
+                    action: #selector(dismissEditorPanelsFromKeyCommand),
+                    input: UIKeyCommand.inputEscape,
+                    modifierFlags: [.shift],
+                    propertyList: nil
+                )
+            )
+        }
+        let undoCommand = UIKeyCommand(
+            title: NSLocalizedString("Undo", comment: "Undo the last edit"),
+            action: #selector(performUndo),
+            input: "z",
+            modifierFlags: .command
+        )
+        let redoCommand = UIKeyCommand(
+            title: NSLocalizedString("Redo", comment: "Redo the last undone edit"),
+            action: #selector(performRedo),
+            input: "z",
+            modifierFlags: [.command, .shift]
+        )
+        if #available(iOS 15.0, *) {
+            undoCommand.wantsPriorityOverSystemBehavior = true
+            redoCommand.wantsPriorityOverSystemBehavior = true
+        }
+        commands.append(contentsOf: [undoCommand, redoCommand])
+        return commands
+    }
+
+    @objc private func performToolbarKeyCommand(_ sender: UIKeyCommand) {
+        guard let index = sender.propertyList as? Int else { return }
+        let actions = toolbarKeyCommandActions
+        guard actions.indices.contains(index) else { return }
+        let action = actions[index]
+        guard responds(to: action) else { return }
+        perform(action)
+    }
+
+    @objc private func toggleSelectedEditorPanelsFromKeyCommand() {
+        if let snapshot = collapsedEditorPanelsSnapshot {
+            restoreCollapsedEditorPanels(from: snapshot, animated: true)
+            collapsedEditorPanelsSnapshot = nil
+        } else if let snapshot = makeCollapsedEditorPanelsSnapshot() {
+            collapsedEditorPanelsSnapshot = snapshot
+            collapseOpenEditorPanels(animated: true)
+        }
+    }
+
+    private func makeCollapsedEditorPanelsSnapshot() -> CollapsedEditorPanelsSnapshot? {
+        var snapshot = CollapsedEditorPanelsSnapshot()
+        var hasOpenPanel = false
+
+        if colorSwatchMode != .tools {
+            snapshot.colorSwatchMode = colorSwatchMode
+            hasOpenPanel = true
+        }
+        if let leading = activeLeadingSidebar {
+            snapshot.leadingSidebar = leading
+            hasOpenPanel = true
+        }
+        if let trailing = activeTrailingSidebar {
+            snapshot.trailingSidebar = trailing
+            hasOpenPanel = true
+        }
+        if let panel = activeEditorPanel {
+            snapshot.editorPanel = panel
+            hasOpenPanel = true
+        }
+        if usesMacCollapsibleBottomPanel {
+            if keyboardOptionsView.isMacPrimarySlidersShowing {
+                snapshot.macPrimarySlidersVisible = true
+                hasOpenPanel = true
+            }
+            if keyboardOptionsView.isMacDesignControlsShowing {
+                snapshot.macDesignControlsVisible = true
+                hasOpenPanel = true
+            }
+        }
+        if isDesignControlsModeActive {
+            snapshot.isDesignControlsModeActive = true
+            hasOpenPanel = true
+        }
+
+        return hasOpenPanel ? snapshot : nil
+    }
+
+    private func collapseOpenEditorPanels(animated: Bool) {
+        if isLeadingSidebarVisible {
+            dismissLeadingSidebar(animated: animated)
+        }
+        if isTrailingSidebarVisible {
+            dismissTrailingSidebar(animated: animated)
+        }
+        if isEditorBottomPanelVisible {
+            dismissEditorPanel(animated: animated)
+        }
+        if colorSwatchMode != .tools {
+            colorSwatchMode = .tools
+        }
+        if usesMacCollapsibleBottomPanel,
+           keyboardOptionsView.isMacPrimarySlidersShowing || keyboardOptionsView.isMacDesignControlsShowing {
+            keyboardOptionsView.dismissInlineEditingPanels()
+        }
+        if isDesignControlsModeActive {
+            if let presented = presentedViewController {
+                presented.dismiss(animated: animated)
+            } else {
+                exitDesignControlsMode()
+            }
+        }
+        updateAllToolbarButtonAppearances()
+    }
+
+    private func restoreCollapsedEditorPanels(from snapshot: CollapsedEditorPanelsSnapshot, animated: Bool) {
+        if let mode = snapshot.colorSwatchMode {
+            colorSwatchMode = mode
+        }
+        if let leading = snapshot.leadingSidebar {
+            presentLeadingSidebar(leading)
+        }
+        if let trailing = snapshot.trailingSidebar {
+            presentTrailingSidebar(trailing)
+        }
+        if let panel = snapshot.editorPanel {
+            presentEditorPanel(panel)
+        }
+        if usesMacCollapsibleBottomPanel {
+            if snapshot.macDesignControlsVisible, !keyboardOptionsView.isMacDesignControlsShowing {
+                keyboardOptionsView.showControls()
+            } else if snapshot.macPrimarySlidersVisible {
+                keyboardOptionsView.setMacPrimarySlidersVisible(true, persist: false)
+            }
+        } else if snapshot.isDesignControlsModeActive, !isDesignControlsModeActive {
+            keyboardOptionsView.showControls()
+        }
+        updateAllToolbarButtonAppearances()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         apply(settingsManager.selectedTheme)
         applyAppearanceSensitiveChrome()
-        keyboardOptionsView.update(with: currentDesign)
+        updateKeyboardOptionsIfNeeded()
         updateAllToolbarButtonAppearances()
         pixelationScale = pixelationScale + .random(in: 0...0.001)
         updateDesignImage()
@@ -1190,9 +1478,13 @@ class EditDesignViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         pixelationScale = pixelationScale + .random(in: 0...0.001)
         updateDesignImage()
         pixelationScale = pixelationScale + .random(in: 0...0.001)
+        if usesMacCollapsibleBottomPanel {
+            becomeFirstResponder()
+        }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: DispatchWorkItem(block: { [weak self] in
             guard let self else {
                 return
@@ -1204,6 +1496,9 @@ class EditDesignViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         saveDesignIfNeeded()
+        if let ctrl = undoController {
+            DesignUndoHistoryStore.shared.save(ctrl.history)
+        }
     }
     
     private func updateWithDesign() {
@@ -1319,10 +1614,12 @@ class EditDesignViewController: UIViewController {
     }
 
     private func applyBackgroundColor(_ color: UIColor) {
+        undoController?.record(currentDesign)
+        refreshUndoRedoButtons()
         backgroundColor = color
         textView.backgroundColor = .clear
         settingsManager.addRecentBackgroundColor(color)
-        keyboardOptionsView.update(with: currentDesign)
+        updateKeyboardOptionsIfNeeded()
         updateDesignImage()
     }
 
@@ -1435,7 +1732,7 @@ class EditDesignViewController: UIViewController {
         }
         embeddedAspectRatioPickerViewController?.selectedCanvasSize = CGSize(width: canvasWidth, height: canvasHeight)
         embeddedAspectRatioPickerViewController?.reloadNativeImageSection(nativeImageAspectSize: nativeBackgroundImageAspectSize())
-        keyboardOptionsView.update(with: currentDesign)
+        updateKeyboardOptionsIfNeeded()
         updateDesignImage()
     }
     
@@ -1784,11 +2081,20 @@ class EditDesignViewController: UIViewController {
 }
 
 extension EditDesignViewController: UITextViewDelegate {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        undoController?.willBeginContinuousEdit(currentDesign: currentDesign)
+    }
+
     func textViewDidChange(_ textView: UITextView) {
         if settingsManager.forceLowercase {
             textView.text = textView.text.localizedLowercase
         }
         updateDesignImage()
+    }
+
+    func textViewDidEndEditing(_ textView: UITextView) {
+        undoController?.didEndContinuousEdit()
+        refreshUndoRedoButtons()
     }
 }
 
@@ -2350,6 +2656,52 @@ extension EditDesignViewController {
         backgroundUnsharpMask = settings.unsharpMask
     }
 
+    // MARK: - Undo / Redo implementation
+
+    /// Restores all editor state from a Design snapshot in one batch,
+    /// suppressing intermediate keyboardOptionsView.update calls via isApplyingSnapshot.
+    func applyDesignSnapshot(_ design: Design) {
+        isApplyingSnapshot = true
+        lastAppliedPreset = nil
+        defer {
+            isApplyingSnapshot = false
+            keyboardOptionsView.update(with: currentDesign)
+            updateDesignImage()
+            refreshUndoRedoButtons()
+        }
+        textView.text = design.text
+        fontName = design.fontName
+        fontSize = design.fontSize
+        stretch = design.stretch
+        blur = design.blur
+        pixelationScale = design.pixelationScale
+        backgroundColor = design.backgroundColor
+        usesAutomaticTextColor = design.usesAutomaticTextColor
+        customTextColor = design.textColor
+        imageName = design.backgroundImageKey ?? ""
+        backgroundScale = design.backgroundScale
+        backgroundFlipHorizontal = design.backgroundFlipHorizontal
+        backgroundFlipVertical = design.backgroundFlipVertical
+        backgroundBlur = design.backgroundBlur
+        backgroundAlpha = design.backgroundAlpha
+        applyFilterState(from: design)
+    }
+
+    @objc private func performUndo() {
+        guard let snapshot = undoController?.undo(currentDesign: currentDesign) else { return }
+        applyDesignSnapshot(snapshot)
+    }
+
+    @objc private func performRedo() {
+        guard let snapshot = undoController?.redo(currentDesign: currentDesign) else { return }
+        applyDesignSnapshot(snapshot)
+    }
+
+    private func refreshUndoRedoButtons() {
+        undoBarButton?.isEnabled = undoController?.canUndo ?? false
+        redoBarButton?.isEnabled = undoController?.canRedo ?? false
+    }
+
     var mainImageFilterSettings: ImageFilterSettings {
         ImageFilterSettings(
             brightness: brightness,
@@ -2412,6 +2764,16 @@ extension EditDesignViewController {
 }
 
 extension EditDesignViewController: KeyboardOptionsViewDelegate {
+
+    func willBeginContinuousEdit() {
+        undoController?.willBeginContinuousEdit(currentDesign: currentDesign)
+    }
+
+    func didEndContinuousEdit() {
+        undoController?.didEndContinuousEdit()
+        refreshUndoRedoButtons()
+    }
+
     func didChangeBrightness(_ brightness: CGFloat) {
         self.brightness = brightness
         updateDesignImage()
@@ -2443,6 +2805,8 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
     }
     
     func didChangeInvert(_ invert: Bool) {
+        undoController?.record(currentDesign)
+        refreshUndoRedoButtons()
         self.invert = invert
         updateDesignImage()
     }
@@ -2528,8 +2892,10 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
     }
 
     func didApplyFilterPreset(_ preset: FilterPreset) {
+        undoController?.record(currentDesign)
+        refreshUndoRedoButtons()
         var updated = currentDesign
-        preset.apply(to: &updated)
+        preset.apply(to: &updated, targetOverride: currentFilterTarget, intensity: currentFilterIntensity)
         if preset.id == "none" {
             updated.backgroundScale = 1.0
             updated.backgroundFlipHorizontal = false
@@ -2543,22 +2909,29 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
         backgroundFlipVertical = updated.backgroundFlipVertical
         backgroundBlur = updated.backgroundBlur
         backgroundAlpha = updated.backgroundAlpha
+        lastAppliedPreset = preset
         lastAppliedPresetID = preset.id
         refreshFilterStylesSelection()
         updateDesignImage()
     }
 
     func didRequestCopyBackgroundFiltersToMain() {
+        undoController?.record(currentDesign)
+        refreshUndoRedoButtons()
         applyMainImageFilters(from: backgroundImageFilterSettings)
         updateDesignImage()
     }
 
     func didRequestResetMainImageFilters() {
+        undoController?.record(currentDesign)
+        refreshUndoRedoButtons()
         applyMainImageFilters(from: .default)
         updateDesignImage()
     }
 
     func didRequestResetBackgroundImageFilters() {
+        undoController?.record(currentDesign)
+        refreshUndoRedoButtons()
         applyBackgroundImageFilters(from: .default)
         updateDesignImage()
     }
@@ -2569,11 +2942,15 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
     }
     
     func didChangeBackgroundFlipHorizontal(_ flip: Bool) {
+        undoController?.record(currentDesign)
+        refreshUndoRedoButtons()
         self.backgroundFlipHorizontal = flip
         updateDesignImage()
     }
-    
+
     func didChangeBackgroundFlipVertical(_ flip: Bool) {
+        undoController?.record(currentDesign)
+        refreshUndoRedoButtons()
         self.backgroundFlipVertical = flip
         updateDesignImage()
     }
@@ -2619,6 +2996,8 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
     }
     
     func didChangeBackgroundInvert(_ invert: Bool) {
+        undoController?.record(currentDesign)
+        refreshUndoRedoButtons()
         self.backgroundInvert = invert
         updateDesignImage()
     }
@@ -2875,6 +3254,8 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
         } else {
             fontViewController = FontsViewController(settingsManager: settingsManager) { [weak self] fontName in
                 guard let self else { return }
+                undoController?.record(currentDesign)
+                refreshUndoRedoButtons()
                 settingsManager.preferredFontName = fontName
                 self.fontName = fontName
                 self.updateDesignImage()
@@ -2976,6 +3357,8 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
                 onCancel: onDone,
                 onImagePicked: { [weak self] imageName in
                     guard let self else { return }
+                    undoController?.record(currentDesign)
+                    refreshUndoRedoButtons()
                     self.imageName = imageName
                     self.updateDesignImage()
                     self.updateAllToolbarButtonAppearances()
@@ -2988,6 +3371,8 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
                 onCancel: onDone,
                 onImagePicked: { [weak self] imageName in
                     guard let self else { return }
+                    undoController?.record(currentDesign)
+                    refreshUndoRedoButtons()
                     self.imageName = imageName
                     self.updateDesignImage()
                     self.updateAllToolbarButtonAppearances()
@@ -3048,10 +3433,12 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
         }
 
         if animated {
+            // Detach embedded content before animating width — UICollectionView crashes if its
+            // bounds shrink while visible cells are being updated for the bounds change.
+            removeChild()
             UIView.animate(withDuration: 0.25, animations: {
                 self.view.layoutIfNeeded()
             }, completion: { _ in
-                removeChild()
                 finish()
             })
         } else {
@@ -3083,6 +3470,7 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
         if isEditorBottomPanelVisible, !shouldUseCompactBottomPanel {
             dismissEditorPanel(animated: false)
         }
+        syncCompactBottomPanelSlidersVisibility()
     }
 
     private func toggleEditorPanel(_ panel: EditorPanel) {
@@ -3147,6 +3535,7 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
         )
         updateAllToolbarButtonAppearances()
         becomeFirstResponder()
+        syncCompactBottomPanelSlidersVisibility()
 
         UIView.animate(withDuration: 0.25) {
             self.view.layoutIfNeeded()
@@ -3194,16 +3583,17 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
         let finish = { [weak self] in
             guard let self else { return }
             self.editorBottomPanelContainer.isHidden = true
+            self.syncCompactBottomPanelSlidersVisibility()
             if !self.isLeadingSidebarVisible, !self.isTrailingSidebarVisible, !self.isEditorBottomPanelVisible {
                 self.resignFirstResponder()
             }
         }
 
         if animated {
+            removeChild()
             UIView.animate(withDuration: 0.25, animations: {
                 self.view.layoutIfNeeded()
             }, completion: { _ in
-                removeChild()
                 finish()
             })
         } else {
@@ -3421,10 +3811,10 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
         }
 
         if animated {
+            removeChild()
             UIView.animate(withDuration: 0.25, animations: {
                 self.view.layoutIfNeeded()
             }, completion: { _ in
-                removeChild()
                 finish()
             })
         } else {
@@ -3462,6 +3852,8 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
     }
 
     private func applyPickedBackgroundImage(_ image: UIImage) {
+        undoController?.record(currentDesign)
+        refreshUndoRedoButtons()
         let imageName = UUID().uuidString
         imageService.saveImageToDisk(
             image,
@@ -3527,7 +3919,7 @@ extension EditDesignViewController: AspectRatioPickerDelegate {
             design = d
         }
         embeddedAspectRatioPickerViewController?.selectedCanvasSize = CGSize(width: canvasWidth, height: canvasHeight)
-        keyboardOptionsView.update(with: currentDesign)
+        updateKeyboardOptionsIfNeeded()
         updateDesignImage()
     }
 }
@@ -3565,6 +3957,35 @@ extension EditDesignViewController: FilterStylesViewControllerDelegate {
         didApplyFilterPreset(none)
         lastAppliedPresetID = nil
         refreshFilterStylesSelection()
+    }
+
+    func filterStylesViewController(_ controller: FilterStylesViewController, didChangeTarget target: FilterPresetTarget) {
+        currentFilterTarget = target
+        guard let preset = lastAppliedPreset else { return }
+        undoController?.record(currentDesign)
+        refreshUndoRedoButtons()
+        var updated = currentDesign
+        preset.apply(to: &updated, targetOverride: target, intensity: currentFilterIntensity)
+        applyFilterState(from: updated)
+        updateDesignImage()
+    }
+
+    func filterStylesViewController(_ controller: FilterStylesViewController, didChangeIntensity intensity: CGFloat) {
+        currentFilterIntensity = intensity
+        guard let preset = lastAppliedPreset else { return }
+        var updated = currentDesign
+        preset.apply(to: &updated, targetOverride: currentFilterTarget, intensity: intensity)
+        applyFilterState(from: updated)
+        updateDesignImage()
+    }
+
+    func filterStylesViewControllerWillBeginIntensityDrag(_ controller: FilterStylesViewController) {
+        undoController?.willBeginContinuousEdit(currentDesign: currentDesign)
+    }
+
+    func filterStylesViewControllerDidEndIntensityDrag(_ controller: FilterStylesViewController) {
+        undoController?.didEndContinuousEdit()
+        refreshUndoRedoButtons()
     }
 }
 

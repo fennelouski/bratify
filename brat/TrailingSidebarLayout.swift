@@ -15,7 +15,7 @@ enum TrailingSidebarLayout {
     static let width: CGFloat = 280
     static let minimumWindowWidth: CGFloat = 700
 
-    static let compactPanelHeightFilterStyles: CGFloat = 240
+    static let compactPanelHeightFilterStyles: CGFloat = 320
     static let compactPanelHeightFontPicker: CGFloat = 280
     static let compactPanelHeightAspectRatio: CGFloat = 300
     static let compactPanelHeightBackgroundImage: CGFloat = 320

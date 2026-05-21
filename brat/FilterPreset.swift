@@ -37,6 +37,21 @@ struct FilterPreset: Identifiable {
         }
     }
 
+    func apply(to design: inout Design, targetOverride: FilterPresetTarget? = nil, intensity: CGFloat = 1.0) {
+        let effectiveTarget = targetOverride ?? target
+        let mainSettings = main.map { ImageFilterSettings.default.lerped(toward: $0, amount: intensity) }
+        let bgSettings = background.map { ImageFilterSettings.default.lerped(toward: $0, amount: intensity) }
+        switch effectiveTarget {
+        case .main:
+            if let m = mainSettings { design.applyMainImageFilters(m) }
+        case .background:
+            if let b = bgSettings { design.applyBackgroundImageFilters(b) }
+        case .both:
+            if let m = mainSettings { design.applyMainImageFilters(m) }
+            if let b = bgSettings { design.applyBackgroundImageFilters(b) }
+        }
+    }
+
     private static func settings(_ configure: (inout ImageFilterSettings) -> Void) -> ImageFilterSettings {
         var settings = ImageFilterSettings.default
         configure(&settings)
