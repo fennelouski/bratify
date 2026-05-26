@@ -1013,6 +1013,7 @@ class EditDesignViewController: UIViewController {
         redoBtn.isEnabled = false
         redoBarButton = redoBtn
 
+        navigationItem.leftItemsSupplementBackButton = true
         navigationItem.leftBarButtonItems = [undoBtn, redoBtn]
 
         if let design {
@@ -1060,6 +1061,13 @@ class EditDesignViewController: UIViewController {
         // Setup preview image view
         view.addSubview(previewImageView)
         previewImageView.translatesAutoresizingMaskIntoConstraints = false
+        previewImageView.addSubview(scratchLoadingView)
+        NSLayoutConstraint.activate([
+            scratchLoadingView.topAnchor.constraint(equalTo: previewImageView.topAnchor),
+            scratchLoadingView.leadingAnchor.constraint(equalTo: previewImageView.leadingAnchor),
+            scratchLoadingView.trailingAnchor.constraint(equalTo: previewImageView.trailingAnchor),
+            scratchLoadingView.bottomAnchor.constraint(equalTo: previewImageView.bottomAnchor),
+        ])
         let topSwatchConstraint = previewImageView.topAnchor.constraint(
             equalTo: colorSwatchToggleButton.bottomAnchor,
             constant: .su2
@@ -1660,10 +1668,20 @@ class EditDesignViewController: UIViewController {
     
     private var lastUpdateDate: Date?
     private var pendingImageUpdateWorkItem: DispatchWorkItem?
+    private var accurateRenderWorkItem: DispatchWorkItem?
     private var previewImageGenerationID: UInt64 = 0
     private static var backgroundImageLoadFailedKeys = Set<String>()
+    private var scratchLoadingWorkItem: DispatchWorkItem?
+
+    private lazy var scratchLoadingView: BratScratchLoadingView = {
+        let view = BratScratchLoadingView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
 
     internal func updateDesignImage() {
+        accurateRenderWorkItem?.cancel()
+        accurateRenderWorkItem = nil
         let timeLimit = blur > 1 ? 0.12 : 0.06
         if let lastUpdateDate,
            abs(lastUpdateDate.timeIntervalSinceNow) < timeLimit {
@@ -1685,6 +1703,36 @@ class EditDesignViewController: UIViewController {
         lastUpdateDate = Date()
         previewImageGenerationID += 1
         let generationID = previewImageGenerationID
+
+        let accurateID = generationID
+        let accurateWork = DispatchWorkItem { [weak self] in
+            guard let self else { return }
+            self.currentDesign.generateImage(
+                with: self.imageService,
+                userInterfaceStyle: self.resolvedInterfaceStyle,
+                traitCollection: self.traitCollection,
+                view: self.isViewLoaded ? self.view : nil,
+                bypassCache: true
+            ) { [weak self] image, _ in
+                guard let self,
+                      self.previewImageGenerationID == accurateID,
+                      let image else { return }
+                DispatchQueue.main.async {
+                    guard self.previewImageGenerationID == accurateID else { return }
+                    self.previewImageView.image = image
+                    self.scheduleStylesPreviewUpdate()
+                }
+            }
+        }
+        accurateRenderWorkItem = accurateWork
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: accurateWork)
+
+        scratchLoadingWorkItem?.cancel()
+        let showWork = DispatchWorkItem { [weak self] in
+            self?.scratchLoadingView.startAnimating()
+        }
+        scratchLoadingWorkItem = showWork
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: showWork)
 
         let failedImageKey = imageName
         currentDesign.generateImage(
@@ -1713,11 +1761,17 @@ class EditDesignViewController: UIViewController {
                 return
             }
             if Thread.isMainThread {
+                self.scratchLoadingWorkItem?.cancel()
+                self.scratchLoadingWorkItem = nil
+                self.scratchLoadingView.stopAnimating()
                 self.previewImageView.image = returnedImage
                 self.scheduleStylesPreviewUpdate()
             } else {
                 DispatchQueue.main.async {
                     guard generationID == self.previewImageGenerationID else { return }
+                    self.scratchLoadingWorkItem?.cancel()
+                    self.scratchLoadingWorkItem = nil
+                    self.scratchLoadingView.stopAnimating()
                     self.previewImageView.image = returnedImage
                     self.scheduleStylesPreviewUpdate()
                 }
@@ -2105,8 +2159,7 @@ extension UIImage {
     func scaled(by scale: CGFloat, flipHorizontal: Bool = false, flipVertical: Bool = false) -> UIImage? {
         let size = CGSize(width: self.size.width * scale, height: self.size.height * scale)
         
-        // Opaque context + nearest-neighbor keeps pixel edges sharp (no background bleed).
-        UIGraphicsBeginImageContextWithOptions(size, true, self.scale)
+        UIGraphicsBeginImageContextWithOptions(size, false, self.scale)
         guard let context = UIGraphicsGetCurrentContext() else { return nil }
         
         // Set up transformations

@@ -6,6 +6,7 @@ extension Design {
         userInterfaceStyle requestedStyle: UIUserInterfaceStyle = .unspecified,
         traitCollection: UITraitCollection? = nil,
         view: UIView? = nil,
+        bypassCache: Bool = false,
         onBackgroundImageLoadFailed: (() -> Void)? = nil,
         callback: @escaping (UIImage?, String) -> Void
     ) {
@@ -21,7 +22,8 @@ extension Design {
             view: view
         )
 
-        if let cachedImage = imageService.memoryCache.object(forKey: cacheKey as NSString),
+        if !bypassCache,
+           let cachedImage = imageService.memoryCache.object(forKey: cacheKey as NSString),
            isValidImage(cachedImage, expectedSize: size) {
             callback(cachedImage, cacheKey)
             return
