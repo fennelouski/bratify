@@ -101,6 +101,7 @@ class SettingsManager {
         case eli5Mode
         case themingEnabled
         case macPrimarySlidersVisible
+        case undoStepCount
     }
     
     // Properties with default values and persistence
@@ -891,6 +892,21 @@ class SettingsManager {
         set {
             queue.async(flags: .barrier) {
                 UserDefaults.standard.set(newValue, forKey: UserDefaultsKeys.usesAutomaticDefaultTextColor.rawValue)
+            }
+        }
+    }
+
+    // Min: 5, max: 200. Zero means "not yet set" — treated as the default of 50.
+    var undoStepCount: Int {
+        get {
+            queue.sync {
+                let stored = UserDefaults.standard.integer(forKey: UserDefaultsKeys.undoStepCount.rawValue)
+                return stored == 0 ? 50 : stored
+            }
+        }
+        set {
+            queue.async(flags: .barrier) {
+                UserDefaults.standard.set(newValue, forKey: UserDefaultsKeys.undoStepCount.rawValue)
             }
         }
     }

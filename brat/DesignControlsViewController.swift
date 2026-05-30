@@ -374,6 +374,9 @@ extension DesignControlsViewController: DesignControlsDelegate {
         delegate?.designControlsViewController(self, didUpdateDesign: design)
     }
 
+    func willBeginContinuousEdit() {}
+    func didEndContinuousEdit() {}
+
     func didApplyFilterPreset(_ preset: FilterPreset) {
         preset.apply(to: &design)
         delegate?.designControlsViewController(self, didUpdateDesign: design)

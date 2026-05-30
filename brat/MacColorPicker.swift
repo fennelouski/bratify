@@ -8,6 +8,13 @@ class MacColorPicker {
 
     private init() {}
 
+    private static func keyRootViewController() -> UIViewController? {
+        let scenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+        let scene = scenes.first(where: { $0.activationState == .foregroundActive }) ?? scenes.first
+        let window = scene?.windows.first(where: \.isKeyWindow) ?? scene?.windows.first
+        return window?.rootViewController
+    }
+
     func showColorPicker(initialColor: UIColor, completion: @escaping (UIColor) -> Void) {
         colorPickerDelegate = ColorPickerDelegate(completion: completion)
         #if targetEnvironment(macCatalyst)
@@ -17,7 +24,7 @@ class MacColorPicker {
         MacColorPicker.delegate.completion = completion
         
         // Assuming you have a way to present this color picker from the current context
-        if let rootVC = UIApplication.shared.windows.first?.rootViewController {
+        if let rootVC = Self.keyRootViewController() {
             rootVC.present(colorPicker, animated: true, completion: nil)
         }
         #else
@@ -27,7 +34,7 @@ class MacColorPicker {
         colorPicker.delegate = colorPickerDelegate
         
         // Assuming you have a way to present this color picker from the current context
-        if let rootVC = UIApplication.shared.windows.first?.rootViewController {
+        if let rootVC = Self.keyRootViewController() {
             rootVC.present(colorPicker, animated: true, completion: nil)
         }
         #endif

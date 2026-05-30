@@ -3432,7 +3432,6 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
                     self.imageName = imageName
                     self.updateDesignImage()
                     self.updateAllToolbarButtonAppearances()
-                    onDone()
                 }
             )
         } else {
@@ -3446,7 +3445,6 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
                     self.imageName = imageName
                     self.updateDesignImage()
                     self.updateAllToolbarButtonAppearances()
-                    onDone()
                 }
             )
             embeddedWebImagePickerHostingController = host

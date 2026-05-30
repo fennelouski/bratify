@@ -47,20 +47,6 @@ class SliderTableViewCell: UITableViewCell, Themeable {
         }
     }
 
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        if previousTraitCollection?.userInterfaceIdiom != traitCollection.userInterfaceIdiom {
-            macLayoutInstaller.update(for: traitCollection)
-            if SliderMacRowLayout.isEnabled(for: traitCollection) {
-                slider.setThumbImage(nil, for: .normal)
-                macLayoutInstaller.setIconImage(thumbImage, traitCollection: traitCollection)
-            } else {
-                macIconImageView.isHidden = true
-                slider.setThumbImage(thumbImage, for: .normal)
-            }
-        }
-    }
-
     override init(
         style: UITableViewCell.CellStyle,
         reuseIdentifier: String?
@@ -117,6 +103,20 @@ class SliderTableViewCell: UITableViewCell, Themeable {
             valueLabel: valueLabel,
             infoButton: infoButton
         )
+
+        registerForTraitChanges([UITraitUserInterfaceIdiom.self]) { (self: SliderTableViewCell, previousTraitCollection: UITraitCollection) in
+            guard previousTraitCollection.userInterfaceIdiom != self.traitCollection.userInterfaceIdiom else {
+                return
+            }
+            self.macLayoutInstaller.update(for: self.traitCollection)
+            if SliderMacRowLayout.isEnabled(for: self.traitCollection) {
+                self.slider.setThumbImage(nil, for: .normal)
+                self.macLayoutInstaller.setIconImage(self.thumbImage, traitCollection: self.traitCollection)
+            } else {
+                self.macIconImageView.isHidden = true
+                self.slider.setThumbImage(self.thumbImage, for: .normal)
+            }
+        }
     }
 
     @objc private func infoButtonAction() {

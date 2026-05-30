@@ -67,6 +67,10 @@ class FontCell: UITableViewCell, Themeable {
         ]
         
         NSLayoutConstraint.activate(compactConstraints)
+
+        registerForTraitChanges([UITraitHorizontalSizeClass.self]) { (self: FontCell, _: UITraitCollection) in
+            self.updateForCurrentTraits()
+        }
     }
     
     func configure(
@@ -89,11 +93,6 @@ class FontCell: UITableViewCell, Themeable {
         }
         sampleLabel.font = UIFont(name: fontName, size: .su3)
         apply(theme)
-    }
-    
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        updateForCurrentTraits()
     }
     
     private func updateForCurrentTraits() {

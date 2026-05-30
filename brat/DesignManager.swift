@@ -60,6 +60,10 @@ class DesignManager {
         iCloudFileURL ?? localFileURL
     }
 
+    var activeDirectory: URL {
+        activeFileURL.deletingLastPathComponent()
+    }
+
     // MARK: - Migration
 
     private func migrateLocalToiCloudIfNeeded() {
@@ -136,6 +140,9 @@ class DesignManager {
         }
 
         NotificationCenter.default.post(name: .designsInitialSyncDidComplete, object: nil)
+
+        let knownIDs = Set(designs.map(\.id))
+        DesignUndoHistoryStore.shared.purgeOrphans(keeping: knownIDs)
     }
 
     private func ubiquitousDownloadStatus() -> String? {
@@ -268,6 +275,7 @@ class DesignManager {
         if let index = designs.firstIndex(where: { $0.id == design.id }) {
             designs.remove(at: index)
             saveDesigns(designs)
+            DesignUndoHistoryStore.shared.delete(for: design.id)
         }
     }
 

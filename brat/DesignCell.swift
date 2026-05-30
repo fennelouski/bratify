@@ -45,6 +45,20 @@ class DesignCell: UICollectionViewCell {
     
     private var currentDesign: Design?
     private var imageService: ImageService?
+    private var scratchLoadingWorkItem: DispatchWorkItem?
+
+    private lazy var scratchLoadingView: BratScratchLoadingView = {
+        let view = BratScratchLoadingView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        imageView.addSubview(view)
+        NSLayoutConstraint.activate([
+            view.topAnchor.constraint(equalTo: imageView.topAnchor),
+            view.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
+            view.trailingAnchor.constraint(equalTo: imageView.trailingAnchor),
+            view.bottomAnchor.constraint(equalTo: imageView.bottomAnchor),
+        ])
+        return view
+    }()
 
     private lazy var errorOverlay: UIView = {
         let overlay = UIView()
@@ -132,6 +146,13 @@ class DesignCell: UICollectionViewCell {
         if let cachedImage = imageService.memoryCache.object(forKey: cacheKey as NSString) {
             imageView.image = cachedImage
         } else {
+            scratchLoadingWorkItem?.cancel()
+            let showWork = DispatchWorkItem { [weak self] in
+                self?.scratchLoadingView.startAnimating()
+            }
+            scratchLoadingWorkItem = showWork
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: showWork)
+
             design.generateImage(
                 with: imageService,
                 userInterfaceStyle: interfaceStyle,
@@ -148,17 +169,26 @@ class DesignCell: UICollectionViewCell {
                     return  // stale result for a recycled cell
                 }
                 guard let generatedImage else {
-                    DispatchQueue.main.async { [weak self] in self?.showErrorOverlay() }
+                    DispatchQueue.main.async { [weak self] in
+                        self?.scratchLoadingWorkItem?.cancel()
+                        self?.scratchLoadingWorkItem = nil
+                        self?.scratchLoadingView.stopAnimating(animated: false)
+                        self?.showErrorOverlay()
+                    }
                     return
                 }
-                
+
                 if Thread.isMainThread {
+                    scratchLoadingWorkItem?.cancel()
+                    scratchLoadingWorkItem = nil
+                    scratchLoadingView.stopAnimating()
                     imageView.image = generatedImage
                 } else {
                     DispatchQueue.main.async { [weak self] in
-                        guard let self else {
-                            return
-                        }
+                        guard let self else { return }
+                        scratchLoadingWorkItem?.cancel()
+                        scratchLoadingWorkItem = nil
+                        scratchLoadingView.stopAnimating()
                         imageView.image = generatedImage
                     }
                 }
@@ -168,6 +198,9 @@ class DesignCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        scratchLoadingWorkItem?.cancel()
+        scratchLoadingWorkItem = nil
+        scratchLoadingView.stopAnimating(animated: false)
         imageView.image = nil
         currentDesign = nil
         imageService = nil

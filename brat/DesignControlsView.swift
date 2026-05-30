@@ -60,7 +60,10 @@ protocol DesignControlsDelegate: AnyObject {
     func didRequestCopyBackgroundFiltersToMain()
     func didRequestResetMainImageFilters()
     func didRequestResetBackgroundImageFilters()
-    
+
+    func willBeginContinuousEdit()
+    func didEndContinuousEdit()
+
     var currentDesign: Design { get }
 }
 
@@ -275,6 +278,8 @@ extension DesignControlsView: UITableViewDelegate, UITableViewDataSource {
                 cell.valueChanged = { [weak self] newValue in
                     self?.handleSliderChange(for: row, value: newValue)
                 }
+                cell.sliderBegan = { [weak self] in self?.delegate?.willBeginContinuousEdit() }
+                cell.sliderEnded = { [weak self] in self?.delegate?.didEndContinuousEdit() }
                 cell.infoButtonTapped = { [weak self] in
                     self?.showELI5Toast(for: text)
                 }
@@ -318,6 +323,8 @@ extension DesignControlsView: UITableViewDelegate, UITableViewDataSource {
                 cell.valueChanged = { [weak self] newValue in
                     self?.handleSliderChange(for: row, value: newValue)
                 }
+                cell.sliderBegan = { [weak self] in self?.delegate?.willBeginContinuousEdit() }
+                cell.sliderEnded = { [weak self] in self?.delegate?.didEndContinuousEdit() }
                 cell.infoButtonTapped = { [weak self] in
                     self?.showELI5Toast(for: text)
                 }
@@ -745,6 +752,8 @@ class ControlSliderTableViewCell: UITableViewCell {
     var valueLabel: UILabel!
     var mode: Mode = .unknown
     var valueChanged: ((Float) -> Void)?
+    var sliderBegan: (() -> Void)?
+    var sliderEnded: (() -> Void)?
     var infoButtonTapped: (() -> Void)?
 
     private let infoButton = UIButton(type: .system)
@@ -768,20 +777,6 @@ class ControlSliderTableViewCell: UITableViewCell {
             if SliderMacRowLayout.isEnabled(for: traitCollection) {
                 macLayoutInstaller.setIconImage(thumbImage, traitCollection: traitCollection)
             } else {
-                slider.setThumbImage(thumbImage, for: .normal)
-            }
-        }
-    }
-
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        if previousTraitCollection?.userInterfaceIdiom != traitCollection.userInterfaceIdiom {
-            macLayoutInstaller.update(for: traitCollection)
-            if SliderMacRowLayout.isEnabled(for: traitCollection) {
-                slider.setThumbImage(nil, for: .normal)
-                macLayoutInstaller.setIconImage(thumbImage, traitCollection: traitCollection)
-            } else {
-                macIconImageView.isHidden = true
                 slider.setThumbImage(thumbImage, for: .normal)
             }
         }
@@ -824,11 +819,9 @@ class ControlSliderTableViewCell: UITableViewCell {
 
         slider = UISlider()
         slider.translatesAutoresizingMaskIntoConstraints = false
-        slider.addTarget(
-            self,
-            action: #selector(sliderValueChanged(_:)),
-            for: .valueChanged
-        )
+        slider.addTarget(self, action: #selector(sliderValueChanged(_:)), for: .valueChanged)
+        slider.addTarget(self, action: #selector(sliderTouchDown), for: .touchDown)
+        slider.addTarget(self, action: #selector(sliderTouchUp), for: [.touchUpInside, .touchUpOutside, .touchCancel])
         slider.accessibilityLabel = NSLocalizedString("Slider", comment: "Slider")
         contentView.addSubview(slider)
 
@@ -855,6 +848,20 @@ class ControlSliderTableViewCell: UITableViewCell {
         let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap(_:)))
         doubleTapRecognizer.numberOfTapsRequired = 2
         contentView.addGestureRecognizer(doubleTapRecognizer)
+
+        registerForTraitChanges([UITraitUserInterfaceIdiom.self]) { (self: ControlSliderTableViewCell, previousTraitCollection: UITraitCollection) in
+            guard previousTraitCollection.userInterfaceIdiom != self.traitCollection.userInterfaceIdiom else {
+                return
+            }
+            self.macLayoutInstaller.update(for: self.traitCollection)
+            if SliderMacRowLayout.isEnabled(for: self.traitCollection) {
+                self.slider.setThumbImage(nil, for: .normal)
+                self.macLayoutInstaller.setIconImage(self.thumbImage, traitCollection: self.traitCollection)
+            } else {
+                self.macIconImageView.isHidden = true
+                self.slider.setThumbImage(self.thumbImage, for: .normal)
+            }
+        }
     }
 
     @objc private func infoButtonAction() {
@@ -873,6 +880,8 @@ class ControlSliderTableViewCell: UITableViewCell {
         showInfoButton: Bool = false
     ) {
         valueChanged = nil
+        sliderBegan = nil
+        sliderEnded = nil
         infoButtonTapped = nil
         self.showInfoButton = showInfoButton
         label.text = text.localizedLowercase
@@ -886,6 +895,9 @@ class ControlSliderTableViewCell: UITableViewCell {
         apply(theme)
     }
     
+    @objc private func sliderTouchDown() { sliderBegan?() }
+    @objc private func sliderTouchUp() { sliderEnded?() }
+
     @objc private func sliderValueChanged(_ sender: UISlider) {
         switch mode {
         case .alpha:

@@ -2,31 +2,31 @@
   {
     "attachments" : [
       {
-        "configurationName" : "Test Scheme Action",
+        "configurationName" : "Configuration 1",
         "deviceId" : "BA67541E-EB71-4D24-A766-4048DAF15E29",
         "deviceName" : "iPhone 17 Pro Max",
-        "exportedFileName" : "7EC0E5BE-FD38-48A1-AE42-7B4713F9607E.png",
+        "exportedFileName" : "FF786D12-DCD4-4C29-82DA-CC1C0DDF02C7.png",
         "isAssociatedWithFailure" : false,
-        "suggestedHumanReadableName" : "03_settings_0_02EAB5F6-4FA9-4BC4-AB9A-89BB798F1E7B.png",
-        "timestamp" : 1779029262.087
+        "suggestedHumanReadableName" : "03_settings_0_C3A9368B-0A9F-4926-9B10-EF6E915F433E.png",
+        "timestamp" : 1779866085.818
       },
       {
-        "configurationName" : "Test Scheme Action",
+        "configurationName" : "Configuration 1",
         "deviceId" : "BA67541E-EB71-4D24-A766-4048DAF15E29",
         "deviceName" : "iPhone 17 Pro Max",
-        "exportedFileName" : "9157C135-C10A-436B-A230-69721DEA9308.png",
+        "exportedFileName" : "F8628D62-0768-4851-B007-FE390FB85F44.png",
         "isAssociatedWithFailure" : false,
-        "suggestedHumanReadableName" : "02_editor_0_4EEE8906-ED5E-4C58-BB86-699D3A68B872.png",
-        "timestamp" : 1779029257.956
+        "suggestedHumanReadableName" : "02_editor_0_ED9A92A0-A398-47B5-9DA0-E2517F705014.png",
+        "timestamp" : 1779866082.329
       },
       {
-        "configurationName" : "Test Scheme Action",
+        "configurationName" : "Configuration 1",
         "deviceId" : "BA67541E-EB71-4D24-A766-4048DAF15E29",
         "deviceName" : "iPhone 17 Pro Max",
-        "exportedFileName" : "158534FF-AB1D-4215-AB0B-ADBFA681900F.png",
+        "exportedFileName" : "E2C6C4A1-C72C-4A95-B114-060104B667AF.png",
         "isAssociatedWithFailure" : false,
-        "suggestedHumanReadableName" : "01_main_0_285E426F-7FB7-464E-A225-EC0E52424F13.png",
-        "timestamp" : 1779029252.896
+        "suggestedHumanReadableName" : "01_main_0_52AFCF4A-5DB7-4E52-B736-5149CB6AF7B4.png",
+        "timestamp" : 1779866078.251
       }
     ],
     "testIdentifier" : "ScreenshotTests/testCaptureScreenshots()",

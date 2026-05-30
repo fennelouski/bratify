@@ -16,14 +16,9 @@
 		807A4F462C52DAFE009ED2FD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 807A4F452C52DAFE009ED2FD /* Assets.xcassets */; };
 		807A4F482C52DAFE009ED2FD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 807A4F472C52DAFE009ED2FD /* LaunchScreen.storyboard */; };
 		807A4F542C52DAFE009ED2FD /* bratTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F532C52DAFE009ED2FD /* bratTests.swift */; };
-		E1BEE00000000002CAFECAFE /* DesignManagerMergeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BEE00000000001CAFECAFE /* DesignManagerMergeTests.swift */; };
 		807A4F5E2C52DAFE009ED2FD /* bratUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F5D2C52DAFE009ED2FD /* bratUITests.swift */; };
 		807A4F602C52DAFE009ED2FD /* bratUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F5F2C52DAFE009ED2FD /* bratUITestsLaunchTests.swift */; };
-		E1FACADE00000002CAFECAFE /* ScreenshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1FACADE00000001CAFECAFE /* ScreenshotTests.swift */; };
-		E1FACADE00000004CAFECAFE /* WebImagePickerUIAccessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1FACADE00000003CAFECAFE /* WebImagePickerUIAccessibility.swift */; };
 		807A4F6D2C52DB11009ED2FD /* Design.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F6C2C52DB11009ED2FD /* Design.swift */; };
-		E2TEXT00000000002CAFECAFE /* DesignTextColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2TEXT00000000001CAFECAFE /* DesignTextColor.swift */; };
-		E2TEXT00000000004CAFECAFE /* DesignTextColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2TEXT00000000003CAFECAFE /* DesignTextColorTests.swift */; };
 		807A4F6F2C52DB26009ED2FD /* EditDesignViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F6E2C52DB26009ED2FD /* EditDesignViewController.swift */; };
 		807A4F712C52DBC2009ED2FD /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F702C52DBC2009ED2FD /* SettingsManager.swift */; };
 		807A4F732C52DBCF009ED2FD /* ThemeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F722C52DBCF009ED2FD /* ThemeModel.swift */; };
@@ -50,9 +45,6 @@
 		807A4F9D2C52DC6F009ED2FD /* UIDevice+Admin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F9C2C52DC6F009ED2FD /* UIDevice+Admin.swift */; };
 		807A4F9F2C52DC72009ED2FD /* UIDevice+Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F9E2C52DC72009ED2FD /* UIDevice+Keyboard.swift */; };
 		807A4FA12C52DC82009ED2FD /* SliderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4FA02C52DC82009ED2FD /* SliderTableViewCell.swift */; };
-		80B2C3D42E8A100100A1B2C3 /* SliderMacRowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B2C3D32E8A100100A1B2C3 /* SliderMacRowLayout.swift */; };
-		80B2C3D62E8A100200A1B2C3 /* TrailingSidebarLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B2C3D52E8A100200A1B2C3 /* TrailingSidebarLayout.swift */; };
-		80B2C3D82E8A100300A1B2C3 /* BackgroundImagePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B2C3D72E8A100300A1B2C3 /* BackgroundImagePickerViewController.swift */; };
 		807A4FA32C52DC8A009ED2FD /* TextFieldTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4FA22C52DC8A009ED2FD /* TextFieldTableViewCell.swift */; };
 		807A4FA52C52DC8D009ED2FD /* SwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4FA42C52DC8D009ED2FD /* SwitchTableViewCell.swift */; };
 		807A4FA72C52DCA0009ED2FD /* KeyboardObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4FA62C52DCA0009ED2FD /* KeyboardObserver.swift */; };
@@ -83,29 +75,44 @@
 		8084C0DF2C5D790D00EA453C /* AspectRatioTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8084C0DE2C5D790D00EA453C /* AspectRatioTableViewCell.swift */; };
 		8084C0E12C5D7C9D00EA453C /* DesignControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8084C0E02C5D7C9D00EA453C /* DesignControlsView.swift */; };
 		8084C0E32C5D7F3A00EA453C /* DesignControlsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8084C0E22C5D7F3A00EA453C /* DesignControlsViewController.swift */; };
+		80B2C3D42E8A100100A1B2C3 /* SliderMacRowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B2C3D32E8A100100A1B2C3 /* SliderMacRowLayout.swift */; };
+		80B2C3D62E8A100200A1B2C3 /* TrailingSidebarLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B2C3D52E8A100200A1B2C3 /* TrailingSidebarLayout.swift */; };
+		80B2C3D82E8A100300A1B2C3 /* BackgroundImagePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B2C3D72E8A100300A1B2C3 /* BackgroundImagePickerViewController.swift */; };
 		80F4589B2C61D3160039C385 /* UIImage+Filters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F4589A2C61D3160039C385 /* UIImage+Filters.swift */; };
-		E3FLT00000000002CAFECAFE /* ImageFilterSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT00000000001CAFECAFE /* ImageFilterSettings.swift */; };
-		E3FLT00000000004CAFECAFE /* FilterPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT00000000003CAFECAFE /* FilterPreset.swift */; };
-		E3FLT00000000006CAFECAFE /* FilterPresetPickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT00000000005CAFECAFE /* FilterPresetPickerCell.swift */; };
-		E3FLT0000000000BCAFECAFE /* FilterPresetPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT0000000000ACAFECAFE2 /* FilterPresetPickerView.swift */; };
-		E3FLT0000000000ECAFECAFE /* FilterPresetCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT0000000000DCAFECAFE2 /* FilterPresetCardCell.swift */; };
-		E3FLT0000000000FCAFECAFE /* FilterPresetPreviewProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT0000000000FCAFECAFE2 /* FilterPresetPreviewProvider.swift */; };
-		E3FLT0000000000DCAFECAFE /* FilterStylesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT0000000000CCAFECAFE /* FilterStylesViewController.swift */; };
-		E3FLT00000000008CAFECAFE /* DesignFilterStateSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT00000000007CAFECAFE /* DesignFilterStateSync.swift */; };
-		E3FLT0000000000ACAFECAFE /* ImageFilterSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT00000000009CAFECAFE /* ImageFilterSettingsTests.swift */; };
 		80F4589D2C61E2EB0039C385 /* AspectRatioPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F4589C2C61E2EB0039C385 /* AspectRatioPickerViewController.swift */; };
 		80F4589F2C61EA860039C385 /* AspectRatioCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F4589E2C61EA860039C385 /* AspectRatioCell.swift */; };
-		E3AR000000000002CAFECAFE /* CanvasDimensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AR000000000001CAFECAFE /* CanvasDimensions.swift */; };
-		E3AR000000000004CAFECAFE /* AspectRatioPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AR000000000003CAFECAFE /* AspectRatioPreset.swift */; };
-		E3PLAT00000000002CAFECAFE /* PlatformBrandIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3PLAT00000000001CAFECAFE /* PlatformBrandIcon.swift */; };
-		E3AR000000000006CAFECAFE /* CanvasDimensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AR000000000005CAFECAFE /* CanvasDimensionsTests.swift */; };
-		E3TSID00000000002CAFECAFE /* TrailingSidebarLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3TSID00000000001CAFECAFE /* TrailingSidebarLayoutTests.swift */; };
 		925F684140994FD3AD3B7D60 /* SettingsCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE14DE7D5E14A4DBE2A0D54 /* SettingsCategoryViewController.swift */; };
 		9722DC6688F841DA989ECAB0 /* UIColor+Contrast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E82833F48124901B68E8882 /* UIColor+Contrast.swift */; };
 		A1B2C3D4E5F60001A1B2C3D4 /* MasonryLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002A1B2C3D4 /* MasonryLayout.swift */; };
 		D70253BCFDB04392B29043BB /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA541FEB83A43E197403C21 /* ToastView.swift */; };
+		E45C8A0000000002CAFECAFE /* BratScratchLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E45C8A0000000001CAFECAFE /* BratScratchLoadingView.swift */; };
+		E1BEE00000000002CAFECAFE /* DesignManagerMergeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BEE00000000001CAFECAFE /* DesignManagerMergeTests.swift */; };
+		E1FACADE00000002CAFECAFE /* ScreenshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1FACADE00000001CAFECAFE /* ScreenshotTests.swift */; };
+		E1FACADE00000004CAFECAFE /* WebImagePickerUIAccessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1FACADE00000003CAFECAFE /* WebImagePickerUIAccessibility.swift */; };
+		E2TEXT00000000002CAFECAFE /* DesignTextColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2TEXT00000000001CAFECAFE /* DesignTextColor.swift */; };
+		E2TEXT00000000004CAFECAFE /* DesignTextColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2TEXT00000000003CAFECAFE /* DesignTextColorTests.swift */; };
+		E3AR000000000002CAFECAFE /* CanvasDimensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AR000000000001CAFECAFE /* CanvasDimensions.swift */; };
+		E3AR000000000004CAFECAFE /* AspectRatioPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AR000000000003CAFECAFE /* AspectRatioPreset.swift */; };
+		E3AR000000000006CAFECAFE /* CanvasDimensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AR000000000005CAFECAFE /* CanvasDimensionsTests.swift */; };
+		E3FLT00000000002CAFECAFE /* ImageFilterSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT00000000001CAFECAFE /* ImageFilterSettings.swift */; };
+		E3FLT00000000004CAFECAFE /* FilterPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT00000000003CAFECAFE /* FilterPreset.swift */; };
+		E3FLT00000000006CAFECAFE /* FilterPresetPickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT00000000005CAFECAFE /* FilterPresetPickerCell.swift */; };
+		E3FLT00000000008CAFECAFE /* DesignFilterStateSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT00000000007CAFECAFE /* DesignFilterStateSync.swift */; };
+		E3FLT0000000000ACAFECAFE /* ImageFilterSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT00000000009CAFECAFE /* ImageFilterSettingsTests.swift */; };
+		E3FLT0000000000BCAFECAFE /* FilterPresetPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT0000000000ACAFECAFE2 /* FilterPresetPickerView.swift */; };
+		E3FLT0000000000DCAFECAFE /* FilterStylesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT0000000000CCAFECAFE /* FilterStylesViewController.swift */; };
+		E3FLT0000000000ECAFECAFE /* FilterPresetCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT0000000000DCAFECAFE2 /* FilterPresetCardCell.swift */; };
+		E3FLT0000000000FCAFECAFE /* FilterPresetPreviewProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT0000000000FCAFECAFE2 /* FilterPresetPreviewProvider.swift */; };
+		E3PLAT00000000002CAFECAFE /* PlatformBrandIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3PLAT00000000001CAFECAFE /* PlatformBrandIcon.swift */; };
+		E3TSID00000000002CAFECAFE /* TrailingSidebarLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3TSID00000000001CAFECAFE /* TrailingSidebarLayoutTests.swift */; };
 		E8F1A1002E5B100012340002 /* WebImageImportPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F1A1002E5B100012340001 /* WebImageImportPresenter.swift */; };
 		E8F1A1002E5B100012340003 /* WebImagePicker in Frameworks */ = {isa = PBXBuildFile; productRef = E8F1A1002E5B100012340005 /* WebImagePicker */; };
+		E3UNDO00000000002CAFECAFE /* DesignUndoHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3UNDO00000000001CAFECAFE /* DesignUndoHistory.swift */; };
+		E3UNDO00000000004CAFECAFE /* DesignUndoHistoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3UNDO00000000003CAFECAFE /* DesignUndoHistoryStore.swift */; };
+		E3UNDO00000000006CAFECAFE /* DesignUndoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3UNDO00000000005CAFECAFE /* DesignUndoController.swift */; };
+		E3UNDO00000000008CAFECAFE /* NonUndoableTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3UNDO00000000007CAFECAFE /* NonUndoableTextView.swift */; };
+		E3UNDO0000000000ACAFECAFE /* UndoControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3UNDO00000000009CAFECAFE /* UndoControllerTests.swift */; };
+		E3UNDO0000000000CCAFECAFE /* DesignUndoHistoryStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3UNDO0000000000BCAFECAFE /* DesignUndoHistoryStoreTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -149,15 +156,10 @@
 		807A4F4A2C52DAFE009ED2FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		807A4F4F2C52DAFE009ED2FD /* bratTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = bratTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		807A4F532C52DAFE009ED2FD /* bratTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bratTests.swift; sourceTree = "<group>"; };
-		E1BEE00000000001CAFECAFE /* DesignManagerMergeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignManagerMergeTests.swift; sourceTree = "<group>"; };
 		807A4F592C52DAFE009ED2FD /* bratUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = bratUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		807A4F5D2C52DAFE009ED2FD /* bratUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bratUITests.swift; sourceTree = "<group>"; };
 		807A4F5F2C52DAFE009ED2FD /* bratUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bratUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		E1FACADE00000001CAFECAFE /* ScreenshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotTests.swift; sourceTree = "<group>"; };
-		E1FACADE00000003CAFECAFE /* WebImagePickerUIAccessibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImagePickerUIAccessibility.swift; sourceTree = "<group>"; };
 		807A4F6C2C52DB11009ED2FD /* Design.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Design.swift; sourceTree = "<group>"; };
-		E2TEXT00000000001CAFECAFE /* DesignTextColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignTextColor.swift; sourceTree = "<group>"; };
-		E2TEXT00000000003CAFECAFE /* DesignTextColorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignTextColorTests.swift; sourceTree = "<group>"; };
 		807A4F6E2C52DB26009ED2FD /* EditDesignViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditDesignViewController.swift; sourceTree = "<group>"; };
 		807A4F702C52DBC2009ED2FD /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
 		807A4F722C52DBCF009ED2FD /* ThemeModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeModel.swift; sourceTree = "<group>"; };
@@ -184,9 +186,6 @@
 		807A4F9C2C52DC6F009ED2FD /* UIDevice+Admin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+Admin.swift"; sourceTree = "<group>"; };
 		807A4F9E2C52DC72009ED2FD /* UIDevice+Keyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+Keyboard.swift"; sourceTree = "<group>"; };
 		807A4FA02C52DC82009ED2FD /* SliderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SliderTableViewCell.swift; sourceTree = "<group>"; };
-		80B2C3D32E8A100100A1B2C3 /* SliderMacRowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SliderMacRowLayout.swift; sourceTree = "<group>"; };
-		80B2C3D52E8A100200A1B2C3 /* TrailingSidebarLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrailingSidebarLayout.swift; sourceTree = "<group>"; };
-		80B2C3D72E8A100300A1B2C3 /* BackgroundImagePickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundImagePickerViewController.swift; sourceTree = "<group>"; };
 		807A4FA22C52DC8A009ED2FD /* TextFieldTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldTableViewCell.swift; sourceTree = "<group>"; };
 		807A4FA42C52DC8D009ED2FD /* SwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCell.swift; sourceTree = "<group>"; };
 		807A4FA62C52DCA0009ED2FD /* KeyboardObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardObserver.swift; sourceTree = "<group>"; };
@@ -218,27 +217,42 @@
 		8084C0DE2C5D790D00EA453C /* AspectRatioTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectRatioTableViewCell.swift; sourceTree = "<group>"; };
 		8084C0E02C5D7C9D00EA453C /* DesignControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignControlsView.swift; sourceTree = "<group>"; };
 		8084C0E22C5D7F3A00EA453C /* DesignControlsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignControlsViewController.swift; sourceTree = "<group>"; };
+		80B2C3D32E8A100100A1B2C3 /* SliderMacRowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SliderMacRowLayout.swift; sourceTree = "<group>"; };
+		80B2C3D52E8A100200A1B2C3 /* TrailingSidebarLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrailingSidebarLayout.swift; sourceTree = "<group>"; };
+		80B2C3D72E8A100300A1B2C3 /* BackgroundImagePickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundImagePickerViewController.swift; sourceTree = "<group>"; };
 		80F4589A2C61D3160039C385 /* UIImage+Filters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Filters.swift"; sourceTree = "<group>"; };
+		80F4589C2C61E2EB0039C385 /* AspectRatioPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectRatioPickerViewController.swift; sourceTree = "<group>"; };
+		80F4589E2C61EA860039C385 /* AspectRatioCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectRatioCell.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F60002A1B2C3D4 /* MasonryLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasonryLayout.swift; sourceTree = "<group>"; };
+		CFA541FEB83A43E197403C21 /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
+		E45C8A0000000001CAFECAFE /* BratScratchLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BratScratchLoadingView.swift; sourceTree = "<group>"; };
+		E1BEE00000000001CAFECAFE /* DesignManagerMergeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignManagerMergeTests.swift; sourceTree = "<group>"; };
+		E1FACADE00000001CAFECAFE /* ScreenshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotTests.swift; sourceTree = "<group>"; };
+		E1FACADE00000003CAFECAFE /* WebImagePickerUIAccessibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImagePickerUIAccessibility.swift; sourceTree = "<group>"; };
+		E2TEXT00000000001CAFECAFE /* DesignTextColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignTextColor.swift; sourceTree = "<group>"; };
+		E2TEXT00000000003CAFECAFE /* DesignTextColorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignTextColorTests.swift; sourceTree = "<group>"; };
+		E3AR000000000001CAFECAFE /* CanvasDimensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasDimensions.swift; sourceTree = "<group>"; };
+		E3AR000000000003CAFECAFE /* AspectRatioPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectRatioPreset.swift; sourceTree = "<group>"; };
+		E3AR000000000005CAFECAFE /* CanvasDimensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasDimensionsTests.swift; sourceTree = "<group>"; };
 		E3FLT00000000001CAFECAFE /* ImageFilterSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFilterSettings.swift; sourceTree = "<group>"; };
 		E3FLT00000000003CAFECAFE /* FilterPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterPreset.swift; sourceTree = "<group>"; };
 		E3FLT00000000005CAFECAFE /* FilterPresetPickerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterPresetPickerCell.swift; sourceTree = "<group>"; };
-		E3FLT0000000000ACAFECAFE2 /* FilterPresetPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterPresetPickerView.swift; sourceTree = "<group>"; };
-		E3FLT0000000000DCAFECAFE2 /* FilterPresetCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterPresetCardCell.swift; sourceTree = "<group>"; };
-		E3FLT0000000000FCAFECAFE2 /* FilterPresetPreviewProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterPresetPreviewProvider.swift; sourceTree = "<group>"; };
-		E3FLT0000000000CCAFECAFE /* FilterStylesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterStylesViewController.swift; sourceTree = "<group>"; };
 		E3FLT00000000007CAFECAFE /* DesignFilterStateSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignFilterStateSync.swift; sourceTree = "<group>"; };
 		E3FLT00000000009CAFECAFE /* ImageFilterSettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFilterSettingsTests.swift; sourceTree = "<group>"; };
-		80F4589C2C61E2EB0039C385 /* AspectRatioPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectRatioPickerViewController.swift; sourceTree = "<group>"; };
-		80F4589E2C61EA860039C385 /* AspectRatioCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectRatioCell.swift; sourceTree = "<group>"; };
-		E3AR000000000001CAFECAFE /* CanvasDimensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasDimensions.swift; sourceTree = "<group>"; };
-		E3AR000000000003CAFECAFE /* AspectRatioPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectRatioPreset.swift; sourceTree = "<group>"; };
+		E3FLT0000000000ACAFECAFE2 /* FilterPresetPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterPresetPickerView.swift; sourceTree = "<group>"; };
+		E3FLT0000000000CCAFECAFE /* FilterStylesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterStylesViewController.swift; sourceTree = "<group>"; };
+		E3FLT0000000000DCAFECAFE2 /* FilterPresetCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterPresetCardCell.swift; sourceTree = "<group>"; };
+		E3FLT0000000000FCAFECAFE2 /* FilterPresetPreviewProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterPresetPreviewProvider.swift; sourceTree = "<group>"; };
 		E3PLAT00000000001CAFECAFE /* PlatformBrandIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformBrandIcon.swift; sourceTree = "<group>"; };
-		E3AR000000000005CAFECAFE /* CanvasDimensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasDimensionsTests.swift; sourceTree = "<group>"; };
 		E3TSID00000000001CAFECAFE /* TrailingSidebarLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailingSidebarLayoutTests.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60002A1B2C3D4 /* MasonryLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasonryLayout.swift; sourceTree = "<group>"; };
-		CFA541FEB83A43E197403C21 /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 		E8F1A1002E5B100012340001 /* WebImageImportPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageImportPresenter.swift; sourceTree = "<group>"; };
 		FEE14DE7D5E14A4DBE2A0D54 /* SettingsCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCategoryViewController.swift; sourceTree = "<group>"; };
+		E3UNDO00000000001CAFECAFE /* DesignUndoHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignUndoHistory.swift; sourceTree = "<group>"; };
+		E3UNDO00000000003CAFECAFE /* DesignUndoHistoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignUndoHistoryStore.swift; sourceTree = "<group>"; };
+		E3UNDO00000000005CAFECAFE /* DesignUndoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignUndoController.swift; sourceTree = "<group>"; };
+		E3UNDO00000000007CAFECAFE /* NonUndoableTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NonUndoableTextView.swift; sourceTree = "<group>"; };
+		E3UNDO00000000009CAFECAFE /* UndoControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UndoControllerTests.swift; sourceTree = "<group>"; };
+		E3UNDO0000000000BCAFECAFE /* DesignUndoHistoryStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignUndoHistoryStoreTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -318,6 +332,7 @@
 				E3FLT0000000000CCAFECAFE /* FilterStylesViewController.swift */,
 				E3FLT00000000007CAFECAFE /* DesignFilterStateSync.swift */,
 				CFA541FEB83A43E197403C21 /* ToastView.swift */,
+				E45C8A0000000001CAFECAFE /* BratScratchLoadingView.swift */,
 				8084C0E02C5D7C9D00EA453C /* DesignControlsView.swift */,
 				807A4FBA2C52DE82009ED2FD /* DesignManager.swift */,
 				807A4F702C52DBC2009ED2FD /* SettingsManager.swift */,
@@ -376,6 +391,10 @@
 				807A4FC42C52FC10009ED2FD /* ImageService.swift */,
 				807A4FC62C52FC10009ED2FD /* ImageURLs.swift */,
 				E8F1A1002E5B100012340001 /* WebImageImportPresenter.swift */,
+				E3UNDO00000000001CAFECAFE /* DesignUndoHistory.swift */,
+				E3UNDO00000000003CAFECAFE /* DesignUndoHistoryStore.swift */,
+				E3UNDO00000000005CAFECAFE /* DesignUndoController.swift */,
+				E3UNDO00000000007CAFECAFE /* NonUndoableTextView.swift */,
 				807A4F422C52DAFD009ED2FD /* Main.storyboard */,
 				807A4F452C52DAFE009ED2FD /* Assets.xcassets */,
 				807A4F472C52DAFE009ED2FD /* LaunchScreen.storyboard */,
@@ -393,6 +412,8 @@
 				E3FLT00000000009CAFECAFE /* ImageFilterSettingsTests.swift */,
 				E3AR000000000005CAFECAFE /* CanvasDimensionsTests.swift */,
 				E3TSID00000000001CAFECAFE /* TrailingSidebarLayoutTests.swift */,
+				E3UNDO00000000009CAFECAFE /* UndoControllerTests.swift */,
+				E3UNDO0000000000BCAFECAFE /* DesignUndoHistoryStoreTests.swift */,
 			);
 			path = bratTests;
 			sourceTree = "<group>";
@@ -568,7 +589,7 @@
 			);
 			mainGroup = 807A4F302C52DAFD009ED2FD;
 			packageReferences = (
-				E8F1A1002E5B100012340004 /* XCLocalSwiftPackageReference "Packages/WebImagePicker" */,
+				E8F1A1002E5B100012340004 /* XCRemoteSwiftPackageReference "SwiftUI-Web-Image-Picker" */,
 			);
 			productRefGroup = 807A4F3A2C52DAFD009ED2FD /* Products */;
 			projectDirPath = "";
@@ -644,6 +665,7 @@
 				E3FLT0000000000DCAFECAFE /* FilterStylesViewController.swift in Sources */,
 				E3FLT00000000008CAFECAFE /* DesignFilterStateSync.swift in Sources */,
 				D70253BCFDB04392B29043BB /* ToastView.swift in Sources */,
+				E45C8A0000000002CAFECAFE /* BratScratchLoadingView.swift in Sources */,
 				807A4FCD2C535C20009ED2FD /* KeyboardOptionsView.swift in Sources */,
 				807A4FA52C52DC8D009ED2FD /* SwitchTableViewCell.swift in Sources */,
 				807A4FCA2C52FC10009ED2FD /* ImageURLs.swift in Sources */,
@@ -698,6 +720,10 @@
 				80F4589D2C61E2EB0039C385 /* AspectRatioPickerViewController.swift in Sources */,
 				807A4FD82C53F843009ED2FD /* CustomColorPickerViewController.swift in Sources */,
 				E8F1A1002E5B100012340002 /* WebImageImportPresenter.swift in Sources */,
+				E3UNDO00000000002CAFECAFE /* DesignUndoHistory.swift in Sources */,
+				E3UNDO00000000004CAFECAFE /* DesignUndoHistoryStore.swift in Sources */,
+				E3UNDO00000000006CAFECAFE /* DesignUndoController.swift in Sources */,
+				E3UNDO00000000008CAFECAFE /* NonUndoableTextView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -711,6 +737,8 @@
 				E3FLT0000000000ACAFECAFE /* ImageFilterSettingsTests.swift in Sources */,
 				E3AR000000000006CAFECAFE /* CanvasDimensionsTests.swift in Sources */,
 				E3TSID00000000002CAFECAFE /* TrailingSidebarLayoutTests.swift in Sources */,
+				E3UNDO0000000000ACAFECAFE /* UndoControllerTests.swift in Sources */,
+				E3UNDO0000000000CCAFECAFE /* DesignUndoHistoryStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -898,7 +926,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = brat/brat.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = EJLR2RPSV2;
 				GENERATE_APP_INTENTS_METADATA = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -917,7 +945,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2;
+				MARKETING_VERSION = 3.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nathanfennel.brat;
 				PRODUCT_MODULE_NAME = brat;
 				PRODUCT_NAME = bratify;
@@ -937,7 +965,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = brat/brat.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = EJLR2RPSV2;
 				GENERATE_APP_INTENTS_METADATA = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -956,7 +984,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2;
+				MARKETING_VERSION = 3.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nathanfennel.brat;
 				PRODUCT_MODULE_NAME = brat;
 				PRODUCT_NAME = bratify;
@@ -1082,17 +1110,21 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		E8F1A1002E5B100012340004 /* XCLocalSwiftPackageReference "Packages/WebImagePicker" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = Packages/WebImagePicker;
+/* Begin XCRemoteSwiftPackageReference section */
+		E8F1A1002E5B100012340004 /* XCRemoteSwiftPackageReference "SwiftUI-Web-Image-Picker" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/fennelouski/SwiftUI-Web-Image-Picker.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.0;
+			};
 		};
-/* End XCLocalSwiftPackageReference section */
+/* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		E8F1A1002E5B100012340005 /* WebImagePicker */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = E8F1A1002E5B100012340004 /* XCLocalSwiftPackageReference "Packages/WebImagePicker" */;
+			package = E8F1A1002E5B100012340004 /* XCRemoteSwiftPackageReference "SwiftUI-Web-Image-Picker" */;
 			productName = WebImagePicker;
 		};
 /* End XCSwiftPackageProductDependency section */

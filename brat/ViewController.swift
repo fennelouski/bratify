@@ -42,13 +42,19 @@ class ViewController: UIViewController {
         subtitleLabel.numberOfLines = 0
 
         let button = UIButton(type: .system)
-        button.setTitle(NSLocalizedString("create_first_design", comment: "CTA button on the empty state screen"), for: .normal)
-        button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
-        button.titleLabel?.adjustsFontForContentSizeCategory = true
-        button.backgroundColor = .label
-        button.setTitleColor(.systemBackground, for: .normal)
-        button.layer.cornerRadius = 14
-        button.contentEdgeInsets = UIEdgeInsets(top: .su, left: .su4, bottom: .su, right: .su4)
+        var buttonConfiguration = UIButton.Configuration.filled()
+        buttonConfiguration.title = NSLocalizedString("create_first_design", comment: "CTA button on the empty state screen")
+        buttonConfiguration.baseBackgroundColor = .label
+        buttonConfiguration.baseForegroundColor = .systemBackground
+        buttonConfiguration.cornerStyle = .fixed
+        buttonConfiguration.background.cornerRadius = 14
+        buttonConfiguration.contentInsets = NSDirectionalEdgeInsets(top: .su, leading: .su4, bottom: .su, trailing: .su4)
+        buttonConfiguration.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
+            var outgoing = incoming
+            outgoing.font = UIFont.preferredFont(forTextStyle: .headline)
+            return outgoing
+        }
+        button.configuration = buttonConfiguration
         button.addTarget(nil, action: #selector(ViewController.addNewDesign), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
 
@@ -210,10 +216,6 @@ class ViewController: UIViewController {
             emptyStateView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
         ])
         
-        // Add long press gesture recognizer to collection view
-        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(gesture:)))
-        collectionView.addGestureRecognizer(longPressGesture)
-        
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(handleDesignSaveFailed),
@@ -341,53 +343,6 @@ class ViewController: UIViewController {
         }
     }
     
-    @objc func handleLongPress(gesture: UILongPressGestureRecognizer) {
-        guard gesture.state == .began else { return }
-        let point = gesture.location(in: collectionView)
-        guard let indexPath = collectionView.indexPathForItem(at: point) else { return }
-        let design = designs[indexPath.item]
-
-        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-
-        alert.addAction(UIAlertAction(
-            title: NSLocalizedString("duplicate", comment: "Action to duplicate a design"),
-            style: .default
-        ) { [weak self] _ in
-            guard let self else { return }
-            let duplicate = DesignManager.shared.duplicateDesign(design)
-            let newIndex = indexPath.item + 1
-            designs.insert(duplicate, at: newIndex)
-            collectionView.insertItems(at: [IndexPath(item: newIndex, section: 0)])
-        })
-
-        alert.addAction(UIAlertAction(
-            title: NSLocalizedString("delete", comment: "Action to delete a design"),
-            style: .destructive
-        ) { [weak self] _ in
-            guard let self else { return }
-            if settingsManager.confirmBeforeDeleting {
-                confirmDeleteDesign(design, at: indexPath)
-            } else {
-                DesignManager.shared.deleteDesign(design)
-                designs.remove(at: indexPath.item)
-                collectionView.deleteItems(at: [indexPath])
-            }
-        })
-
-        alert.addAction(UIAlertAction(
-            title: NSLocalizedString("Cancel", comment: "Cancel action"),
-            style: .cancel
-        ))
-
-        if let popover = alert.popoverPresentationController,
-           let cell = collectionView.cellForItem(at: indexPath) {
-            popover.sourceView = cell
-            popover.sourceRect = cell.bounds
-        }
-
-        present(alert, animated: true)
-    }
-
     private func confirmDeleteDesign(_ design: Design, at indexPath: IndexPath) {
         let confirmation = UIAlertController(
             title: NSLocalizedString("delete_design_title", comment: "Title of the delete confirmation alert"),
@@ -440,6 +395,42 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
         didSelectItemAt indexPath: IndexPath
     ) {
         openDesign(at: indexPath)
+    }
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        contextMenuConfigurationForItemAt indexPath: IndexPath,
+        point: CGPoint
+    ) -> UIContextMenuConfiguration? {
+        let design = designs[indexPath.item]
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in
+            guard let self else { return nil }
+            let duplicate = UIAction(
+                title: NSLocalizedString("duplicate", comment: "Action to duplicate a design"),
+                image: UIImage(systemName: "doc.on.doc")
+            ) { [weak self] _ in
+                guard let self else { return }
+                let copy = DesignManager.shared.duplicateDesign(design)
+                let newIndex = indexPath.item + 1
+                designs.insert(copy, at: newIndex)
+                collectionView.insertItems(at: [IndexPath(item: newIndex, section: 0)])
+            }
+            let delete = UIAction(
+                title: NSLocalizedString("delete", comment: "Action to delete a design"),
+                image: UIImage(systemName: "trash"),
+                attributes: .destructive
+            ) { [weak self] _ in
+                guard let self else { return }
+                if settingsManager.confirmBeforeDeleting {
+                    confirmDeleteDesign(design, at: indexPath)
+                } else {
+                    DesignManager.shared.deleteDesign(design)
+                    designs.remove(at: indexPath.item)
+                    collectionView.deleteItems(at: [indexPath])
+                }
+            }
+            return UIMenu(title: "", children: [duplicate, delete])
+        }
     }
 }
 

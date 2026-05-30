@@ -20,6 +20,8 @@ enum SettingItem: Equatable {
     case defaultTextColor
     case defaultBackgroundColor
     case themingEnabled
+    case undoStepCount
+    case removeUndoHistory
 }
 
 class SettingsCategoryViewController: UITableViewController {
@@ -279,6 +281,29 @@ class SettingsCategoryViewController: UITableViewController {
             cell.infoButtonTapped = { [weak self] in self?.showELI5Toast(for: item) }
             return cell
 
+        case .undoStepCount:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "StepperTableViewCell", for: indexPath) as! StepperTableViewCell
+            cell.configure(
+                text: NSLocalizedString("undo steps", comment: "Number of undo steps to remember per design."),
+                with: Double(settingsManager.undoStepCount),
+                min: 5,
+                max: 200,
+                step: 5,
+                theme: settingsManager.selectedTheme
+            )
+            cell.valueChanged = { [weak self] newValue in
+                self?.settingsManager.undoStepCount = Int(newValue)
+            }
+            return cell
+
+        case .removeUndoHistory:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "DefaultCell", for: indexPath)
+            cell.textLabel?.text = NSLocalizedString("remove undo history", comment: "Destructive action that deletes all saved undo history files.")
+            cell.textLabel?.textColor = .systemRed
+            cell.selectionStyle = .default
+            cell.apply(settingsManager.selectedTheme)
+            return cell
+
         case .gallerySortOrder:
             let cell = tableView.dequeueReusableCell(withIdentifier: "DefaultCell", for: indexPath)
             cell.textLabel?.text = NSLocalizedString("Sort Order", comment: "A label for the control that sets gallery sort order.").localizedLowercase
@@ -376,6 +401,27 @@ class SettingsCategoryViewController: UITableViewController {
             activeColorPicker = .backgroundColor
             let initial = UIColor(hexString: settingsManager.backgroundColorHex)
             showColorPicker(initialColor: initial, at: indexPath)
+
+        case .removeUndoHistory:
+            let alert = UIAlertController(
+                title: NSLocalizedString("Remove Undo History", comment: "Alert title for removing all undo history"),
+                message: NSLocalizedString(
+                    "This will permanently delete undo history for all designs. Your designs are not affected.",
+                    comment: "Alert message for removing all undo history"
+                ),
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(
+                title: NSLocalizedString("Remove", comment: "Confirm remove undo history"),
+                style: .destructive
+            ) { _ in
+                DesignUndoHistoryStore.shared.purgeAll()
+            })
+            alert.addAction(UIAlertAction(
+                title: NSLocalizedString("Cancel", comment: "Cancel"),
+                style: .cancel
+            ))
+            present(alert, animated: true)
 
         default:
             break
@@ -614,6 +660,10 @@ enum ELI5Descriptions {
             return "the background color your canvas starts out as when you create a new design"
         case .themingEnabled:
             return "when on, the app uses your chosen theme colors; when off, it sticks with the system look"
+        case .undoStepCount:
+            return "how many edits you can undo — higher means more history kept on disk"
+        case .removeUndoHistory:
+            return "deletes all saved undo history files to free up space — your designs are not affected"
         }
     }
 

@@ -21,6 +21,7 @@ class KeyboardOptionsView: UIView {
     private let settingsManager: SettingsManager
     private var designControlsView: DesignControlsView?
     private var isMacPrimarySlidersVisible = false
+    private var isPrimaryControlsSuppressedByBottomPanel = false
 
     var isMacPrimarySlidersShowing: Bool {
         isMacPrimarySlidersVisible
@@ -54,6 +55,14 @@ class KeyboardOptionsView: UIView {
         dismissMacDesignControls()
         isMacPrimarySlidersVisible = false
         updateMacBottomPanelLayout()
+    }
+
+    /// Hides font/pixelation/stretch/blur sliders while a compact bottom editor panel is open (iPhone, iPad portrait).
+    func setPrimaryControlsSuppressedByBottomPanel(_ suppressed: Bool) {
+        guard !usesInlineMacDesignControls else { return }
+        guard isPrimaryControlsSuppressedByBottomPanel != suppressed else { return }
+        isPrimaryControlsSuppressedByBottomPanel = suppressed
+        updateCompactPrimaryControlsVisibility()
     }
 
     func update(with design: Design) {
@@ -259,6 +268,11 @@ class KeyboardOptionsView: UIView {
         stretchSlider.addTarget(self, action: #selector(stretchChanged), for: .valueChanged)
         blurSlider.addTarget(self, action: #selector(blurChanged), for: .valueChanged)
 
+        for slider in [fontSizeSlider, pixelationSlider, stretchSlider, blurSlider] {
+            slider.addTarget(self, action: #selector(primarySliderTouchDown), for: .touchDown)
+            slider.addTarget(self, action: #selector(primarySliderTouchUp), for: [.touchUpInside, .touchUpOutside, .touchCancel])
+        }
+
         updateSliderRanges()
 
         if usesInlineMacDesignControls {
@@ -293,6 +307,13 @@ class KeyboardOptionsView: UIView {
         if notifyDelegate {
             delegate?.keyboardOptionsView(self, didSetBottomPanelExpanded: needsExpandedHeight)
         }
+    }
+
+    private func updateCompactPrimaryControlsVisibility() {
+        guard !usesInlineMacDesignControls else { return }
+        let visible = !isPrimaryControlsSuppressedByBottomPanel
+        macPrimaryControlViews.forEach { $0.isHidden = !visible }
+        updateInfoButtonVisibility()
     }
 
     private func updateSliderRanges() {
@@ -458,10 +479,12 @@ class KeyboardOptionsView: UIView {
     func updateInfoButtonVisibility() {
         let show = settingsManager.eli5Mode
         let hiddenByMacPanel = usesInlineMacDesignControls && !isMacPrimarySlidersVisible
-        fontSizeInfoButton.isHidden = hiddenByMacPanel || !show
-        pixelationInfoButton.isHidden = hiddenByMacPanel || !show
-        stretchInfoButton.isHidden = hiddenByMacPanel || !show
-        blurInfoButton.isHidden = hiddenByMacPanel || !show
+        let hiddenByBottomPanel = !usesInlineMacDesignControls && isPrimaryControlsSuppressedByBottomPanel
+        let hiddenByPanel = hiddenByMacPanel || hiddenByBottomPanel
+        fontSizeInfoButton.isHidden = hiddenByPanel || !show
+        pixelationInfoButton.isHidden = hiddenByPanel || !show
+        stretchInfoButton.isHidden = hiddenByPanel || !show
+        blurInfoButton.isHidden = hiddenByPanel || !show
     }
     
     private lazy var closeButton = UIButton(type: .system)
@@ -499,6 +522,9 @@ class KeyboardOptionsView: UIView {
 //        addGestureRecognizer(closeGesture)
     }
     
+    @objc private func primarySliderTouchDown() { delegate?.willBeginContinuousEdit() }
+    @objc private func primarySliderTouchUp() { delegate?.didEndContinuousEdit() }
+
     @objc private func fontSizeChanged() {
         fontSizeValueLabel.text = "\(Int(fontSizeSlider.value))"
         settingsManager.preferredFontSize = Double(fontSizeSlider.value)

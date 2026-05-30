@@ -34,7 +34,7 @@ class SettingsViewController: UITableViewController {
             case .appearance: return [.themingEnabled, .themeSelection, .defaultTextColor, .defaultBackgroundColor]
             case .typography: return [.preferredFontName, .preferredFontSize]
             case .canvas:     return [.aspectRatio, .pixelationScale, .extendedRange]
-            case .behavior:   return [.autocorrectionEnabled, .forceLowercase, .saveWithoutTitle, .confirmBeforeDeleting, .showLabels, .eli5Mode]
+            case .behavior:   return [.autocorrectionEnabled, .forceLowercase, .saveWithoutTitle, .confirmBeforeDeleting, .showLabels, .eli5Mode, .undoStepCount, .removeUndoHistory]
             case .gallery:    return [.gallerySortOrder, .galleryLayout, .galleryLabel, .doubleTapToShare]
             }
         }
@@ -165,6 +165,8 @@ class SettingsViewController: UITableViewController {
             if !settingsManager.confirmBeforeDeleting { active.append(NSLocalizedString("no confirm", comment: "Short label for skip delete confirmation.")) }
             if settingsManager.showLabels { active.append(NSLocalizedString("labels", comment: "Short label for show labels.")) }
             if settingsManager.eli5Mode { active.append(NSLocalizedString("eli5", comment: "Short label for eli5 mode.")) }
+            let undoSteps = settingsManager.undoStepCount
+            if undoSteps != 50 { active.append("\(undoSteps) undo") }
             return active.isEmpty ? NSLocalizedString("default", comment: "Default behavior subtitle.") : active.joined(separator: ", ")
         case .gallery:
             var parts = [settingsManager.gallerySortOrder.displayName.localizedLowercase,

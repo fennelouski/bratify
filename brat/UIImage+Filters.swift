@@ -38,7 +38,7 @@ extension UIImage {
     ) -> UIImage? {
         let size = CGSize(width: self.size.width * scale, height: self.size.height * scale)
 
-        UIGraphicsBeginImageContextWithOptions(size, true, self.scale)
+        UIGraphicsBeginImageContextWithOptions(size, false, self.scale)
         guard let context = UIGraphicsGetCurrentContext() else { return nil }
 
         if flipHorizontal {
@@ -358,7 +358,7 @@ extension UIImage {
         matrix.setValue(CIVector(x: 0, y: 0, z: 0, w: intensity * 0.35), forKey: "inputAVector")
 
         guard let grainImage = matrix.outputImage,
-              let blend = CIFilter(name: "CISourceOverCompositing") else {
+              let blend = CIFilter(name: "CISourceAtopCompositing") else {
             return nil
         }
         blend.setValue(grainImage, forKey: kCIInputImageKey)

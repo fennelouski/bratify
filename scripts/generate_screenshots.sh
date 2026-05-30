@@ -173,6 +173,15 @@ capture_macos() {
     rm -rf "$out"
     mkdir -p "$out"
 
+    # Target App Store dimensions in pixels (@2x Retina).
+    local TARGET_PX_W=2560
+    local TARGET_PX_H=1600
+    # Window width in logical points (= TARGET_PX_W / 2 on @2x displays).
+    local CONTENT_W=1280
+    # Mac Catalyst merges UINavigationBar into the NSWindow title bar.
+    # TOOLBAR_H confirmed at 52pt on macOS 15 / Mac Catalyst.
+    local TOOLBAR_H=52
+
     # Check Screen Recording permission up front — screencapture fails silently otherwise.
     if ! screencapture -x /tmp/sc_permission_check.png 2>/dev/null; then
         echo ""
@@ -183,6 +192,12 @@ capture_macos() {
         return 0
     fi
     rm -f /tmp/sc_permission_check.png
+
+    # Pre-seed the app's data store with brat-style designs before launch so the
+    # app opens with the right content instead of whatever the user had saved.
+    echo ""
+    echo "==> Seeding brat designs (Charli XCX fan content + image backgrounds)..."
+    python3 "$REPO_ROOT/scripts/seed_macos_designs.py" || echo "  Warning: seed script failed — proceeding with existing designs"
 
     echo ""
     echo "==> Building for macOS (Mac Catalyst)"
@@ -199,6 +214,7 @@ capture_macos() {
 
     if [[ $build_status -ne 0 ]]; then
         echo "  SKIP: Mac Catalyst build failed (see errors above)."
+        python3 "$REPO_ROOT/scripts/seed_macos_designs.py" --restore 2>/dev/null || true
         return 0
     fi
 
@@ -208,6 +224,7 @@ capture_macos() {
 
     if [[ -z "$app_path" ]]; then
         echo "  SKIP: Mac Catalyst app not found in DerivedData."
+        python3 "$REPO_ROOT/scripts/seed_macos_designs.py" --restore 2>/dev/null || true
         return 0
     fi
 
@@ -223,9 +240,9 @@ capture_macos() {
     sleep 1
     open "$app_path" || true
 
-    # Wait up to 10 s for the process to appear.
+    # Wait up to 15 s for the process to appear.
     local launched=false
-    for i in 1 2 3 4 5 6 7 8 9 10; do
+    for i in $(seq 1 15); do
         sleep 1
         if pgrep -xq "$process_name"; then
             launched=true
@@ -235,9 +252,10 @@ capture_macos() {
 
     if ! $launched; then
         echo "  ERROR: process '$process_name' never appeared."
+        python3 "$REPO_ROOT/scripts/seed_macos_designs.py" --restore 2>/dev/null || true
         return 0
     fi
-    sleep 2  # let window finish drawing
+    sleep 3  # let window finish drawing and data load from disk
 
     # Helper: get app window bounds via CoreGraphics (Swift, no extra permissions needed).
     # Prints "x,y,w,h" in screen points, or nothing if no matching window is found.
@@ -262,101 +280,189 @@ if let wl = CGWindowListCopyWindowInfo([.optionOnScreenOnly, .excludeDesktopElem
 SWIFTEOF
     }
 
-    # Helper: capture the app window (or a --macos-size sub-region of it).
-    # Mac Catalyst windows can't be resized programmatically; manually size the window
-    # to match --macos-size before running the script.
+    # Maximize window width and height for the target platform.
+    osascript >/dev/null 2>&1 <<APPLESCRIPT || true
+tell application "$process_name" to activate
+delay 1
+tell application "System Events"
+    tell process "$process_name"
+        set size of window 1 to {$CONTENT_W, 900}
+        delay 0.5
+    end tell
+end tell
+APPLESCRIPT
+    sleep 0.5
+
+    # Pad a raw screencapture PNG to exactly TARGET_PX_W×TARGET_PX_H using PIL.
+    # Frames with lime-green (#8ACE00) bars when the captured content is shorter.
+    pad_screenshot() {
+        local src="$1" dst="$2"
+        python3 - "$src" "$dst" "$TARGET_PX_W" "$TARGET_PX_H" <<'PYEOF'
+from PIL import Image
+import sys
+src, dst, tw, th = sys.argv[1], sys.argv[2], int(sys.argv[3]), int(sys.argv[4])
+img = Image.open(src).convert("RGB")
+w, h = img.size
+if w == tw and h == th:
+    img.save(dst, "PNG")
+else:
+    canvas = Image.new("RGB", (tw, th), (0x8A, 0xCE, 0x00))
+    canvas.paste(img, ((tw - w) // 2, (th - h) // 2))
+    canvas.save(dst, "PNG")
+PYEOF
+    }
+
+    # Helper: capture the app content (below toolbar) and pad to App Store dimensions.
+    # The editor's colorSwatchScrollView (toolbar icons row) sits inside the safe area,
+    # so we skip only the NSWindow title+toolbar chrome (TOOLBAR_H points).
     snap() {
         local filename="$1"
         local bounds
         bounds=$(get_win_bounds)
+        local tmp="/tmp/snap_raw_${filename}"
         if [[ -n "$bounds" ]]; then
             local wx wy ww wh
             IFS=',' read -r wx wy ww wh <<< "$bounds"
-            local cap_w=${MACOS_WIDTH:-$ww}
-            local cap_h=${MACOS_HEIGHT:-$wh}
-            if [[ -n "${MACOS_WIDTH:-}" && ( "$cap_w" -gt "$ww" || "$cap_h" -gt "$wh" ) ]]; then
-                echo "  WARNING: requested ${cap_w}×${cap_h} exceeds window ${ww}×${wh} — desktop background may be visible"
-            fi
-            screencapture -R "$wx,$wy,$cap_w,$cap_h" -x "$out/$filename"
-            echo "  Captured $filename (${cap_w}×${cap_h} at $wx,$wy)"
+            local cap_y=$((wy + TOOLBAR_H))
+            local cap_h=$((wh - TOOLBAR_H))
+            screencapture -R "$wx,$cap_y,$CONTENT_W,$cap_h" -x "$tmp"
+            echo "  Captured ${CONTENT_W}×${cap_h}pt content → padding to ${TARGET_PX_W}×${TARGET_PX_H}px"
         else
-            screencapture -x "$out/$filename"
-            echo "  Captured $filename (full-screen fallback — window not detected)"
+            screencapture -x "$tmp"
+            echo "  Captured full-screen (window not detected) → padding to ${TARGET_PX_W}×${TARGET_PX_H}px"
         fi
+        pad_screenshot "$tmp" "$out/$filename"
+        rm -f "$tmp"
+    }
+
+    # CGEvent-based mouse click helper — reliable for Mac Catalyst UIKit views
+    # that don't respond to AppleScript's accessibility click at {x, y}.
+    local cg_clicker
+    cg_clicker=$(mktemp /tmp/cg_clicker_XXXXXX.swift)
+    cat > "$cg_clicker" << 'SWIFTEOF'
+import CoreGraphics, Foundation
+let x = CGFloat(Double(CommandLine.arguments[1])!),
+    y = CGFloat(Double(CommandLine.arguments[2])!),
+    pt = CGPoint(x: x, y: y)
+CGEvent(mouseEventSource: nil, mouseType: .leftMouseDown, mouseCursorPosition: pt, mouseButton: .left)!.post(tap: .cghidEventTap)
+Thread.sleep(forTimeInterval: 0.05)
+CGEvent(mouseEventSource: nil, mouseType: .leftMouseUp, mouseCursorPosition: pt, mouseButton: .left)!.post(tap: .cghidEventTap)
+SWIFTEOF
+
+    cg_click() {
+        local x="$1" y="$2"
+        swift "$cg_clicker" "$x" "$y" 2>/dev/null || true
+    }
+
+    # Helper: click one of the editor's swatch-row tool buttons by logical name.
+    # Buttons are in a UIStackView with equalSpacing distribution filling the scroll
+    # view width (window_width - 62pt).  Button order (Mac):
+    #   [0]=spacer(0pt) [1]=Settings [2]=BgImage [3]=Styles [4]=PrimarySliders
+    #   [5]=Controls [6]=AspectRatio [7]=FontPicker [8]=ImportWeb
+    # Each button is 30pt wide; scroll view starts at x=50pt from window left edge.
+    click_swatch_btn() {
+        local btn_name="$1"
+        local bounds
+        bounds=$(get_win_bounds)
+        [[ -z "$bounds" ]] && return
+        local wx wy ww
+        IFS=',' read -r wx wy ww _ <<< "$bounds"
+
+        # Button y-center: safe_area_top(wy+TOOLBAR_H) + top_margin(8) + half_height(15)
+        local btn_y=$(( wy + TOOLBAR_H + 23 ))
+
+        # equalSpacing gap between items: (scrollview_width - 8*30pt) / 8 gaps
+        local sw_w=$(( ww - 62 ))
+        local gap_x100=$(( (sw_w * 100 - 24000) / 8 ))
+
+        local idx
+        case "$btn_name" in
+            BgImage)    idx=2 ;;
+            Styles)     idx=3 ;;
+            Controls)   idx=5 ;;
+            FontPicker) idx=7 ;;
+            *) echo "  Unknown swatch button: $btn_name"; return ;;
+        esac
+
+        # center_x within scroll view:
+        #   spacer(0) + (idx-1) buttons * 30pt + idx * gap + half-button(15)
+        local prev_w=$(( (idx - 1) * 30 ))
+        local center_sv=$(( (prev_w * 100 + idx * gap_x100 + 1500) / 100 ))
+        local click_x=$(( wx + 50 + center_sv ))
+
+        cg_click "$click_x" "$btn_y"
     }
 
     # Navigate back to gallery (handles state restoration from previous session).
-    # Cmd+[ is the standard macOS/Mac Catalyst back shortcut; three presses is enough.
     osascript >/dev/null 2>&1 <<APPLESCRIPT || true
 tell application "$process_name" to activate
 delay 0.5
 tell application "System Events"
     tell process "$process_name"
         keystroke "[" using command down
-        delay 0.4
-        keystroke "[" using command down
-        delay 0.4
-        keystroke "[" using command down
-        delay 0.4
-    end tell
-end tell
-APPLESCRIPT
-    sleep 0.5
-
-    # Seed: create 3 demo designs before screenshotting.
-    if $SEED; then
-        local samples="hello kitty
-brat summer
-very demure"
-        echo "$samples" | while IFS= read -r text; do
-            osascript >/dev/null 2>&1 <<APPLESCRIPT || true
-tell application "System Events"
-    tell process "$process_name"
-        -- Click the Add (+) button in the toolbar
-        click (first button of toolbar 1 of window 1 whose description is "Add")
-        delay 1.5
-        -- Type the design text into the focused text view
-        keystroke "$text"
         delay 0.5
-        -- Cmd+[ to go back to gallery
         keystroke "[" using command down
-        delay 1
+        delay 0.5
+        keystroke "[" using command down
+        delay 0.5
     end tell
 end tell
 APPLESCRIPT
-        done
-        sleep 1
-    fi
+    sleep 1
 
-    # Screenshot 1: gallery view
+    # Screenshot 1: gallery — shows the full design collection.
     osascript >/dev/null 2>&1 -e "tell application \"$process_name\" to activate" || true
     sleep 0.5
     snap "01_gallery.png"
 
-    # Screenshot 2: editor — bring app to front then click the first gallery cell.
-    # Toolbar height is ~45pt; first-row cell center is ~80pt below the toolbar top.
+    # Open the first gallery cell.
+    # Gallery layout: UICollectionViewFlowLayout, maxColumnWidth=240pt, ~5-6 cols.
+    # contentInset set at viewDidLoad (safeAreaInsets=0 at that time) + 20pt = 20pt top.
+    # First cell: top at screen.y=29+20=49 (partially under toolbar until y=81).
+    # First visible row center at roughly y=150pt screen.
+    # Uses CoreGraphics mouse events — AppleScript click at {} does not reach UIKit cells.
     local bounds wx wy
     bounds=$(get_win_bounds)
     if [[ -n "$bounds" ]]; then
         IFS=',' read -r wx wy _ _ <<< "$bounds"
     else
-        wx=0; wy=31
+        wx=0; wy=29
     fi
-    local cell_x=$(( wx + 80 ))
+    local cell_x=$(( wx + 200 ))
     local cell_y=$(( wy + 120 ))
-    osascript >/dev/null 2>&1 <<APPLESCRIPT || true
-tell application "$process_name" to activate
-delay 0.8
-tell application "System Events"
-    tell process "$process_name"
-        click at {$cell_x, $cell_y}
-    end tell
-end tell
-APPLESCRIPT
-    sleep 1.5
+    osascript >/dev/null 2>&1 -e "tell application \"$process_name\" to activate" || true
+    sleep 0.5
+    cg_click "$cell_x" "$cell_y"
+    sleep 5  # allow background image to load from disk (async ImageService)
+
+    # Screenshot 2: editor — canvas with image background, no sidebar open.
     snap "02_editor.png"
 
+    # Screenshot 3: editor + Filter Styles panel (left sidebar).
+    click_swatch_btn "Styles"
+    sleep 3
+    snap "03_editor_styles.png"
+
+    # Screenshot 4: editor + Design Controls panel.
+    click_swatch_btn "Styles"   # toggle Styles off
+    sleep 0.5
+    click_swatch_btn "Controls"
+    sleep 3
+    snap "04_editor_controls.png"
+
+    # Screenshot 5: editor + Font Picker sidebar (right side).
+    click_swatch_btn "Controls"   # toggle Controls off
+    sleep 0.5
+    click_swatch_btn "FontPicker"
+    sleep 3
+    snap "05_editor_fonts.png"
+
     pkill -x "$process_name" 2>/dev/null || true
+    rm -f "$cg_clicker"
+
+    # Restore the user's original designs so the app is unchanged after screenshotting.
+    echo "  Restoring original designs..."
+    python3 "$REPO_ROOT/scripts/seed_macos_designs.py" --restore 2>/dev/null || true
 
     local count
     count=$(find "$out" -maxdepth 1 -name "*.png" | wc -l | tr -d ' ')
@@ -383,7 +489,7 @@ echo ""
 echo "===== Dimension check ====="
 run_iphone && verify_dimensions "$OUTPUT_DIR/iPhone_17_Pro_Max"  1320 2868 "iPhone 17 Pro Max"
 run_ipad   && verify_dimensions "$OUTPUT_DIR/iPad_Pro_13inch_M5" 2064 2752 "iPad Pro 13\" M5"
-run_macos  && verify_dimensions "$OUTPUT_DIR/macOS"              1280  800 "macOS"
+run_macos  && verify_dimensions "$OUTPUT_DIR/macOS"              2560 1600 "macOS (content-only @2x)"
 
 echo ""
 echo "Done. Screenshots saved to: $OUTPUT_DIR/"

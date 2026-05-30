@@ -70,6 +70,11 @@ class TypographyViewController: UIViewController {
         setupStepperRow()
         updatePreview()
         apply(settingsManager.selectedTheme)
+
+        registerForTraitChanges([UITraitUserInterfaceStyle.self]) { (self: TypographyViewController, _: UITraitCollection) in
+            self.previewContainerView.layer.borderColor = UIColor.separator.cgColor
+            self.apply(self.settingsManager.selectedTheme)
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -190,9 +195,4 @@ class TypographyViewController: UIViewController {
         present(fontVC)
     }
 
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        previewContainerView.layer.borderColor = UIColor.separator.cgColor
-        apply(settingsManager.selectedTheme)
-    }
 }
