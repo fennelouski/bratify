@@ -1832,7 +1832,7 @@ class EditDesignViewController: UIViewController {
         let duration = (notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?
             .doubleValue ?? 0.3
         let curveValue = (notification.userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber)?
-            .uintValue ?? UIView.AnimationCurve.easeInOut.rawValue
+            .uintValue ?? UInt(UIView.AnimationCurve.easeInOut.rawValue)
         let options = UIView.AnimationOptions(rawValue: curveValue << 16)
 
         UIView.animate(withDuration: duration, delay: 0, options: options) {
@@ -1842,7 +1842,11 @@ class EditDesignViewController: UIViewController {
 
     @objc private func keyboardWillShow(_ notification: NSNotification) {
         guard !isDesignControlsModeActive else { return }
-        if isEditorBottomPanelVisible, shouldUseCompactBottomPanel {
+        // iPhone web import uses URL/search text fields; dismissing the compact panel on
+        // keyboard show would immediately hide the web picker.
+        if isEditorBottomPanelVisible,
+           shouldUseCompactBottomPanel,
+           TrailingSidebarLayout.shouldDismissCompactPanelOnKeyboardShow(activePanel: activeEditorPanel) {
             dismissEditorPanel(animated: true)
         }
         guard previewImageViewBottomConstraint?.isActive == true else { return }

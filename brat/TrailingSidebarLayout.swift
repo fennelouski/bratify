@@ -149,6 +149,12 @@ enum TrailingSidebarLayout {
             return compactPanelHeightWebImport
         }
     }
+
+    /// Compact panels usually dismiss on keyboard show to preserve editing space.
+    /// Web import is excluded because it requires keyboard input in its URL/search controls.
+    static func shouldDismissCompactPanelOnKeyboardShow(activePanel: EditorPanel?) -> Bool {
+        activePanel != .webImport
+    }
 }
 
 enum EditorPanel: Equatable {

@@ -196,4 +196,28 @@ final class TrailingSidebarLayoutTests: XCTestCase {
             )
         )
     }
+
+    func testCompactKeyboardShowDoesNotDismissWebImportPanel() {
+        XCTAssertFalse(
+            TrailingSidebarLayout.shouldDismissCompactPanelOnKeyboardShow(activePanel: .webImport)
+        )
+    }
+
+    func testCompactKeyboardShowDismissesOtherPanels() {
+        XCTAssertTrue(
+            TrailingSidebarLayout.shouldDismissCompactPanelOnKeyboardShow(activePanel: .fontPicker)
+        )
+        XCTAssertTrue(
+            TrailingSidebarLayout.shouldDismissCompactPanelOnKeyboardShow(activePanel: .backgroundImage)
+        )
+        XCTAssertTrue(
+            TrailingSidebarLayout.shouldDismissCompactPanelOnKeyboardShow(activePanel: .filterStyles)
+        )
+        XCTAssertTrue(
+            TrailingSidebarLayout.shouldDismissCompactPanelOnKeyboardShow(activePanel: .aspectRatio)
+        )
+        XCTAssertTrue(
+            TrailingSidebarLayout.shouldDismissCompactPanelOnKeyboardShow(activePanel: nil)
+        )
+    }
 }
