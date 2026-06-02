@@ -1793,25 +1793,74 @@ class EditDesignViewController: UIViewController {
         updateDesignImage()
     }
     
+    private static let previewImageViewBottomSpacing: CGFloat = .su2
+
+    /// Keyboard frame in this view's coordinate space.
+    private func keyboardFrameInView(from notification: NSNotification) -> CGRect? {
+        guard
+            let frame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
+            isViewLoaded
+        else {
+            return nil
+        }
+        return view.convert(frame, from: nil)
+    }
+
+    /// Height of the keyboard intersecting this view (0 when hidden or external keyboard accessory bar only).
+    private func keyboardOverlapHeight(from notification: NSNotification) -> CGFloat {
+        guard let keyboardFrame = keyboardFrameInView(from: notification) else { return 0 }
+        return max(0, view.bounds.intersection(keyboardFrame).height)
+    }
+
+    /// Extra preview bottom inset beyond what safe-area layout already applied for the keyboard.
+    private func additionalPreviewBottomInsetForKeyboard(from notification: NSNotification) -> CGFloat {
+        let overlap = keyboardOverlapHeight(from: notification)
+        guard overlap > 0 else { return 0 }
+        view.layoutIfNeeded()
+        let handledBySafeArea = view.safeAreaInsets.bottom
+        return max(0, overlap - handledBySafeArea)
+    }
+
+    private func animatePreviewBottomConstraintForKeyboard(
+        notification: NSNotification,
+        additionalInset: CGFloat
+    ) {
+        guard previewImageViewBottomConstraint?.isActive == true else { return }
+
+        previewImageViewBottomConstraint?.constant = Self.previewImageViewBottomSpacing - additionalInset
+
+        let duration = (notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?
+            .doubleValue ?? 0.3
+        let curveValue = (notification.userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber)?
+            .uintValue ?? UIView.AnimationCurve.easeInOut.rawValue
+        let options = UIView.AnimationOptions(rawValue: curveValue << 16)
+
+        UIView.animate(withDuration: duration, delay: 0, options: options) {
+            self.view.layoutIfNeeded()
+        }
+    }
+
     @objc private func keyboardWillShow(_ notification: NSNotification) {
         guard !isDesignControlsModeActive else { return }
         if isEditorBottomPanelVisible, shouldUseCompactBottomPanel {
             dismissEditorPanel(animated: true)
         }
-        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
-            previewImageViewBottomConstraint?.constant = -.su2 - keyboardFrame.height
-            UIView.animate(withDuration: 0.3) {
-                self.view.layoutIfNeeded()
-            }
+        guard previewImageViewBottomConstraint?.isActive == true else { return }
+
+        // iPhone/iPad: preview is already pinned above keyboardOptions via the safe area; only
+        // apply a manual inset when the keyboard overlaps beyond what safe-area layout handled.
+        if usesMacCollapsibleBottomPanel {
+            let overlap = keyboardOverlapHeight(from: notification)
+            animatePreviewBottomConstraintForKeyboard(notification: notification, additionalInset: overlap)
+        } else {
+            let extra = additionalPreviewBottomInsetForKeyboard(from: notification)
+            animatePreviewBottomConstraintForKeyboard(notification: notification, additionalInset: extra)
         }
     }
 
     @objc private func keyboardWillHide(_ notification: NSNotification) {
         guard !isDesignControlsModeActive else { return }
-        previewImageViewBottomConstraint?.constant = -.su2
-        UIView.animate(withDuration: 0.3) {
-            self.view.layoutIfNeeded()
-        }
+        animatePreviewBottomConstraintForKeyboard(notification: notification, additionalInset: 0)
     }
     
     @objc private func shareButtonTouched() {
