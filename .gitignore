@@ -30,3 +30,7 @@ Podfile.lock
 
 # Carthage
 Carthage/Build/
+
+# Python
+__pycache__/
+*.pyc

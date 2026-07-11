@@ -112,6 +112,49 @@ final class DesignScratchTests: XCTestCase {
 }
 
 // Lives here rather than its own file to keep the test target's project wiring minimal.
+final class DesignImageCacheValidationTests: XCTestCase {
+
+    private func flatImage(_ color: UIColor, side: CGFloat = 64) -> UIImage {
+        UIGraphicsImageRenderer(size: CGSize(width: side, height: side)).image { ctx in
+            color.setFill()
+            ctx.fill(CGRect(x: 0, y: 0, width: side, height: side))
+        }
+    }
+
+    func testAverageColorCheckOnlyAppliesToFlatColorDesigns() {
+        var design = Design(
+            text: "brat",
+            backgroundColor: UIColor(hexString: "#8ACE00"),
+            usesAutomaticTextColor: false,
+            creationDate: Date(),
+            fontName: "Arial",
+            fontSize: 12,
+            pixelationScale: 1,
+            id: UUID()
+        )
+        design.width = 64
+        design.height = 64
+
+        let size = CGSize(width: 64, height: 64)
+        let matching = flatImage(UIColor(hexString: "#8ACE00"))
+        let mismatched = flatImage(.red)
+
+        XCTAssertTrue(design.isValidImage(matching, expectedSize: size))
+        XCTAssertFalse(design.isValidImage(mismatched, expectedSize: size), "Flat-color design: wrong average color must be rejected")
+        XCTAssertFalse(design.isValidImage(matching, expectedSize: CGSize(width: 32, height: 32)), "Wrong size must be rejected")
+
+        // Color-shifting filters legitimately move the average — check skipped.
+        design.mainImageFilters.invert = true
+        XCTAssertTrue(design.isValidImage(mismatched, expectedSize: size))
+
+        // Background image designs never average to the background color.
+        design.mainImageFilters = .default
+        design.backgroundImageKey = "some-image-key"
+        XCTAssertTrue(design.isValidImage(mismatched, expectedSize: size))
+    }
+}
+
+// Lives here rather than its own file to keep the test target's project wiring minimal.
 final class LiveDesignPreviewParityTests: XCTestCase {
 
     /// The live GPU preview and the generateImage export path must agree:

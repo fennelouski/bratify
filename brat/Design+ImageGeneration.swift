@@ -153,6 +153,15 @@ extension Design {
             return false
         }
 
+        // The average-color check below only holds when the canvas is mostly
+        // the flat background color. A background image or color-shifting
+        // filters (sepia, invert, duotone…) legitimately move the average, so
+        // comparing would reject every valid cached render and force a full
+        // re-render on each lookup.
+        if !(backgroundImageKey ?? "").isEmpty || !mainImageFilters.isDefault {
+            return true
+        }
+
         let context = ImageFilterRendering.sharedContext
         let inputImage = CIImage(cgImage: cgImage)
         let filter = CIFilter(name: "CIAreaAverage")
