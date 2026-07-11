@@ -62,6 +62,7 @@ class EditDesignViewController: UIViewController {
     private var currentFilterIntensity: CGFloat = 1.0
     private var stylesPreviewWorkItem: DispatchWorkItem?
     private weak var settingsNavBarButton: UIBarButtonItem?
+    private weak var shareNavBarButton: UIBarButtonItem?
 
     private enum ColorSwatchMode { case tools, backgroundColor, textColor }
     private var colorSwatchMode: ColorSwatchMode = .tools { didSet { applySwatchMode() } }
@@ -951,6 +952,7 @@ class EditDesignViewController: UIViewController {
         let shareBarButton = UIBarButtonItem.share { [weak self] in
             self?.shareButtonTouched()
         }
+        shareNavBarButton = shareBarButton
 
         if usesMacCollapsibleBottomPanel {
             navigationItem.rightBarButtonItems = [shareBarButton]
@@ -1891,14 +1893,31 @@ class EditDesignViewController: UIViewController {
         }
     }
     private func share(image imageToShare: UIImage) {
-        let activityViewController = UIActivityViewController(activityItems: [imageToShare], applicationActivities: nil)
-        
-        // For iPad: Popover presentation configuration
+        share(items: [imageToShare])
+    }
+
+    private func share(items: [Any]) {
+        let activityViewController = UIActivityViewController(activityItems: items, applicationActivities: nil)
         if let popoverController = activityViewController.popoverPresentationController {
-            popoverController.barButtonItem = navigationItem.rightBarButtonItem
+            configurePopover(popoverController)
         }
-        
         present(activityViewController, animated: true, completion: nil)
+    }
+
+    // For iPad: anchor to the visible share control — the focus-mode button when the
+    // nav bar is hidden, otherwise the share bar button (not rightBarButtonItem,
+    // which is the keyboard button).
+    private func configurePopover(_ popover: UIPopoverPresentationController) {
+        if let focusShareButton, focusShareButton.window != nil {
+            popover.sourceView = focusShareButton
+            popover.sourceRect = focusShareButton.bounds
+        } else if let shareNavBarButton {
+            popover.barButtonItem = shareNavBarButton
+        } else {
+            popover.sourceView = view
+            popover.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)
+            popover.permittedArrowDirections = []
+        }
     }
     
     // MARK: - Focus mode methods

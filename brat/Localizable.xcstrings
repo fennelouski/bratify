@@ -857,7 +857,7 @@
         "af": {
           "stringUnit": {
             "state": "translated",
-            "value": "a"
+            "value": "[UI] a"
           }
         },
         "ar": {
@@ -887,7 +887,7 @@
         "ca": {
           "stringUnit": {
             "state": "translated",
-            "value": "a"
+            "value": "[UI] a"
           }
         },
         "cs": {
@@ -971,13 +971,13 @@
         "et": {
           "stringUnit": {
             "state": "translated",
-            "value": "a"
+            "value": "[UI silt] a"
           }
         },
         "eu": {
           "stringUnit": {
             "state": "translated",
-            "value": "a"
+            "value": "[UI etiketa] a"
           }
         },
         "fa": {
@@ -995,7 +995,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "a"
+            "value": "[UI] a"
           }
         },
         "fr": {
@@ -1019,7 +1019,7 @@
         "gl": {
           "stringUnit": {
             "state": "translated",
-            "value": "a"
+            "value": "[Etiqueta da IU] a"
           }
         },
         "he": {
@@ -1037,7 +1037,7 @@
         "hr": {
           "stringUnit": {
             "state": "translated",
-            "value": "a"
+            "value": "[UI oznaka] a"
           }
         },
         "hu": {
@@ -1061,7 +1061,7 @@
         "is": {
           "stringUnit": {
             "state": "translated",
-            "value": "a"
+            "value": "[HÍ merki] a"
           }
         },
         "it": {
@@ -1073,7 +1073,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "a"
+            "value": "ある"
           }
         },
         "ka": {
@@ -1097,13 +1097,13 @@
         "lt": {
           "stringUnit": {
             "state": "translated",
-            "value": "a"
+            "value": "[UI etiketė] a"
           }
         },
         "lv": {
           "stringUnit": {
             "state": "translated",
-            "value": "a"
+            "value": "[UI etiķete] a"
           }
         },
         "mk": {
@@ -1139,7 +1139,7 @@
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "a"
+            "value": "A"
           }
         },
         "pt-BR": {
@@ -1151,7 +1151,7 @@
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
-            "value": "a"
+            "value": "um"
           }
         },
         "ro": {
@@ -1163,25 +1163,25 @@
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "a"
+            "value": "а"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "a"
+            "value": "[označenie používateľského rozhrania] a"
           }
         },
         "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "a"
+            "value": "[Oznaka uporabniškega vmesnika] a"
           }
         },
         "sq": {
           "stringUnit": {
             "state": "translated",
-            "value": "a"
+            "value": "[etiketa UI] a"
           }
         },
         "sr": {
@@ -1205,7 +1205,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "a"
+            "value": "[Lebo ya UI] a"
           }
         },
         "ta": {
@@ -1229,7 +1229,7 @@
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "a"
+            "value": "A"
           }
         },
         "uk": {
@@ -1247,13 +1247,13 @@
         "uz": {
           "stringUnit": {
             "state": "translated",
-            "value": "a"
+            "value": "[UI yorlig'i] a"
           }
         },
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "a"
+            "value": "Một"
           }
         },
         "zh-Hans": {
@@ -1821,7 +1821,7 @@
         "et": {
           "stringUnit": {
             "state": "translated",
-            "value": "a.m"
+            "value": "[UI silt] a.m"
           }
         },
         "eu": {
@@ -1845,7 +1845,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "a.m"
+            "value": "pagi"
           }
         },
         "fr": {
@@ -1947,13 +1947,13 @@
         "lt": {
           "stringUnit": {
             "state": "translated",
-            "value": "a.m"
+            "value": "[UI etiketė] a.m"
           }
         },
         "lv": {
           "stringUnit": {
             "state": "translated",
-            "value": "a.m"
+            "value": "[UI etiķete] a.m"
           }
         },
         "mk": {
@@ -2055,7 +2055,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "a.m"
+            "value": "[Lebo ya UI] a.m"
           }
         },
         "ta": {
@@ -2246,13 +2246,13 @@
         "et": {
           "stringUnit": {
             "state": "translated",
-            "value": "a.m."
+            "value": "[UI silt] a.m."
           }
         },
         "eu": {
           "stringUnit": {
             "state": "translated",
-            "value": "a.m."
+            "value": "[UI etiketa] a.m."
           }
         },
         "fa": {
@@ -2270,7 +2270,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "a.m."
+            "value": "pagi"
           }
         },
         "fr": {
@@ -2294,7 +2294,7 @@
         "gl": {
           "stringUnit": {
             "state": "translated",
-            "value": "a.m."
+            "value": "[Etiqueta da IU] a.m."
           }
         },
         "he": {
@@ -2372,13 +2372,13 @@
         "lt": {
           "stringUnit": {
             "state": "translated",
-            "value": "a.m."
+            "value": "[UI etiketė] a.m."
           }
         },
         "lv": {
           "stringUnit": {
             "state": "translated",
-            "value": "a.m."
+            "value": "[UI etiķete] a.m."
           }
         },
         "mk": {
@@ -2480,7 +2480,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "a.m."
+            "value": "[Lebo ya UI] a.m."
           }
         },
         "ta": {
@@ -2671,7 +2671,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "acid"
+            "value": "asido"
           }
         },
         "gl": {
@@ -2761,7 +2761,7 @@
         "ro": {
           "stringUnit": {
             "state": "translated",
-            "value": "acid"
+            "value": "[Etichetă UI] acid"
           }
         },
         "sk": {
@@ -2779,7 +2779,7 @@
         "sq": {
           "stringUnit": {
             "state": "translated",
-            "value": "acid"
+            "value": "[UI label] acid"
           }
         },
         "sr": {
@@ -2964,7 +2964,7 @@
         "eu": {
           "stringUnit": {
             "state": "translated",
-            "value": "am"
+            "value": "[UI etiketa] am"
           }
         },
         "fa": {
@@ -2982,7 +2982,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "am"
+            "value": "pagi"
           }
         },
         "fr": {
@@ -3048,7 +3048,7 @@
         "is": {
           "stringUnit": {
             "state": "translated",
-            "value": "am"
+            "value": "[HÍ merki] am"
           }
         },
         "it": {
@@ -3084,13 +3084,13 @@
         "lt": {
           "stringUnit": {
             "state": "translated",
-            "value": "am"
+            "value": "[UI etiketė] am"
           }
         },
         "lv": {
           "stringUnit": {
             "state": "translated",
-            "value": "am"
+            "value": "[UI etiķete] am"
           }
         },
         "mk": {
@@ -3192,7 +3192,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "am"
+            "value": "asubuhi"
           }
         },
         "ta": {
@@ -3234,7 +3234,7 @@
         "uz": {
           "stringUnit": {
             "state": "translated",
-            "value": "am"
+            "value": "[UI yorlig'i] am"
           }
         },
         "vi": {
@@ -3832,7 +3832,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Aspect Ratio"
+            "value": "Rasio Aspek"
           }
         },
         "fr": {
@@ -5957,7 +5957,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Background Alpha"
+            "value": "Background nga Alpha"
           }
         },
         "fr": {
@@ -6382,7 +6382,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Background Bloom"
+            "value": "Latar Belakang Mekar"
           }
         },
         "fr": {
@@ -8082,7 +8082,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Background Contrast"
+            "value": "Kontras sa Background"
           }
         },
         "fr": {
@@ -8507,7 +8507,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Background Duotone"
+            "value": "Latar Belakang Duoton"
           }
         },
         "fr": {
@@ -9782,7 +9782,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Background Flip Vertical"
+            "value": "Latar Belakang Balik Vertikal"
           }
         },
         "fr": {
@@ -10207,7 +10207,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Background Gamma"
+            "value": "Latar Belakang Gamma"
           }
         },
         "fr": {
@@ -11057,7 +11057,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Background Halftone"
+            "value": "Latar Belakang Halftone"
           }
         },
         "fr": {
@@ -14032,7 +14032,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Background Pixelate"
+            "value": "Piksel Latar Belakang"
           }
         },
         "fr": {
@@ -14457,7 +14457,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Background Posterize"
+            "value": "Posterisasi Latar Belakang"
           }
         },
         "fr": {
@@ -15307,7 +15307,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Background Scale"
+            "value": "Skala Latar Belakang"
           }
         },
         "fr": {
@@ -15732,7 +15732,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Background Sepia"
+            "value": "Latar Belakang Sepia"
           }
         },
         "fr": {
@@ -17857,7 +17857,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Background Unsharp Mask"
+            "value": "Latar Belakang Masker Tidak Tajam"
           }
         },
         "fr": {
@@ -18282,7 +18282,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Background Vibrance"
+            "value": "Getaran Latar Belakang"
           }
         },
         "fr": {
@@ -18707,7 +18707,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Background Vignette"
+            "value": "Vinyet Latar Belakang"
           }
         },
         "fr": {
@@ -20270,7 +20270,7 @@
         "af": {
           "stringUnit": {
             "state": "translated",
-            "value": "BG"
+            "value": "[UI] BG"
           }
         },
         "be": {
@@ -20294,19 +20294,19 @@
         "ca": {
           "stringUnit": {
             "state": "translated",
-            "value": "BG"
+            "value": "[UI] BG"
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "BG"
+            "value": "[UI] BG"
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "BG"
+            "value": "[UI label] BG"
           }
         },
         "el": {
@@ -20360,13 +20360,13 @@
         "et": {
           "stringUnit": {
             "state": "translated",
-            "value": "BG"
+            "value": "[UI silt] BG"
           }
         },
         "eu": {
           "stringUnit": {
             "state": "translated",
-            "value": "BG"
+            "value": "[UI etiketa] BG"
           }
         },
         "fa": {
@@ -20384,25 +20384,25 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "BG"
+            "value": "[UI] BG"
           }
         },
         "gl": {
           "stringUnit": {
             "state": "translated",
-            "value": "BG"
+            "value": "[Etiqueta da IU] BG"
           }
         },
         "hr": {
           "stringUnit": {
             "state": "translated",
-            "value": "BG"
+            "value": "[UI oznaka] BG"
           }
         },
         "hu": {
           "stringUnit": {
             "state": "translated",
-            "value": "BG"
+            "value": "[UI] BG"
           }
         },
         "hy": {
@@ -20420,7 +20420,7 @@
         "is": {
           "stringUnit": {
             "state": "translated",
-            "value": "BG"
+            "value": "[UI merki] BG"
           }
         },
         "ka": {
@@ -20438,13 +20438,13 @@
         "lt": {
           "stringUnit": {
             "state": "translated",
-            "value": "BG"
+            "value": "[UI etiketė] BG"
           }
         },
         "lv": {
           "stringUnit": {
             "state": "translated",
-            "value": "BG"
+            "value": "[UI etiķete] BG"
           }
         },
         "mk": {
@@ -20462,37 +20462,37 @@
         "ms": {
           "stringUnit": {
             "state": "translated",
-            "value": "BG"
+            "value": "[UI] BG"
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "BG"
+            "value": "[UI-etikett] BG"
           }
         },
         "ro": {
           "stringUnit": {
             "state": "translated",
-            "value": "BG"
+            "value": "[Etichetă UI] BG"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "BG"
+            "value": "[označenie používateľského rozhrania] BG"
           }
         },
         "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "BG"
+            "value": "[Oznaka uporabniškega vmesnika] BG"
           }
         },
         "sq": {
           "stringUnit": {
             "state": "translated",
-            "value": "BG"
+            "value": "[Etiketa UI] BG"
           }
         },
         "sr": {
@@ -20504,7 +20504,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "BG"
+            "value": "[Lebo ya UI] BG"
           }
         },
         "ta": {
@@ -20534,7 +20534,7 @@
         "uz": {
           "stringUnit": {
             "state": "translated",
-            "value": "BG"
+            "value": "[UI yorlig'i] BG"
           }
         },
         "zh-HK": {
@@ -20791,7 +20791,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "bleach"
+            "value": "[Lebo ya UI] bleach"
           }
         },
         "ta": {
@@ -20892,7 +20892,7 @@
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bloom"
+            "value": "[UI label] Bloom"
           }
         },
         "de": {
@@ -20940,7 +20940,7 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bloom"
+            "value": "Floración"
           }
         },
         "es-419": {
@@ -20982,7 +20982,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bloom"
+            "value": "Bunga"
           }
         },
         "fr": {
@@ -21024,7 +21024,7 @@
         "hr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bloom"
+            "value": "[UI oznaka] Bloom"
           }
         },
         "hu": {
@@ -21084,13 +21084,13 @@
         "lt": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bloom"
+            "value": "[UI etiketė] Bloom"
           }
         },
         "lv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bloom"
+            "value": "[UI etiķete] Blūms"
           }
         },
         "mk": {
@@ -21114,7 +21114,7 @@
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bloom"
+            "value": "[UI label] Bloom"
           }
         },
         "nl": {
@@ -21126,7 +21126,7 @@
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bloom"
+            "value": "Kwiat"
           }
         },
         "pt-BR": {
@@ -21138,7 +21138,7 @@
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bloom"
+            "value": "Florescer"
           }
         },
         "ro": {
@@ -21150,19 +21150,19 @@
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bloom"
+            "value": "Цвести"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bloom"
+            "value": "[označenie používateľského rozhrania] Bloom"
           }
         },
         "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bloom"
+            "value": "[Oznaka uporabniškega vmesnika] Bloom"
           }
         },
         "sq": {
@@ -21192,7 +21192,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bloom"
+            "value": "[Lebo ya UI] Bloom"
           }
         },
         "ta": {
@@ -21216,13 +21216,13 @@
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bloom"
+            "value": "Çiçek açmak"
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bloom"
+            "value": "цвітіння"
           }
         },
         "ur": {
@@ -21240,7 +21240,7 @@
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bloom"
+            "value": "Hoa"
           }
         },
         "zh-Hans": {
@@ -22828,7 +22828,7 @@
         "af": {
           "stringUnit": {
             "state": "translated",
-            "value": "Brat Punch"
+            "value": "[UI] Brat Punch"
           }
         },
         "ar": {
@@ -22858,13 +22858,13 @@
         "ca": {
           "stringUnit": {
             "state": "translated",
-            "value": "Brat Punch"
+            "value": "[UI] Brat Punch"
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Brat Punch"
+            "value": "[UI] Brat Punch"
           }
         },
         "cy": {
@@ -22876,7 +22876,7 @@
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Brat Punch"
+            "value": "[UI label] Brat Punch"
           }
         },
         "de": {
@@ -22924,7 +22924,7 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Brat Punch"
+            "value": "Golpe de mocoso"
           }
         },
         "es-419": {
@@ -22942,13 +22942,13 @@
         "et": {
           "stringUnit": {
             "state": "translated",
-            "value": "Brat Punch"
+            "value": "[Kasutajaliidese silt] Brat Punch"
           }
         },
         "eu": {
           "stringUnit": {
             "state": "translated",
-            "value": "Brat Punch"
+            "value": "[UI etiketa] Brat Punch"
           }
         },
         "fa": {
@@ -22966,7 +22966,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Brat Punch"
+            "value": "Pukulan Bocah"
           }
         },
         "fr": {
@@ -22990,7 +22990,7 @@
         "gl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Brat Punch"
+            "value": "[Etiqueta da interface de usuario] Brat Punch"
           }
         },
         "he": {
@@ -23008,13 +23008,13 @@
         "hr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Brat Punch"
+            "value": "[UI oznaka] Brat Punch"
           }
         },
         "hu": {
           "stringUnit": {
             "state": "translated",
-            "value": "Brat Punch"
+            "value": "[UI] Brat Punch"
           }
         },
         "hy": {
@@ -23032,7 +23032,7 @@
         "is": {
           "stringUnit": {
             "state": "translated",
-            "value": "Brat Punch"
+            "value": "[UI merki] Brat Punch"
           }
         },
         "it": {
@@ -23044,7 +23044,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Brat Punch"
+            "value": "ブラットパンチ"
           }
         },
         "ka": {
@@ -23062,19 +23062,19 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Brat Punch"
+            "value": "브랫 펀치"
           }
         },
         "lt": {
           "stringUnit": {
             "state": "translated",
-            "value": "Brat Punch"
+            "value": "[UI etiketė] Brat Punch"
           }
         },
         "lv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Brat Punch"
+            "value": "[UI etiķete] Brat Punch"
           }
         },
         "mk": {
@@ -23098,7 +23098,7 @@
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "Brat Punch"
+            "value": "[UI-etikett] Brat Punch"
           }
         },
         "nl": {
@@ -23122,37 +23122,37 @@
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
-            "value": "Brat Punch"
+            "value": "Pirralho Soco"
           }
         },
         "ro": {
           "stringUnit": {
             "state": "translated",
-            "value": "Brat Punch"
+            "value": "[Etichetă UI] Brat Punch"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Brat Punch"
+            "value": "Брат Панч"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Brat Punch"
+            "value": "[označenie používateľského rozhrania] Brat Punch"
           }
         },
         "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Brat Punch"
+            "value": "[Oznaka uporabniškega vmesnika] Brat Punch"
           }
         },
         "sq": {
           "stringUnit": {
             "state": "translated",
-            "value": "Brat Punch"
+            "value": "[Etiketa UI] Brat Punch"
           }
         },
         "sr": {
@@ -23176,7 +23176,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "Brat Punch"
+            "value": "[Lebo ya UI] Brat Punch"
           }
         },
         "ta": {
@@ -23200,7 +23200,7 @@
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Brat Punch"
+            "value": "Velet Yumruğu"
           }
         },
         "uk": {
@@ -23218,13 +23218,13 @@
         "uz": {
           "stringUnit": {
             "state": "translated",
-            "value": "Brat Punch"
+            "value": "[UI yorlig'i] Brat Punch"
           }
         },
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Brat Punch"
+            "value": "Cú đấm"
           }
         },
         "zh-Hans": {
@@ -26651,7 +26651,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Canvas"
+            "value": "Kanvas"
           }
         },
         "fr": {
@@ -26909,7 +26909,7 @@
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Canvas"
+            "value": "Vải bạt"
           }
         },
         "zh-Hans": {
@@ -27788,7 +27788,7 @@
         "af": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome"
+            "value": "[UI] Chrome"
           }
         },
         "ar": {
@@ -27818,13 +27818,13 @@
         "ca": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome"
+            "value": "[UI] Chrome"
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome"
+            "value": "[UI] Chrome"
           }
         },
         "cy": {
@@ -27836,7 +27836,7 @@
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome"
+            "value": "[UI label] Chrome"
           }
         },
         "de": {
@@ -27884,7 +27884,7 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome"
+            "value": "Cromo"
           }
         },
         "es-419": {
@@ -27902,13 +27902,13 @@
         "et": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome"
+            "value": "[UI silt] Chrome"
           }
         },
         "eu": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome"
+            "value": "[UI etiketa] Chrome"
           }
         },
         "fa": {
@@ -27926,7 +27926,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome"
+            "value": "krom"
           }
         },
         "fr": {
@@ -27950,7 +27950,7 @@
         "gl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome"
+            "value": "[Etiqueta da interface de usuario] Chrome"
           }
         },
         "he": {
@@ -28004,7 +28004,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome"
+            "value": "クロム"
           }
         },
         "ka": {
@@ -28022,19 +28022,19 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome"
+            "value": "크롬"
           }
         },
         "lt": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome"
+            "value": "[UI etiketė] Chrome"
           }
         },
         "lv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome"
+            "value": "[UI etiķete] Chrome"
           }
         },
         "mk": {
@@ -28052,13 +28052,13 @@
         "ms": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome"
+            "value": "[UI] Chrome"
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome"
+            "value": "[UI label] Chrome"
           }
         },
         "nl": {
@@ -28070,7 +28070,7 @@
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome"
+            "value": "Chrom"
           }
         },
         "pt-BR": {
@@ -28082,31 +28082,31 @@
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome"
+            "value": "Cromo"
           }
         },
         "ro": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome"
+            "value": "[Etichetă UI] Chrome"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome"
+            "value": "Хром"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome"
+            "value": "[štítok používateľského rozhrania] Chrome"
           }
         },
         "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome"
+            "value": "[Oznaka uporabniškega vmesnika] Chrome"
           }
         },
         "sq": {
@@ -28136,7 +28136,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome"
+            "value": "[Lebo ya UI] Chrome"
           }
         },
         "ta": {
@@ -28160,7 +28160,7 @@
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome"
+            "value": "Krom"
           }
         },
         "uk": {
@@ -28178,7 +28178,7 @@
         "uz": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome"
+            "value": "[UI yorlig'i] Chrome"
           }
         },
         "vi": {
@@ -28213,7 +28213,7 @@
         "af": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome Pop"
+            "value": "[UI] Chrome Pop"
           }
         },
         "ar": {
@@ -28243,13 +28243,13 @@
         "ca": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome Pop"
+            "value": "[UI] Chrome Pop"
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome Pop"
+            "value": "[UI] Chrome Pop"
           }
         },
         "cy": {
@@ -28261,7 +28261,7 @@
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome Pop"
+            "value": "[UI label] Chrome Pop"
           }
         },
         "de": {
@@ -28309,7 +28309,7 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome Pop"
+            "value": "Cromo pop"
           }
         },
         "es-419": {
@@ -28327,13 +28327,13 @@
         "et": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome Pop"
+            "value": "[UI silt] Chrome Pop"
           }
         },
         "eu": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome Pop"
+            "value": "[UI etiketa] Chrome Pop"
           }
         },
         "fa": {
@@ -28351,7 +28351,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome Pop"
+            "value": "[UI] Chrome Pop"
           }
         },
         "fr": {
@@ -28375,7 +28375,7 @@
         "gl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome Pop"
+            "value": "[Etiqueta da interface de usuario] Chrome Pop"
           }
         },
         "he": {
@@ -28393,13 +28393,13 @@
         "hr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome Pop"
+            "value": "[UI oznaka] Chrome Pop"
           }
         },
         "hu": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome Pop"
+            "value": "[UI] Chrome Pop"
           }
         },
         "hy": {
@@ -28417,7 +28417,7 @@
         "is": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome Pop"
+            "value": "[UI merkið] Chrome Pop"
           }
         },
         "it": {
@@ -28429,7 +28429,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome Pop"
+            "value": "クロムポップ"
           }
         },
         "ka": {
@@ -28447,19 +28447,19 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome Pop"
+            "value": "크롬팝"
           }
         },
         "lt": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome Pop"
+            "value": "[UI etiketė] Chrome Pop"
           }
         },
         "lv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome Pop"
+            "value": "[UI etiķete] Chrome Pop"
           }
         },
         "mk": {
@@ -28477,13 +28477,13 @@
         "ms": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome Pop"
+            "value": "[UI] Chrome Pop"
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome Pop"
+            "value": "[UI label] Chrome Pop"
           }
         },
         "nl": {
@@ -28507,37 +28507,37 @@
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome Pop"
+            "value": "Cromo Pop"
           }
         },
         "ro": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome Pop"
+            "value": "[Etichetă UI] Chrome Pop"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome Pop"
+            "value": "Хром Поп"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome Pop"
+            "value": "[označenie používateľského rozhrania] Chrome Pop"
           }
         },
         "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome Pop"
+            "value": "[Oznaka uporabniškega vmesnika] Chrome Pop"
           }
         },
         "sq": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome Pop"
+            "value": "[Etiketa UI] Chrome Pop"
           }
         },
         "sr": {
@@ -28561,7 +28561,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome Pop"
+            "value": "[Lebo ya UI] Chrome Pop"
           }
         },
         "ta": {
@@ -28603,7 +28603,7 @@
         "uz": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chrome Pop"
+            "value": "[UI yorlig'i] Chrome Pop"
           }
         },
         "vi": {
@@ -32463,7 +32463,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Contrast"
+            "value": "Sukwahi"
           }
         },
         "fr": {
@@ -34118,7 +34118,7 @@
         "eu": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cool Ice"
+            "value": "[UI etiketa] Cool Ice"
           }
         },
         "fa": {
@@ -34136,7 +34136,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cool Ice"
+            "value": "Bugnaw nga Ice"
           }
         },
         "gl": {
@@ -34148,13 +34148,13 @@
         "hr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cool Ice"
+            "value": "[UI oznaka] Cool Ice"
           }
         },
         "hu": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cool Ice"
+            "value": "[UI] Cool Ice"
           }
         },
         "hy": {
@@ -35195,7 +35195,7 @@
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "cyber"
+            "value": "[UI label] cyber"
           }
         },
         "el": {
@@ -35273,7 +35273,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "cyber"
+            "value": "dunia maya"
           }
         },
         "gl": {
@@ -35285,13 +35285,13 @@
         "hr": {
           "stringUnit": {
             "state": "translated",
-            "value": "cyber"
+            "value": "[UI oznaka] cyber"
           }
         },
         "hu": {
           "stringUnit": {
             "state": "translated",
-            "value": "cyber"
+            "value": "[UI] cyber"
           }
         },
         "hy": {
@@ -35357,7 +35357,7 @@
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "cyber"
+            "value": "[UI label] cyber"
           }
         },
         "ro": {
@@ -35375,7 +35375,7 @@
         "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "cyber"
+            "value": "[oznaka uporabniškega vmesnika] cyber"
           }
         },
         "sq": {
@@ -35584,7 +35584,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Dark Mode"
+            "value": "Mode Gelap"
           }
         },
         "fr": {
@@ -35650,7 +35650,7 @@
         "is": {
           "stringUnit": {
             "state": "translated",
-            "value": "Dark Mode"
+            "value": "[UI label] Dark Mode"
           }
         },
         "it": {
@@ -36857,7 +36857,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Deep indigo monochromatic"
+            "value": "Lalim nga indigo monochromatic"
           }
         },
         "fr": {
@@ -37336,7 +37336,7 @@
         "ms": {
           "stringUnit": {
             "state": "translated",
-            "value": "deep noir"
+            "value": "[UI] deep noir"
           }
         },
         "nb": {
@@ -37348,7 +37348,7 @@
         "ro": {
           "stringUnit": {
             "state": "translated",
-            "value": "deep noir"
+            "value": "[Etichetă UI] deep noir"
           }
         },
         "sk": {
@@ -37569,7 +37569,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "default"
+            "value": "bawaan"
           }
         },
         "fr": {
@@ -37994,7 +37994,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Default"
+            "value": "Bawaan"
           }
         },
         "fr": {
@@ -43003,7 +43003,7 @@
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Duotone"
+            "value": "[UI label] Duotone"
           }
         },
         "de": {
@@ -43093,7 +43093,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Duotone"
+            "value": "Duoton"
           }
         },
         "fr": {
@@ -43225,7 +43225,7 @@
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "Duotone"
+            "value": "[UI label] Duotone"
           }
         },
         "nl": {
@@ -43249,7 +43249,7 @@
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
-            "value": "Duotone"
+            "value": "Duotónico"
           }
         },
         "ro": {
@@ -43518,7 +43518,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "duplicate"
+            "value": "duplikat"
           }
         },
         "fr": {
@@ -43829,7 +43829,7 @@
         "ca": {
           "stringUnit": {
             "state": "translated",
-            "value": "Editorial"
+            "value": "[UI] Editorial"
           }
         },
         "cs": {
@@ -43925,7 +43925,7 @@
         "gl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Editorial"
+            "value": "[Etiqueta UI] Editorial"
           }
         },
         "hr": {
@@ -43997,7 +43997,7 @@
         "ms": {
           "stringUnit": {
             "state": "translated",
-            "value": "Editorial"
+            "value": "[UI] Editorial"
           }
         },
         "nb": {
@@ -44009,7 +44009,7 @@
         "ro": {
           "stringUnit": {
             "state": "translated",
-            "value": "Editorial"
+            "value": "[Etichetă UI] Editorial"
           }
         },
         "sk": {
@@ -44027,7 +44027,7 @@
         "sq": {
           "stringUnit": {
             "state": "translated",
-            "value": "Editorial"
+            "value": "[Etiketa UI] Editorial"
           }
         },
         "sr": {
@@ -44517,7 +44517,7 @@
         "af": {
           "stringUnit": {
             "state": "translated",
-            "value": "eli5"
+            "value": "[UI] eli5"
           }
         },
         "ar": {
@@ -44547,13 +44547,13 @@
         "ca": {
           "stringUnit": {
             "state": "translated",
-            "value": "eli5"
+            "value": "[UI] eli5"
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "eli5"
+            "value": "[UI] eli5"
           }
         },
         "cy": {
@@ -44565,7 +44565,7 @@
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "eli5"
+            "value": "[UI label] eli5"
           }
         },
         "de": {
@@ -44631,13 +44631,13 @@
         "et": {
           "stringUnit": {
             "state": "translated",
-            "value": "eli5"
+            "value": "[UI silt] eli5"
           }
         },
         "eu": {
           "stringUnit": {
             "state": "translated",
-            "value": "eli5"
+            "value": "[UI etiketa] eli5"
           }
         },
         "fa": {
@@ -44655,7 +44655,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "eli5"
+            "value": "[UI] eli5"
           }
         },
         "fr": {
@@ -44679,7 +44679,7 @@
         "gl": {
           "stringUnit": {
             "state": "translated",
-            "value": "eli5"
+            "value": "[Etiqueta da IU] eli5"
           }
         },
         "he": {
@@ -44697,13 +44697,13 @@
         "hr": {
           "stringUnit": {
             "state": "translated",
-            "value": "eli5"
+            "value": "[UI oznaka] eli5"
           }
         },
         "hu": {
           "stringUnit": {
             "state": "translated",
-            "value": "eli5"
+            "value": "[UI] eli5"
           }
         },
         "hy": {
@@ -44733,7 +44733,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "eli5"
+            "value": "エリ5"
           }
         },
         "ka": {
@@ -44751,19 +44751,19 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "eli5"
+            "value": "엘리5"
           }
         },
         "lt": {
           "stringUnit": {
             "state": "translated",
-            "value": "eli5"
+            "value": "[UI etiketė] eli5"
           }
         },
         "lv": {
           "stringUnit": {
             "state": "translated",
-            "value": "eli5"
+            "value": "[UI etiķete] eli5"
           }
         },
         "mk": {
@@ -44781,13 +44781,13 @@
         "ms": {
           "stringUnit": {
             "state": "translated",
-            "value": "eli5"
+            "value": "[UI] eli5"
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "eli5"
+            "value": "[UI-etikett] eli5"
           }
         },
         "nl": {
@@ -44817,31 +44817,31 @@
         "ro": {
           "stringUnit": {
             "state": "translated",
-            "value": "eli5"
+            "value": "[Etichetă UI] eli5"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "eli5"
+            "value": "Эли5"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "eli5"
+            "value": "[označenie používateľského rozhrania] eli5"
           }
         },
         "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "eli5"
+            "value": "[Oznaka uporabniškega vmesnika] eli5"
           }
         },
         "sq": {
           "stringUnit": {
             "state": "translated",
-            "value": "eli5"
+            "value": "[Etiketa UI] eli5"
           }
         },
         "sr": {
@@ -44865,7 +44865,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "eli5"
+            "value": "[Lebo ya UI] eli5"
           }
         },
         "ta": {
@@ -44889,7 +44889,7 @@
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "eli5"
+            "value": "Eli5"
           }
         },
         "uk": {
@@ -44907,7 +44907,7 @@
         "uz": {
           "stringUnit": {
             "state": "translated",
-            "value": "eli5"
+            "value": "[UI yorlig'i] eli5"
           }
         },
         "vi": {
@@ -45080,7 +45080,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "eli5 mode"
+            "value": "modus eli5"
           }
         },
         "fr": {
@@ -46331,7 +46331,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "ethereal"
+            "value": "sangat halus"
           }
         },
         "gl": {
@@ -46451,7 +46451,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "ethereal"
+            "value": "[Lebo ya UI] ethereal"
           }
         },
         "ta": {
@@ -47492,7 +47492,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Fade"
+            "value": "Mawala"
           }
         },
         "fr": {
@@ -50543,7 +50543,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "フォント名ラベル"
+            "value": "%@"
           }
         },
         "ka": {
@@ -50890,7 +50890,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Force Lowercase"
+            "value": "Puwersa ang Lowercase"
           }
         },
         "fr": {
@@ -52164,7 +52164,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gallery"
+            "value": "Galeri"
           }
         },
         "fr": {
@@ -52451,7 +52451,7 @@
         "af": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gamma"
+            "value": "[UI] Gamma"
           }
         },
         "ar": {
@@ -52565,13 +52565,13 @@
         "et": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gamma"
+            "value": "[UI silt] Gamma"
           }
         },
         "eu": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gamma"
+            "value": "[UI etiketa] Gamma"
           }
         },
         "fa": {
@@ -52589,7 +52589,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gamma"
+            "value": "[UI] Gamma"
           }
         },
         "fr": {
@@ -52613,7 +52613,7 @@
         "gl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gamma"
+            "value": "[Etiqueta da interface de usuario] Gamma"
           }
         },
         "he": {
@@ -52655,7 +52655,7 @@
         "is": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gamma"
+            "value": "[UI merki] Gamma"
           }
         },
         "it": {
@@ -52697,7 +52697,7 @@
         "lv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gamma"
+            "value": "[UI etiķete] Gamma"
           }
         },
         "mk": {
@@ -52799,7 +52799,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gamma"
+            "value": "[Lebo ya UI] Gamma"
           }
         },
         "ta": {
@@ -52841,7 +52841,7 @@
         "uz": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gamma"
+            "value": "[UI yorlig'i] Gamma"
           }
         },
         "vi": {
@@ -54150,7 +54150,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Grid"
+            "value": "jaringan"
           }
         },
         "fr": {
@@ -54276,7 +54276,7 @@
         "ms": {
           "stringUnit": {
             "state": "translated",
-            "value": "Grid"
+            "value": "[UI] Grid"
           }
         },
         "nb": {
@@ -54575,7 +54575,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Halftone"
+            "value": "Setengah suara"
           }
         },
         "fr": {
@@ -55425,7 +55425,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Hue"
+            "value": "Warna"
           }
         },
         "fr": {
@@ -56114,7 +56114,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "infrared"
+            "value": "inframerah"
           }
         },
         "gl": {
@@ -56234,7 +56234,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "infrared"
+            "value": "[Lebo ya UI] ya infrared"
           }
         },
         "ta": {
@@ -56317,7 +56317,7 @@
         "ca": {
           "stringUnit": {
             "state": "translated",
-            "value": "Instant"
+            "value": "[UI] Instant"
           }
         },
         "cs": {
@@ -56383,7 +56383,7 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Instant"
+            "value": "Instante"
           }
         },
         "es-419": {
@@ -56425,7 +56425,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Instant"
+            "value": "Diha-diha dayon"
           }
         },
         "fr": {
@@ -56503,7 +56503,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Instant"
+            "value": "インスタント"
           }
         },
         "ka": {
@@ -56521,7 +56521,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Instant"
+            "value": "즉각적인"
           }
         },
         "lt": {
@@ -56569,7 +56569,7 @@
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Instant"
+            "value": "Natychmiastowy"
           }
         },
         "pt-BR": {
@@ -56581,7 +56581,7 @@
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
-            "value": "Instant"
+            "value": "Instante"
           }
         },
         "ro": {
@@ -56593,7 +56593,7 @@
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Instant"
+            "value": "Мгновенный"
           }
         },
         "sk": {
@@ -56605,7 +56605,7 @@
         "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Instant"
+            "value": "[Oznaka uporabniškega vmesnika] Takoj"
           }
         },
         "sq": {
@@ -56659,13 +56659,13 @@
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Instant"
+            "value": "Ani"
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Instant"
+            "value": "Миттєво"
           }
         },
         "ur": {
@@ -56683,7 +56683,7 @@
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Instant"
+            "value": "Lập tức"
           }
         },
         "zh-Hans": {
@@ -57562,7 +57562,7 @@
         "af": {
           "stringUnit": {
             "state": "translated",
-            "value": "k"
+            "value": "[UI] k"
           }
         },
         "ar": {
@@ -57592,13 +57592,13 @@
         "ca": {
           "stringUnit": {
             "state": "translated",
-            "value": "k"
+            "value": "[UI] k"
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "k"
+            "value": "[UI] k"
           }
         },
         "cy": {
@@ -57610,7 +57610,7 @@
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "k"
+            "value": "[UI label] k"
           }
         },
         "de": {
@@ -57676,13 +57676,13 @@
         "et": {
           "stringUnit": {
             "state": "translated",
-            "value": "k"
+            "value": "[UI silt] k"
           }
         },
         "eu": {
           "stringUnit": {
             "state": "translated",
-            "value": "k"
+            "value": "[UI etiketa] k"
           }
         },
         "fa": {
@@ -57700,7 +57700,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "k"
+            "value": "[UI] k"
           }
         },
         "fr": {
@@ -57724,7 +57724,7 @@
         "gl": {
           "stringUnit": {
             "state": "translated",
-            "value": "k"
+            "value": "[Etiqueta da IU] k"
           }
         },
         "he": {
@@ -57742,7 +57742,7 @@
         "hr": {
           "stringUnit": {
             "state": "translated",
-            "value": "k"
+            "value": "[UI oznaka] k"
           }
         },
         "hu": {
@@ -57766,7 +57766,7 @@
         "is": {
           "stringUnit": {
             "state": "translated",
-            "value": "k"
+            "value": "[HÍ merki] k"
           }
         },
         "it": {
@@ -57802,13 +57802,13 @@
         "lt": {
           "stringUnit": {
             "state": "translated",
-            "value": "k"
+            "value": "[UI etiketė] k"
           }
         },
         "lv": {
           "stringUnit": {
             "state": "translated",
-            "value": "k"
+            "value": "[UI etiķete] k"
           }
         },
         "mk": {
@@ -57832,7 +57832,7 @@
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "k"
+            "value": "[UI-etikett] k"
           }
         },
         "nl": {
@@ -57886,7 +57886,7 @@
         "sq": {
           "stringUnit": {
             "state": "translated",
-            "value": "k"
+            "value": "[Etiketa UI] k"
           }
         },
         "sr": {
@@ -57910,7 +57910,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "k"
+            "value": "[Lebo ya UI] k"
           }
         },
         "ta": {
@@ -57952,7 +57952,7 @@
         "uz": {
           "stringUnit": {
             "state": "translated",
-            "value": "k"
+            "value": "[UI yorlig'i] k"
           }
         },
         "vi": {
@@ -60652,7 +60652,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "lavender"
+            "value": "lavendel"
           }
         },
         "gl": {
@@ -60688,7 +60688,7 @@
         "is": {
           "stringUnit": {
             "state": "translated",
-            "value": "lavender"
+            "value": "[UI merki] lavender"
           }
         },
         "ka": {
@@ -60730,7 +60730,7 @@
         "ms": {
           "stringUnit": {
             "state": "translated",
-            "value": "lavender"
+            "value": "[UI] lavender"
           }
         },
         "nb": {
@@ -60772,7 +60772,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "lavender"
+            "value": "[Lebo ya UI] lavender"
           }
         },
         "ta": {
@@ -60873,7 +60873,7 @@
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Layout"
+            "value": "[UI label] Layout"
           }
         },
         "de": {
@@ -60963,7 +60963,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Layout"
+            "value": "Tata Letak"
           }
         },
         "fr": {
@@ -61388,7 +61388,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Light Mode"
+            "value": "Kahayag nga Mode"
           }
         },
         "fr": {
@@ -64083,7 +64083,7 @@
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Masonry"
+            "value": "Kamieniarstwo"
           }
         },
         "pt-BR": {
@@ -64095,7 +64095,7 @@
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
-            "value": "Masonry"
+            "value": "Alvenaria"
           }
         },
         "ro": {
@@ -64173,7 +64173,7 @@
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Masonry"
+            "value": "Duvarcılık"
           }
         },
         "uk": {
@@ -64197,7 +64197,7 @@
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Masonry"
+            "value": "xây dựng"
           }
         },
         "zh-Hans": {
@@ -64765,7 +64765,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "matte"
+            "value": "[UI] matte"
           }
         },
         "gl": {
@@ -64843,7 +64843,7 @@
         "ms": {
           "stringUnit": {
             "state": "translated",
-            "value": "matte"
+            "value": "[UI] matte"
           }
         },
         "nb": {
@@ -64885,7 +64885,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "matte"
+            "value": "[Lebo ya UI] matte"
           }
         },
         "ta": {
@@ -65052,7 +65052,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Midnight Blue"
+            "value": "Biru Tengah Malam"
           }
         },
         "gl": {
@@ -65070,7 +65070,7 @@
         "hu": {
           "stringUnit": {
             "state": "translated",
-            "value": "Midnight Blue"
+            "value": "[UI] Midnight Blue"
           }
         },
         "hy": {
@@ -65160,7 +65160,7 @@
         "sq": {
           "stringUnit": {
             "state": "translated",
-            "value": "Midnight Blue"
+            "value": "[Etiketa UI] Midnight Blue"
           }
         },
         "sr": {
@@ -65375,7 +65375,7 @@
         "is": {
           "stringUnit": {
             "state": "translated",
-            "value": "Mist"
+            "value": "[HÍ merki] Mist"
           }
         },
         "ka": {
@@ -65650,7 +65650,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Monochrome"
+            "value": "Satu warna"
           }
         },
         "fr": {
@@ -65860,7 +65860,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "Monochrome"
+            "value": "[Lebo ya UI] Monochrome"
           }
         },
         "ta": {
@@ -66457,7 +66457,7 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Negative Pop"
+            "value": "pop negativo"
           }
         },
         "es-419": {
@@ -66577,7 +66577,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Negative Pop"
+            "value": "ネガティブポップ"
           }
         },
         "ka": {
@@ -66595,7 +66595,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Negative Pop"
+            "value": "네거티브 팝"
           }
         },
         "lt": {
@@ -66643,7 +66643,7 @@
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Negative Pop"
+            "value": "Negatywny pop"
           }
         },
         "pt-BR": {
@@ -66655,7 +66655,7 @@
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
-            "value": "Negative Pop"
+            "value": "Pop negativo"
           }
         },
         "ro": {
@@ -66667,7 +66667,7 @@
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Negative Pop"
+            "value": "Негативный поп"
           }
         },
         "sk": {
@@ -66733,13 +66733,13 @@
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Negative Pop"
+            "value": "Negatif Pop"
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Negative Pop"
+            "value": "Негативний поп"
           }
         },
         "ur": {
@@ -66757,7 +66757,7 @@
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Negative Pop"
+            "value": "Nhạc Pop tiêu cực"
           }
         },
         "zh-Hans": {
@@ -68911,7 +68911,7 @@
         "af": {
           "stringUnit": {
             "state": "translated",
-            "value": "Noir"
+            "value": "[UI] Noir"
           }
         },
         "ar": {
@@ -68947,7 +68947,7 @@
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Noir"
+            "value": "[UI] Noir"
           }
         },
         "cy": {
@@ -68959,7 +68959,7 @@
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Noir"
+            "value": "[UI label] Noir"
           }
         },
         "de": {
@@ -69007,7 +69007,7 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Noir"
+            "value": "negro"
           }
         },
         "es-419": {
@@ -69025,7 +69025,7 @@
         "et": {
           "stringUnit": {
             "state": "translated",
-            "value": "Noir"
+            "value": "[UI silt] Noir"
           }
         },
         "eu": {
@@ -69049,7 +69049,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Noir"
+            "value": "[UI] Noir"
           }
         },
         "fr": {
@@ -69091,13 +69091,13 @@
         "hr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Noir"
+            "value": "[UI oznaka] Noir"
           }
         },
         "hu": {
           "stringUnit": {
             "state": "translated",
-            "value": "Noir"
+            "value": "[UI] Noir"
           }
         },
         "hy": {
@@ -69115,7 +69115,7 @@
         "is": {
           "stringUnit": {
             "state": "translated",
-            "value": "Noir"
+            "value": "[UI merki] Noir"
           }
         },
         "it": {
@@ -69127,7 +69127,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Noir"
+            "value": "ノワール"
           }
         },
         "ka": {
@@ -69145,19 +69145,19 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Noir"
+            "value": "느와르"
           }
         },
         "lt": {
           "stringUnit": {
             "state": "translated",
-            "value": "Noir"
+            "value": "[UI etiketė] Noir"
           }
         },
         "lv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Noir"
+            "value": "[UI etiķete] Noir"
           }
         },
         "mk": {
@@ -69175,13 +69175,13 @@
         "ms": {
           "stringUnit": {
             "state": "translated",
-            "value": "Noir"
+            "value": "[UI] Noir"
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "Noir"
+            "value": "[UI-etikett] Noir"
           }
         },
         "nl": {
@@ -69193,7 +69193,7 @@
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Noir"
+            "value": "Czarny"
           }
         },
         "pt-BR": {
@@ -69205,37 +69205,37 @@
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
-            "value": "Noir"
+            "value": "Preto"
           }
         },
         "ro": {
           "stringUnit": {
             "state": "translated",
-            "value": "Noir"
+            "value": "[Etichetă UI] Noir"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Noir"
+            "value": "Нуар"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Noir"
+            "value": "[označenie používateľského rozhrania] Noir"
           }
         },
         "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Noir"
+            "value": "[Oznaka uporabniškega vmesnika] Noir"
           }
         },
         "sq": {
           "stringUnit": {
             "state": "translated",
-            "value": "Noir"
+            "value": "[Etiketa UI] Noir"
           }
         },
         "sr": {
@@ -69259,7 +69259,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "Noir"
+            "value": "[Lebo ya UI] Noir"
           }
         },
         "ta": {
@@ -69283,7 +69283,7 @@
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Noir"
+            "value": "Kara"
           }
         },
         "uk": {
@@ -69301,7 +69301,7 @@
         "uz": {
           "stringUnit": {
             "state": "translated",
-            "value": "Noir"
+            "value": "[UI yorlig'i] Noir"
           }
         },
         "vi": {
@@ -72000,7 +72000,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Overexposed"
+            "value": "terlalu terang"
           }
         },
         "gl": {
@@ -72209,7 +72209,7 @@
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "p"
+            "value": "[UI] str"
           }
         },
         "cy": {
@@ -72269,7 +72269,7 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "p"
+            "value": "pag"
           }
         },
         "es-419": {
@@ -72311,7 +72311,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "p"
+            "value": "[UI] p"
           }
         },
         "fr": {
@@ -72335,7 +72335,7 @@
         "gl": {
           "stringUnit": {
             "state": "translated",
-            "value": "p"
+            "value": "[Etiqueta da IU] p"
           }
         },
         "he": {
@@ -72413,7 +72413,7 @@
         "lt": {
           "stringUnit": {
             "state": "translated",
-            "value": "p"
+            "value": "[UI etiketė] p"
           }
         },
         "lv": {
@@ -72455,7 +72455,7 @@
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "p"
+            "value": "P"
           }
         },
         "pt-BR": {
@@ -72473,19 +72473,19 @@
         "ro": {
           "stringUnit": {
             "state": "translated",
-            "value": "p"
+            "value": "[Etichetă UI] p"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "p"
+            "value": "п"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "p"
+            "value": "[označenie používateľského rozhrania] s"
           }
         },
         "sl": {
@@ -72545,13 +72545,13 @@
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "p"
+            "value": "P"
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "p"
+            "value": "стор"
           }
         },
         "ur": {
@@ -72563,13 +72563,13 @@
         "uz": {
           "stringUnit": {
             "state": "translated",
-            "value": "p"
+            "value": "[UI yorlig'i] p"
           }
         },
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "p"
+            "value": "P"
           }
         },
         "zh-Hans": {
@@ -72598,7 +72598,7 @@
         "af": {
           "stringUnit": {
             "state": "translated",
-            "value": "P"
+            "value": "[UI] P"
           }
         },
         "ar": {
@@ -72628,13 +72628,13 @@
         "ca": {
           "stringUnit": {
             "state": "translated",
-            "value": "P"
+            "value": "[UI] P"
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "P"
+            "value": "[UI] P"
           }
         },
         "cy": {
@@ -72646,7 +72646,7 @@
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "P"
+            "value": "[UI label] P"
           }
         },
         "de": {
@@ -72712,13 +72712,13 @@
         "et": {
           "stringUnit": {
             "state": "translated",
-            "value": "P"
+            "value": "[Kasutajaliidese silt] P"
           }
         },
         "eu": {
           "stringUnit": {
             "state": "translated",
-            "value": "P"
+            "value": "[UI etiketa] P"
           }
         },
         "fa": {
@@ -72736,7 +72736,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "P"
+            "value": "[UI] P"
           }
         },
         "fr": {
@@ -72760,7 +72760,7 @@
         "gl": {
           "stringUnit": {
             "state": "translated",
-            "value": "P"
+            "value": "[Etiqueta da interface de usuario] P"
           }
         },
         "he": {
@@ -72778,13 +72778,13 @@
         "hr": {
           "stringUnit": {
             "state": "translated",
-            "value": "P"
+            "value": "[UI oznaka] P"
           }
         },
         "hu": {
           "stringUnit": {
             "state": "translated",
-            "value": "P"
+            "value": "[UI] P"
           }
         },
         "hy": {
@@ -72802,7 +72802,7 @@
         "is": {
           "stringUnit": {
             "state": "translated",
-            "value": "P"
+            "value": "[HÍ merki] P"
           }
         },
         "it": {
@@ -72838,13 +72838,13 @@
         "lt": {
           "stringUnit": {
             "state": "translated",
-            "value": "P"
+            "value": "[UI etiketė] P"
           }
         },
         "lv": {
           "stringUnit": {
             "state": "translated",
-            "value": "P"
+            "value": "[UI etiķete] P"
           }
         },
         "mk": {
@@ -72862,13 +72862,13 @@
         "ms": {
           "stringUnit": {
             "state": "translated",
-            "value": "P"
+            "value": "[UI] P"
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "P"
+            "value": "[UI-etikett] P"
           }
         },
         "nl": {
@@ -72898,7 +72898,7 @@
         "ro": {
           "stringUnit": {
             "state": "translated",
-            "value": "P"
+            "value": "[Etichetă UI] P"
           }
         },
         "ru": {
@@ -72910,19 +72910,19 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "P"
+            "value": "[štítok používateľského rozhrania] P"
           }
         },
         "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "P"
+            "value": "[Oznaka uporabniškega vmesnika] P"
           }
         },
         "sq": {
           "stringUnit": {
             "state": "translated",
-            "value": "P"
+            "value": "[Etiketa UI] P"
           }
         },
         "sr": {
@@ -72946,7 +72946,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "P"
+            "value": "[Lebo ya UI] P"
           }
         },
         "ta": {
@@ -72988,7 +72988,7 @@
         "uz": {
           "stringUnit": {
             "state": "translated",
-            "value": "P"
+            "value": "[UI yorlig'i] P"
           }
         },
         "vi": {
@@ -73161,7 +73161,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "p."
+            "value": "[UI] p."
           }
         },
         "fr": {
@@ -73185,7 +73185,7 @@
         "gl": {
           "stringUnit": {
             "state": "translated",
-            "value": "p."
+            "value": "[Etiqueta da IU] p."
           }
         },
         "he": {
@@ -73263,7 +73263,7 @@
         "lt": {
           "stringUnit": {
             "state": "translated",
-            "value": "p."
+            "value": "[UI etiketė] p."
           }
         },
         "lv": {
@@ -73413,7 +73413,7 @@
         "uz": {
           "stringUnit": {
             "state": "translated",
-            "value": "p."
+            "value": "[UI yorlig'i] p."
           }
         },
         "vi": {
@@ -73562,7 +73562,7 @@
         "et": {
           "stringUnit": {
             "state": "translated",
-            "value": "p.m"
+            "value": "[UI silt] p.m"
           }
         },
         "eu": {
@@ -73586,7 +73586,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "p.m"
+            "value": "pm"
           }
         },
         "fr": {
@@ -73688,7 +73688,7 @@
         "lt": {
           "stringUnit": {
             "state": "translated",
-            "value": "p.m"
+            "value": "[UI etiketė] p.m"
           }
         },
         "lv": {
@@ -73796,7 +73796,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "p.m"
+            "value": "[Lebo ya UI] p.m"
           }
         },
         "ta": {
@@ -73987,13 +73987,13 @@
         "et": {
           "stringUnit": {
             "state": "translated",
-            "value": "p.m."
+            "value": "[UI silt] p.m."
           }
         },
         "eu": {
           "stringUnit": {
             "state": "translated",
-            "value": "p.m."
+            "value": "[UI etiketa] p.m."
           }
         },
         "fa": {
@@ -74011,7 +74011,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "p.m."
+            "value": "pm."
           }
         },
         "fr": {
@@ -74035,7 +74035,7 @@
         "gl": {
           "stringUnit": {
             "state": "translated",
-            "value": "p.m."
+            "value": "[Etiqueta da IU] p.m."
           }
         },
         "he": {
@@ -74113,7 +74113,7 @@
         "lt": {
           "stringUnit": {
             "state": "translated",
-            "value": "p.m."
+            "value": "[UI etiketė] p.m."
           }
         },
         "lv": {
@@ -74221,7 +74221,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "p.m."
+            "value": "[Lebo ya UI] p.m."
           }
         },
         "ta": {
@@ -74298,7 +74298,7 @@
         "af": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pastel"
+            "value": "[UI] Pastel"
           }
         },
         "be": {
@@ -74322,19 +74322,19 @@
         "ca": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pastel"
+            "value": "[UI] Pastel"
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pastel"
+            "value": "[UI] Pastelové"
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pastel"
+            "value": "[UI label] Pastel"
           }
         },
         "el": {
@@ -74394,7 +74394,7 @@
         "eu": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pastel"
+            "value": "[UI etiketa] Pastel"
           }
         },
         "fa": {
@@ -74412,19 +74412,19 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pastel"
+            "value": "[UI] Pastel"
           }
         },
         "gl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pastel"
+            "value": "[Etiqueta da interface de usuario] Pastel"
           }
         },
         "hr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pastel"
+            "value": "[UI label] Pastel"
           }
         },
         "hu": {
@@ -74448,7 +74448,7 @@
         "is": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pastel"
+            "value": "[HÍ merki] Pastel"
           }
         },
         "ka": {
@@ -74490,7 +74490,7 @@
         "ms": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pastel"
+            "value": "[UI] Pastel"
           }
         },
         "nb": {
@@ -74502,13 +74502,13 @@
         "ro": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pastel"
+            "value": "[Etichetă UI] Pastel"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pastel"
+            "value": "[štítok používateľského rozhrania] Pastel"
           }
         },
         "sl": {
@@ -74520,7 +74520,7 @@
         "sq": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pastel"
+            "value": "[Etiketa UI] Pastel"
           }
         },
         "sr": {
@@ -74532,7 +74532,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pastel"
+            "value": "[Lebo ya UI] Pastel"
           }
         },
         "ta": {
@@ -74562,7 +74562,7 @@
         "uz": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pastel"
+            "value": "[UI yorlig'i] Pastel"
           }
         },
         "zh-HK": {
@@ -74681,7 +74681,7 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Photo Noir"
+            "value": "Foto negra"
           }
         },
         "es-419": {
@@ -74771,7 +74771,7 @@
         "hu": {
           "stringUnit": {
             "state": "translated",
-            "value": "Photo Noir"
+            "value": "[UI] Photo Noir"
           }
         },
         "hy": {
@@ -74801,7 +74801,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Photo Noir"
+            "value": "フォト・ノワール"
           }
         },
         "ka": {
@@ -74819,19 +74819,19 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Photo Noir"
+            "value": "포토 느와르"
           }
         },
         "lt": {
           "stringUnit": {
             "state": "translated",
-            "value": "Photo Noir"
+            "value": "[UI etiketė] Photo Noir"
           }
         },
         "lv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Photo Noir"
+            "value": "[UI etiķete] Photo Noir"
           }
         },
         "mk": {
@@ -74855,7 +74855,7 @@
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "Photo Noir"
+            "value": "[UI label] Photo Noir"
           }
         },
         "nl": {
@@ -74867,7 +74867,7 @@
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Photo Noir"
+            "value": "Zdjęcie Noir"
           }
         },
         "pt-BR": {
@@ -74879,19 +74879,19 @@
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
-            "value": "Photo Noir"
+            "value": "Foto Negra"
           }
         },
         "ro": {
           "stringUnit": {
             "state": "translated",
-            "value": "Photo Noir"
+            "value": "[Etichetă UI] Photo Noir"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Photo Noir"
+            "value": "Фото Нуар"
           }
         },
         "sk": {
@@ -74957,13 +74957,13 @@
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Photo Noir"
+            "value": "Kara Fotoğraf"
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Photo Noir"
+            "value": "Фото Нуар"
           }
         },
         "ur": {
@@ -74981,7 +74981,7 @@
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Photo Noir"
+            "value": "Ảnh Noir"
           }
         },
         "zh-Hans": {
@@ -75573,7 +75573,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pixelate"
+            "value": "Pikselasi"
           }
         },
         "fr": {
@@ -75639,7 +75639,7 @@
         "is": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pixelate"
+            "value": "[HÍ merki] Pixelate"
           }
         },
         "it": {
@@ -75783,7 +75783,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pixelate"
+            "value": "[Lebo ya UI] Pixelate"
           }
         },
         "ta": {
@@ -75997,7 +75997,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "pixelation"
+            "value": "pikselasi"
           }
         },
         "fr": {
@@ -76207,7 +76207,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "pixelation"
+            "value": "[Lebo ya UI] pixelation"
           }
         },
         "ta": {
@@ -76284,7 +76284,7 @@
         "af": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pixelation Scale"
+            "value": "[UI] Pixelation Scale"
           }
         },
         "ar": {
@@ -76488,7 +76488,7 @@
         "is": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pixelation Scale"
+            "value": "[UI label] Pixelation Scale"
           }
         },
         "it": {
@@ -76823,7 +76823,7 @@
         "et": {
           "stringUnit": {
             "state": "translated",
-            "value": "pm"
+            "value": "[UI silt] pm"
           }
         },
         "eu": {
@@ -76847,7 +76847,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "pm"
+            "value": "[UI] pm"
           }
         },
         "fr": {
@@ -76949,13 +76949,13 @@
         "lt": {
           "stringUnit": {
             "state": "translated",
-            "value": "pm"
+            "value": "[UI etiketė] pm"
           }
         },
         "lv": {
           "stringUnit": {
             "state": "translated",
-            "value": "pm"
+            "value": "[UI etiķete] pm"
           }
         },
         "mk": {
@@ -77134,7 +77134,7 @@
         "af": {
           "stringUnit": {
             "state": "translated",
-            "value": "Polaroid"
+            "value": "[UI] Polaroid"
           }
         },
         "be": {
@@ -77158,19 +77158,19 @@
         "ca": {
           "stringUnit": {
             "state": "translated",
-            "value": "Polaroid"
+            "value": "[UI] Polaroid"
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Polaroid"
+            "value": "[UI] Polaroid"
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Polaroid"
+            "value": "[UI label] Polaroid"
           }
         },
         "el": {
@@ -77224,13 +77224,13 @@
         "et": {
           "stringUnit": {
             "state": "translated",
-            "value": "Polaroid"
+            "value": "[UI silt] Polaroid"
           }
         },
         "eu": {
           "stringUnit": {
             "state": "translated",
-            "value": "Polaroid"
+            "value": "[UI etiketa] Polaroid"
           }
         },
         "fa": {
@@ -77248,19 +77248,19 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Polaroid"
+            "value": "[UI] Polaroid"
           }
         },
         "gl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Polaroid"
+            "value": "[Etiqueta da interface de usuario] Polaroid"
           }
         },
         "hr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Polaroid"
+            "value": "[UI oznaka] Polaroid"
           }
         },
         "hu": {
@@ -77284,7 +77284,7 @@
         "is": {
           "stringUnit": {
             "state": "translated",
-            "value": "Polaroid"
+            "value": "[HÍ merki] Polaroid"
           }
         },
         "ka": {
@@ -77308,7 +77308,7 @@
         "lv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Polaroid"
+            "value": "[UI etiķete] Polaroid"
           }
         },
         "mk": {
@@ -77326,13 +77326,13 @@
         "ms": {
           "stringUnit": {
             "state": "translated",
-            "value": "Polaroid"
+            "value": "[UI] Polaroid"
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "Polaroid"
+            "value": "[UI-etikett] Polaroid"
           }
         },
         "ro": {
@@ -77344,19 +77344,19 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Polaroid"
+            "value": "[označenie používateľského rozhrania] Polaroid"
           }
         },
         "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Polaroid"
+            "value": "[Oznaka uporabniškega vmesnika] Polaroid"
           }
         },
         "sq": {
           "stringUnit": {
             "state": "translated",
-            "value": "Polaroid"
+            "value": "[Etiketa UI] Polaroid"
           }
         },
         "sr": {
@@ -77368,7 +77368,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "Polaroid"
+            "value": "[Lebo ya UI] Polaroid"
           }
         },
         "ta": {
@@ -77398,7 +77398,7 @@
         "uz": {
           "stringUnit": {
             "state": "translated",
-            "value": "Polaroid"
+            "value": "[UI yorlig'i] Polaroid"
           }
         },
         "zh-HK": {
@@ -77984,7 +77984,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Posterize"
+            "value": "Posterisasi"
           }
         },
         "fr": {
@@ -78194,7 +78194,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "Posterize"
+            "value": "[Lebo ya UI] Bandika"
           }
         },
         "ta": {
@@ -78242,7 +78242,7 @@
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Posterize"
+            "value": "áp phích"
           }
         },
         "zh-Hans": {
@@ -78733,7 +78733,7 @@
         "lv": {
           "stringUnit": {
             "state": "translated",
-            "value": "process"
+            "value": "[UI etiķetes] process"
           }
         },
         "mk": {
@@ -78942,7 +78942,7 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Process"
+            "value": "Proceso"
           }
         },
         "es-419": {
@@ -79062,7 +79062,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Process"
+            "value": "プロセス"
           }
         },
         "ka": {
@@ -79080,7 +79080,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Process"
+            "value": "프로세스"
           }
         },
         "lt": {
@@ -79092,7 +79092,7 @@
         "lv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Process"
+            "value": "[UI etiķete] Process"
           }
         },
         "mk": {
@@ -79128,7 +79128,7 @@
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Process"
+            "value": "Proces"
           }
         },
         "pt-BR": {
@@ -79140,7 +79140,7 @@
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
-            "value": "Process"
+            "value": "Processo"
           }
         },
         "ro": {
@@ -79152,7 +79152,7 @@
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Process"
+            "value": "Процесс"
           }
         },
         "sk": {
@@ -79218,13 +79218,13 @@
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Process"
+            "value": "İşlem"
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Process"
+            "value": "процес"
           }
         },
         "ur": {
@@ -79242,7 +79242,7 @@
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Process"
+            "value": "Quá trình"
           }
         },
         "zh-Hans": {
@@ -79301,13 +79301,13 @@
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Punch Mono"
+            "value": "[UI] Punch Mono"
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Punch Mono"
+            "value": "[UI label] Punch Mono"
           }
         },
         "el": {
@@ -79361,13 +79361,13 @@
         "et": {
           "stringUnit": {
             "state": "translated",
-            "value": "Punch Mono"
+            "value": "[Kasutajaliidese silt] Punch Mono"
           }
         },
         "eu": {
           "stringUnit": {
             "state": "translated",
-            "value": "Punch Mono"
+            "value": "[UI etiketa] Punch Mono"
           }
         },
         "fa": {
@@ -79391,19 +79391,19 @@
         "gl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Punch Mono"
+            "value": "[Etiqueta da interface de usuario] Punch Mono"
           }
         },
         "hr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Punch Mono"
+            "value": "[UI oznaka] Punch Mono"
           }
         },
         "hu": {
           "stringUnit": {
             "state": "translated",
-            "value": "Punch Mono"
+            "value": "[UI] Punch Mono"
           }
         },
         "hy": {
@@ -79421,7 +79421,7 @@
         "is": {
           "stringUnit": {
             "state": "translated",
-            "value": "Punch Mono"
+            "value": "[UI merki] Punch Mono"
           }
         },
         "ka": {
@@ -79439,13 +79439,13 @@
         "lt": {
           "stringUnit": {
             "state": "translated",
-            "value": "Punch Mono"
+            "value": "[UI etiketė] Punch Mono"
           }
         },
         "lv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Punch Mono"
+            "value": "[UI etiķete] Punch Mono"
           }
         },
         "mk": {
@@ -79469,25 +79469,25 @@
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "Punch Mono"
+            "value": "[UI label] Punch Mono"
           }
         },
         "ro": {
           "stringUnit": {
             "state": "translated",
-            "value": "Punch Mono"
+            "value": "[Etichetă UI] Punch Mono"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Punch Mono"
+            "value": "[označenie používateľského rozhrania] Punch Mono"
           }
         },
         "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Punch Mono"
+            "value": "[Oznaka uporabniškega vmesnika] Punch Mono"
           }
         },
         "sq": {
@@ -79535,7 +79535,7 @@
         "uz": {
           "stringUnit": {
             "state": "translated",
-            "value": "Punch Mono"
+            "value": "[UI yorlig'i] Punch Mono"
           }
         },
         "zh-HK": {
@@ -79558,7 +79558,7 @@
         "af": {
           "stringUnit": {
             "state": "translated",
-            "value": "radio"
+            "value": "[UI] radio"
           }
         },
         "be": {
@@ -79594,7 +79594,7 @@
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "radio"
+            "value": "[UI label] radio"
           }
         },
         "el": {
@@ -79678,13 +79678,13 @@
         "gl": {
           "stringUnit": {
             "state": "translated",
-            "value": "radio"
+            "value": "[Etiqueta da interface de usuario] radio"
           }
         },
         "hr": {
           "stringUnit": {
             "state": "translated",
-            "value": "radio"
+            "value": "[UI oznaka] radio"
           }
         },
         "hu": {
@@ -79732,7 +79732,7 @@
         "lv": {
           "stringUnit": {
             "state": "translated",
-            "value": "radio"
+            "value": "[UI etiķete] radio"
           }
         },
         "mk": {
@@ -79750,19 +79750,19 @@
         "ms": {
           "stringUnit": {
             "state": "translated",
-            "value": "radio"
+            "value": "radio [UI]."
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "radio"
+            "value": "[UI label] radio"
           }
         },
         "ro": {
           "stringUnit": {
             "state": "translated",
-            "value": "radio"
+            "value": "[Etichetă UI] radio"
           }
         },
         "sk": {
@@ -79774,13 +79774,13 @@
         "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "radio"
+            "value": "[UI oznaka] radio"
           }
         },
         "sq": {
           "stringUnit": {
             "state": "translated",
-            "value": "radio"
+            "value": "[etiketa UI] radio"
           }
         },
         "sr": {
@@ -79822,7 +79822,7 @@
         "uz": {
           "stringUnit": {
             "state": "translated",
-            "value": "radio"
+            "value": "[UI yorlig'i] radiosi"
           }
         },
         "zh-HK": {
@@ -84389,7 +84389,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Saturation"
+            "value": "Kejenuhan"
           }
         },
         "fr": {
@@ -85742,7 +85742,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "選択されたフォントラベル"
+            "value": "%@"
           }
         },
         "ka": {
@@ -85951,7 +85951,7 @@
         "af": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sepia"
+            "value": "[UI] Sepia"
           }
         },
         "ar": {
@@ -86071,7 +86071,7 @@
         "eu": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sepia"
+            "value": "[UI etiketa] Sepia"
           }
         },
         "fa": {
@@ -86089,7 +86089,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sepia"
+            "value": "Warna coklat tua"
           }
         },
         "fr": {
@@ -86113,7 +86113,7 @@
         "gl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sepia"
+            "value": "[Etiqueta da interface de usuario] Sepia"
           }
         },
         "he": {
@@ -86155,7 +86155,7 @@
         "is": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sepia"
+            "value": "[HÍ merki] Sepia"
           }
         },
         "it": {
@@ -86275,7 +86275,7 @@
         "sq": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sepia"
+            "value": "[Etiketa UI] Sepia"
           }
         },
         "sr": {
@@ -86299,7 +86299,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sepia"
+            "value": "[Lebo ya UI] Sepia"
           }
         },
         "ta": {
@@ -90234,7 +90234,7 @@
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Silk Punch"
+            "value": "[UI] Silk Punch"
           }
         },
         "da": {
@@ -90300,7 +90300,7 @@
         "eu": {
           "stringUnit": {
             "state": "translated",
-            "value": "Silk Punch"
+            "value": "[UI etiketa] Silk Punch"
           }
         },
         "fa": {
@@ -90318,7 +90318,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Silk Punch"
+            "value": "Pukulan Sutra"
           }
         },
         "gl": {
@@ -90330,7 +90330,7 @@
         "hr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Silk Punch"
+            "value": "[UI oznaka] Silk Punch"
           }
         },
         "hu": {
@@ -90420,7 +90420,7 @@
         "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Silk Punch"
+            "value": "[Oznaka uporabniškega vmesnika] Silk Punch"
           }
         },
         "sq": {
@@ -90438,7 +90438,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "Silk Punch"
+            "value": "[Lebo ya UI] Silk Punch"
           }
         },
         "ta": {
@@ -90468,7 +90468,7 @@
         "uz": {
           "stringUnit": {
             "state": "translated",
-            "value": "Silk Punch"
+            "value": "[UI yorlig'i] Silk Punch"
           }
         },
         "zh-HK": {
@@ -91479,7 +91479,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Slider"
+            "value": "Penggeser"
           }
         },
         "fr": {
@@ -93135,7 +93135,7 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Soft Dream"
+            "value": "sueño suave"
           }
         },
         "es-419": {
@@ -93255,7 +93255,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Soft Dream"
+            "value": "ソフトドリーム"
           }
         },
         "ka": {
@@ -93273,7 +93273,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Soft Dream"
+            "value": "소프트드림"
           }
         },
         "lt": {
@@ -93321,7 +93321,7 @@
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Soft Dream"
+            "value": "Miękki sen"
           }
         },
         "pt-BR": {
@@ -93333,7 +93333,7 @@
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
-            "value": "Soft Dream"
+            "value": "Sonho Suave"
           }
         },
         "ro": {
@@ -93345,7 +93345,7 @@
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Soft Dream"
+            "value": "Мягкая мечта"
           }
         },
         "sk": {
@@ -93411,13 +93411,13 @@
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Soft Dream"
+            "value": "Yumuşak Rüya"
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Soft Dream"
+            "value": "М'яка мрія"
           }
         },
         "ur": {
@@ -93435,7 +93435,7 @@
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Soft Dream"
+            "value": "Giấc mơ êm đềm"
           }
         },
         "zh-Hans": {
@@ -97885,13 +97885,13 @@
         "ca": {
           "stringUnit": {
             "state": "translated",
-            "value": "Teal Dusk"
+            "value": "[UI] Teal Dusk"
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Teal Dusk"
+            "value": "[UI] Teal Dusk"
           }
         },
         "da": {
@@ -97975,25 +97975,25 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Teal Dusk"
+            "value": "Kilumkilom sa Teal"
           }
         },
         "gl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Teal Dusk"
+            "value": "[Etiqueta da interface de usuario] Teal Dusk"
           }
         },
         "hr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Teal Dusk"
+            "value": "[UI oznaka] Teal Dusk"
           }
         },
         "hu": {
           "stringUnit": {
             "state": "translated",
-            "value": "Teal Dusk"
+            "value": "[UI] Teal Dusk"
           }
         },
         "hy": {
@@ -98035,7 +98035,7 @@
         "lv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Teal Dusk"
+            "value": "[UI etiķete] Teal Dusk"
           }
         },
         "mk": {
@@ -98065,19 +98065,19 @@
         "ro": {
           "stringUnit": {
             "state": "translated",
-            "value": "Teal Dusk"
+            "value": "[Etichetă UI] Teal Dusk"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Teal Dusk"
+            "value": "[označenie používateľského rozhrania] Teal Dusk"
           }
         },
         "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Teal Dusk"
+            "value": "[Oznaka uporabniškega vmesnika] Teal Dusk"
           }
         },
         "sq": {
@@ -98597,13 +98597,13 @@
         "ca": {
           "stringUnit": {
             "state": "translated",
-            "value": "Text"
+            "value": "[UI] Text"
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Text"
+            "value": "[UI] Text"
           }
         },
         "da": {
@@ -98687,7 +98687,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Text"
+            "value": "Teks"
           }
         },
         "gl": {
@@ -98777,13 +98777,13 @@
         "ro": {
           "stringUnit": {
             "state": "translated",
-            "value": "Text"
+            "value": "[Etichetă UI] Text"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Text"
+            "value": "[označenie používateľského rozhrania] Text"
           }
         },
         "sl": {
@@ -101272,7 +101272,7 @@
         "af": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tint"
+            "value": "[UI] Tint"
           }
         },
         "ar": {
@@ -101302,7 +101302,7 @@
         "ca": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tint"
+            "value": "[UI] Tint"
           }
         },
         "cs": {
@@ -101410,7 +101410,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tint"
+            "value": "Warna"
           }
         },
         "fr": {
@@ -103289,7 +103289,7 @@
         "ca": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tonal"
+            "value": "[UI] Tonal"
           }
         },
         "cs": {
@@ -103307,7 +103307,7 @@
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tonal"
+            "value": "[UI label] Tonal"
           }
         },
         "de": {
@@ -103397,7 +103397,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tonal"
+            "value": "tonal"
           }
         },
         "fr": {
@@ -103421,7 +103421,7 @@
         "gl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tonal"
+            "value": "[Etiqueta da IU] Tonal"
           }
         },
         "he": {
@@ -103475,7 +103475,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tonal"
+            "value": "調性"
           }
         },
         "ka": {
@@ -103493,7 +103493,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tonal"
+            "value": "색조"
           }
         },
         "lt": {
@@ -103529,7 +103529,7 @@
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tonal"
+            "value": "[UI label] Tonal"
           }
         },
         "nl": {
@@ -103541,7 +103541,7 @@
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tonal"
+            "value": "Tonalny"
           }
         },
         "pt-BR": {
@@ -103553,25 +103553,25 @@
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tonal"
+            "value": "Tonalidade"
           }
         },
         "ro": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tonal"
+            "value": "[Etichetă UI] Tonal"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tonal"
+            "value": "Тональный"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tonal"
+            "value": "[označenie používateľského rozhrania] Tónové"
           }
         },
         "sl": {
@@ -103583,7 +103583,7 @@
         "sq": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tonal"
+            "value": "[Etiketa UI] Tonal"
           }
         },
         "sr": {
@@ -103607,7 +103607,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tonal"
+            "value": "[Lebo ya UI] Tonal"
           }
         },
         "ta": {
@@ -103637,7 +103637,7 @@
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tonal"
+            "value": "Тональний"
           }
         },
         "ur": {
@@ -103649,13 +103649,13 @@
         "uz": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tonal"
+            "value": "[UI yorlig'i] Tonal"
           }
         },
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tonal"
+            "value": "âm sắc"
           }
         },
         "zh-Hans": {
@@ -103798,7 +103798,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tonal Lift"
+            "value": "Peningkatan Nada"
           }
         },
         "gl": {
@@ -103816,7 +103816,7 @@
         "hu": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tonal Lift"
+            "value": "[UI] Tonális emelés"
           }
         },
         "hy": {
@@ -104601,7 +104601,7 @@
         "ro": {
           "stringUnit": {
             "state": "translated",
-            "value": "transfer"
+            "value": "[Etichetă UI] transfer"
           }
         },
         "sk": {
@@ -104661,7 +104661,7 @@
         "uz": {
           "stringUnit": {
             "state": "translated",
-            "value": "transfer"
+            "value": "[UI label] uzatish"
           }
         },
         "zh-HK": {
@@ -104780,7 +104780,7 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transfer"
+            "value": "Transferir"
           }
         },
         "es-419": {
@@ -104900,7 +104900,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transfer"
+            "value": "移行"
           }
         },
         "ka": {
@@ -104918,7 +104918,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transfer"
+            "value": "옮기다"
           }
         },
         "lt": {
@@ -104966,7 +104966,7 @@
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transfer"
+            "value": "Przenosić"
           }
         },
         "pt-BR": {
@@ -104978,19 +104978,19 @@
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transfer"
+            "value": "Transferir"
           }
         },
         "ro": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transfer"
+            "value": "[Etichetă UI] Transfer"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transfer"
+            "value": "Передача"
           }
         },
         "sk": {
@@ -105056,13 +105056,13 @@
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transfer"
+            "value": "Aktarım"
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transfer"
+            "value": "Трансфер"
           }
         },
         "ur": {
@@ -105074,13 +105074,13 @@
         "uz": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transfer"
+            "value": "[UI yorlig'i] O'tkazish"
           }
         },
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transfer"
+            "value": "Chuyển khoản"
           }
         },
         "zh-Hans": {
@@ -106671,7 +106671,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Unsharp Mask"
+            "value": "Masker Tidak Tajam"
           }
         },
         "fr": {
@@ -107383,7 +107383,7 @@
         "af": {
           "stringUnit": {
             "state": "translated",
-            "value": "VHS"
+            "value": "[UI] VHS"
           }
         },
         "be": {
@@ -107407,19 +107407,19 @@
         "ca": {
           "stringUnit": {
             "state": "translated",
-            "value": "VHS"
+            "value": "[UI] VHS"
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "VHS"
+            "value": "[UI] VHS"
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "VHS"
+            "value": "[UI label] VHS"
           }
         },
         "el": {
@@ -107473,13 +107473,13 @@
         "et": {
           "stringUnit": {
             "state": "translated",
-            "value": "VHS"
+            "value": "[UI silt] VHS"
           }
         },
         "eu": {
           "stringUnit": {
             "state": "translated",
-            "value": "VHS"
+            "value": "[UI etiketa] VHS"
           }
         },
         "fa": {
@@ -107497,25 +107497,25 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "VHS"
+            "value": "[UI] VHS"
           }
         },
         "gl": {
           "stringUnit": {
             "state": "translated",
-            "value": "VHS"
+            "value": "[Etiqueta da interface de usuario] VHS"
           }
         },
         "hr": {
           "stringUnit": {
             "state": "translated",
-            "value": "VHS"
+            "value": "[UI oznaka] VHS"
           }
         },
         "hu": {
           "stringUnit": {
             "state": "translated",
-            "value": "VHS"
+            "value": "[UI] VHS"
           }
         },
         "hy": {
@@ -107533,7 +107533,7 @@
         "is": {
           "stringUnit": {
             "state": "translated",
-            "value": "VHS"
+            "value": "[HÍ merki] VHS"
           }
         },
         "ka": {
@@ -107551,13 +107551,13 @@
         "lt": {
           "stringUnit": {
             "state": "translated",
-            "value": "VHS"
+            "value": "[UI etiketė] VHS"
           }
         },
         "lv": {
           "stringUnit": {
             "state": "translated",
-            "value": "VHS"
+            "value": "[UI etiķete] VHS"
           }
         },
         "mk": {
@@ -107575,37 +107575,37 @@
         "ms": {
           "stringUnit": {
             "state": "translated",
-            "value": "VHS"
+            "value": "[UI] VHS"
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "VHS"
+            "value": "[UI-etikett] VHS"
           }
         },
         "ro": {
           "stringUnit": {
             "state": "translated",
-            "value": "VHS"
+            "value": "[Etichetă UI] VHS"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "VHS"
+            "value": "[označenie používateľského rozhrania] VHS"
           }
         },
         "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "VHS"
+            "value": "[Oznaka uporabniškega vmesnika] VHS"
           }
         },
         "sq": {
           "stringUnit": {
             "state": "translated",
-            "value": "VHS"
+            "value": "[Etiketa UI] VHS"
           }
         },
         "sr": {
@@ -107617,7 +107617,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "VHS"
+            "value": "[Lebo ya UI] VHS"
           }
         },
         "ta": {
@@ -107647,7 +107647,7 @@
         "uz": {
           "stringUnit": {
             "state": "translated",
-            "value": "VHS"
+            "value": "[UI yorlig'i] VHS"
           }
         },
         "zh-HK": {
@@ -107808,7 +107808,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Vibrance"
+            "value": "Kakusog"
           }
         },
         "fr": {
@@ -109506,7 +109506,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Vignette"
+            "value": "Skema"
           }
         },
         "fr": {
@@ -109716,7 +109716,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "Vignette"
+            "value": "[Lebo ya UI] Vignette"
           }
         },
         "ta": {
@@ -110737,7 +110737,7 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Warm Fade"
+            "value": "Desvanecimiento cálido"
           }
         },
         "es-419": {
@@ -110779,7 +110779,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Warm Fade"
+            "value": "Mainit nga Fade"
           }
         },
         "fr": {
@@ -110827,7 +110827,7 @@
         "hu": {
           "stringUnit": {
             "state": "translated",
-            "value": "Warm Fade"
+            "value": "[UI] Warm Fade"
           }
         },
         "hy": {
@@ -110845,7 +110845,7 @@
         "is": {
           "stringUnit": {
             "state": "translated",
-            "value": "Warm Fade"
+            "value": "[HÍ merki] Warm Fade"
           }
         },
         "it": {
@@ -110857,7 +110857,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Warm Fade"
+            "value": "ウォームフェード"
           }
         },
         "ka": {
@@ -110875,7 +110875,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Warm Fade"
+            "value": "따뜻한 페이드"
           }
         },
         "lt": {
@@ -110923,7 +110923,7 @@
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Warm Fade"
+            "value": "Ciepły zanik"
           }
         },
         "pt-BR": {
@@ -110935,7 +110935,7 @@
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
-            "value": "Warm Fade"
+            "value": "Desvanecimento Quente"
           }
         },
         "ro": {
@@ -110947,7 +110947,7 @@
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Warm Fade"
+            "value": "Теплый выцветание"
           }
         },
         "sk": {
@@ -111013,13 +111013,13 @@
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Warm Fade"
+            "value": "Sıcak Solma"
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Warm Fade"
+            "value": "Тепле вицвітання"
           }
         },
         "ur": {
@@ -111037,7 +111037,7 @@
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Warm Fade"
+            "value": "Phai ấm"
           }
         },
         "zh-Hans": {
@@ -112461,7 +112461,7 @@
         "eu": {
           "stringUnit": {
             "state": "translated",
-            "value": "zero"
+            "value": "[UI etiketa] zero"
           }
         },
         "fa": {
@@ -112665,7 +112665,7 @@
         "sq": {
           "stringUnit": {
             "state": "translated",
-            "value": "zero"
+            "value": "[Etiketa UI] zero"
           }
         },
         "sr": {
@@ -113191,7 +113191,7 @@
         "af": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zine"
+            "value": "[UI] Zine"
           }
         },
         "ar": {
@@ -113221,13 +113221,13 @@
         "ca": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zine"
+            "value": "[UI] Zine"
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zine"
+            "value": "[UI] Zine"
           }
         },
         "cy": {
@@ -113239,7 +113239,7 @@
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zine"
+            "value": "[UI label] Zine"
           }
         },
         "de": {
@@ -113287,7 +113287,7 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zine"
+            "value": "revista"
           }
         },
         "es-419": {
@@ -113305,13 +113305,13 @@
         "et": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zine"
+            "value": "[UI silt] Zine"
           }
         },
         "eu": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zine"
+            "value": "[UI etiketa] Zine"
           }
         },
         "fa": {
@@ -113329,7 +113329,7 @@
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zine"
+            "value": "[UI] Zine"
           }
         },
         "fr": {
@@ -113353,7 +113353,7 @@
         "gl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zine"
+            "value": "[Etiqueta da interface de usuario] Zine"
           }
         },
         "he": {
@@ -113371,13 +113371,13 @@
         "hr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zine"
+            "value": "[UI oznaka] Zine"
           }
         },
         "hu": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zine"
+            "value": "[UI] Zine"
           }
         },
         "hy": {
@@ -113395,7 +113395,7 @@
         "is": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zine"
+            "value": "[HÍ merki] Zine"
           }
         },
         "it": {
@@ -113407,7 +113407,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zine"
+            "value": "ジン"
           }
         },
         "ka": {
@@ -113425,19 +113425,19 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zine"
+            "value": "진"
           }
         },
         "lt": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zine"
+            "value": "[UI etiketė] Zine"
           }
         },
         "lv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zine"
+            "value": "[UI etiķete] Zine"
           }
         },
         "mk": {
@@ -113455,13 +113455,13 @@
         "ms": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zine"
+            "value": "[UI] Zine"
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zine"
+            "value": "[UI-etikett] Zine"
           }
         },
         "nl": {
@@ -113473,7 +113473,7 @@
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zine"
+            "value": "Zin"
           }
         },
         "pt-BR": {
@@ -113491,31 +113491,31 @@
         "ro": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zine"
+            "value": "[Etichetă UI] Zine"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zine"
+            "value": "Зин"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zine"
+            "value": "[označenie používateľského rozhrania] Zine"
           }
         },
         "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zine"
+            "value": "[Oznaka uporabniškega vmesnika] Zine"
           }
         },
         "sq": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zine"
+            "value": "[Etiketa UI] Zine"
           }
         },
         "sr": {
@@ -113539,7 +113539,7 @@
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zine"
+            "value": "[Lebo ya UI] Zine"
           }
         },
         "ta": {
@@ -113569,7 +113569,7 @@
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zine"
+            "value": "Зін"
           }
         },
         "ur": {
@@ -113581,13 +113581,13 @@
         "uz": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zine"
+            "value": "[UI yorlig'i] Zine"
           }
         },
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zine"
+            "value": "tạp chí"
           }
         },
         "zh-Hans": {

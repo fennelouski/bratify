@@ -7,7 +7,7 @@
 
 import UIKit
 
-private enum ImageFilterRendering {
+enum ImageFilterRendering {
     static let sharedContext = CIContext(options: nil)
 }
 
@@ -36,6 +36,7 @@ extension UIImage {
         flipVertical: Bool = false,
         blur: CGFloat = 0
     ) -> UIImage? {
+        guard let cgImage = self.cgImage else { return nil }
         let size = CGSize(width: self.size.width * scale, height: self.size.height * scale)
 
         UIGraphicsBeginImageContextWithOptions(size, false, self.scale)
@@ -52,7 +53,7 @@ extension UIImage {
         }
 
         context.interpolationQuality = .none
-        context.draw(self.cgImage!, in: CGRect(origin: .zero, size: size))
+        context.draw(cgImage, in: CGRect(origin: .zero, size: size))
 
         let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()

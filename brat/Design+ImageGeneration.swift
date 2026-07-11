@@ -158,7 +158,7 @@ extension Design {
             return false
         }
 
-        let context = CIContext()
+        let context = ImageFilterRendering.sharedContext
         let inputImage = CIImage(cgImage: cgImage)
         let filter = CIFilter(name: "CIAreaAverage")
         filter?.setValue(inputImage, forKey: kCIInputImageKey)

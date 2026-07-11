@@ -165,10 +165,35 @@ class ViewController: UIViewController {
     }
 
     private func shareDesign(_ design: Design) {
-        let cacheKey = design.description
-        let image = imageService.memoryCache.object(forKey: cacheKey as NSString)
-        var items: [Any] = [design.text]
-        if let image { items.insert(image, at: 0) }
+        let interfaceStyle = DesignTextColor.resolvedUserInterfaceStyle(
+            traitCollection.userInterfaceStyle,
+            traitCollection: traitCollection,
+            view: view
+        )
+        let cacheKey = design.imageCacheKey(
+            userInterfaceStyle: interfaceStyle,
+            traitCollection: traitCollection,
+            view: view
+        )
+        if let image = imageService.memoryCache.object(forKey: cacheKey as NSString) {
+            presentShareSheet(items: [image, design.text])
+        } else {
+            design.generateImage(
+                with: imageService,
+                userInterfaceStyle: interfaceStyle,
+                traitCollection: traitCollection,
+                view: view
+            ) { [weak self] image, _ in
+                DispatchQueue.main.async {
+                    var items: [Any] = [design.text]
+                    if let image { items.insert(image, at: 0) }
+                    self?.presentShareSheet(items: items)
+                }
+            }
+        }
+    }
+
+    private func presentShareSheet(items: [Any]) {
         let activityVC = UIActivityViewController(activityItems: items, applicationActivities: nil)
         if let popover = activityVC.popoverPresentationController {
             popover.sourceView = view
@@ -249,27 +274,6 @@ class ViewController: UIViewController {
         designs = sorted(DesignManager.shared.getAllDesigns())
         collectionView.reloadData()
         updateEmptyState()
-        
-        for indexPath in collectionView.indexPathsForVisibleItems {
-            if designs.indices.contains(indexPath.row) {
-                let design = designs[indexPath.row]
-                let updatedDesign = Design(
-                    text: design.text,
-                    backgroundColor: design.backgroundColor,
-                    creationDate: design.creationDate,
-                    fontName: design.fontName,
-                    fontSize: design.fontSize,
-                    pixelationScale: design.pixelationScale + .random(in: -0.00001...0.00001),
-                    stretch: design.stretch,
-                    blur: design.blur,
-                    id: design.id
-                )
-                DesignManager.shared.addDesign(updatedDesign)
-                updatedDesign.generateImage(with: imageService, callback: { [weak collectionView] _, _ in
-                    collectionView?.reloadItems(at: [indexPath])
-                })
-            }
-        }
     }
 
     @objc func addNewDesign() {

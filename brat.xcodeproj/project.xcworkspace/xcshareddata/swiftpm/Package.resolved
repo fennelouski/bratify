@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/fennelouski/SwiftUI-Web-Image-Picker.git",
       "state" : {
-        "revision" : "95452cde0c1bcd2c3b922a910ba43103ed7e607d",
-        "version" : "1.3.0"
+        "revision" : "cdad5c452d5caa858a898c0cab5adca792ddf3fc",
+        "version" : "1.5.0"
       }
     }
   ],

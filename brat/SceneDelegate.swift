@@ -13,15 +13,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        guard let windowScene = (scene as? UIWindowScene) else { return }
-        
-        window = UIWindow(windowScene: windowScene)
-        window?.backgroundColor = .systemBackground
-        let mainViewController = ViewController()
-        let navigationController = UINavigationController(rootViewController: mainViewController)
+        guard let windowScene = scene as? UIWindowScene else { return }
 
-        window?.rootViewController = navigationController
-        window?.makeKeyAndVisible()
+        // Single programmatic root — do not also set UISceneStoryboardFile in Info.plist,
+        // or UIKit instantiates a second ViewController from Main.storyboard (often crashes on iPad).
+        let window = windowScene.windows.first(where: { $0.rootViewController != nil })
+            ?? windowScene.windows.first
+            ?? UIWindow(windowScene: windowScene)
+        window.backgroundColor = .systemBackground
+
+        if window.rootViewController == nil {
+            let navigationController = UINavigationController(rootViewController: ViewController())
+            window.rootViewController = navigationController
+        }
+
+        window.makeKeyAndVisible()
+        self.window = window
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
