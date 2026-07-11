@@ -380,7 +380,7 @@ struct Design: Codable {
         backgroundColor = UIColor(hexString: colorHex)
         let textColorHex = try container.decodeIfPresent(String.self, forKey: .textColor)
         textColor = textColorHex.map { UIColor(hexString: $0) } ?? .white
-        usesAutomaticTextColor = try container.decodeIfPresent(Bool.self, forKey: .usesAutomaticTextColor) ?? true
+        usesAutomaticTextColor = try container.decodeIfPresent(Bool.self, forKey: .usesAutomaticTextColor) ?? false
         creationDate = try container.decode(Date.self, forKey: .creationDate)
         modifiedDate = try container.decodeIfPresent(Date.self, forKey: .modifiedDate) ?? creationDate
         fontName = try container.decode(String.self, forKey: .fontName)
