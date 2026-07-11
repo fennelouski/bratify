@@ -6,20 +6,23 @@
 //
 
 import UIKit
+import Metal
 
 enum ImageFilterRendering {
-    static let sharedContext = CIContext(options: nil)
+    static let metalDevice: MTLDevice? = MTLCreateSystemDefaultDevice()
+
+    static let sharedContext: CIContext = {
+        if let device = metalDevice {
+            return CIContext(mtlDevice: device)
+        }
+        return CIContext(options: nil)
+    }()
 }
 
 private extension UIImage {
     /// Core Image input with orientation applied; extent matches visible pixels.
     func orientedCIImage() -> CIImage? {
         CIImage(image: self)?.oriented(.up)
-    }
-
-    /// Replicates edge pixels so filters do not sample transparent/out-of-bounds values.
-    func clampedToSourceExtent(_ image: CIImage, extent: CGRect) -> CIImage {
-        image.clampedToExtent().cropped(to: extent)
     }
 
     func renderCIImage(_ ciImage: CIImage, toExtent extent: CGRect, in context: CIContext) -> UIImage? {
@@ -69,84 +72,41 @@ extension UIImage {
         guard let inputImage = orientedCIImage() else { return nil }
 
         let sourceExtent = inputImage.extent.integral
-        let context = ImageFilterRendering.sharedContext
-
-        guard let filter = CIFilter(name: "CIGaussianBlur") else { return nil }
-        filter.setValue(inputImage.clampedToExtent(), forKey: kCIInputImageKey)
-        filter.setValue(blur, forKey: kCIInputRadiusKey)
-
-        guard let outputImage = filter.outputImage else { return nil }
         return renderCIImage(
-            outputImage.cropped(to: sourceExtent),
+            inputImage.applyingGaussianBlur(blur, extent: sourceExtent),
             toExtent: sourceExtent,
-            in: context
+            in: ImageFilterRendering.sharedContext
         )
     }
 
     func applyFilters(_ settings: ImageFilterSettings) -> UIImage? {
-        applyFilters(
-            brightness: settings.brightness,
-            contrast: settings.contrast,
-            saturation: settings.saturation,
-            exposure: settings.exposure,
-            gamma: settings.gamma,
-            sepia: settings.sepia,
-            invert: settings.invert,
-            pixelate: settings.pixelate,
-            sharpen: settings.sharpen,
-            monochrome: settings.monochrome,
-            vignette: settings.vignette,
-            hue: settings.hue,
-            highlightAmount: settings.highlightAmount,
-            shadowAmount: settings.shadowAmount,
-            grain: settings.grain,
-            bloom: settings.bloom,
-            duotoneIntensity: settings.duotoneIntensity,
-            duotoneColorHex: settings.duotoneColorHex,
-            vibrance: settings.vibrance,
-            posterizeLevels: settings.posterizeLevels,
-            colorTemperature: settings.colorTemperature,
-            colorTint: settings.colorTint,
-            photoEffect: settings.photoEffect,
-            halftone: settings.halftone,
-            unsharpMask: settings.unsharpMask
-        )
-    }
-
-    func applyFilters(
-        brightness: CGFloat,
-        contrast: CGFloat,
-        saturation: CGFloat,
-        exposure: CGFloat,
-        gamma: CGFloat,
-        sepia: CGFloat,
-        invert: Bool,
-        pixelate: CGFloat,
-        sharpen: CGFloat,
-        monochrome: CGFloat,
-        vignette: CGFloat,
-        hue: CGFloat = 0,
-        highlightAmount: CGFloat = 1,
-        shadowAmount: CGFloat = 0,
-        grain: CGFloat = 0,
-        bloom: CGFloat = 0,
-        duotoneIntensity: CGFloat = 0,
-        duotoneColorHex: String = "8ACE00",
-        vibrance: CGFloat = 0,
-        posterizeLevels: CGFloat = 0,
-        colorTemperature: CGFloat = 6500,
-        colorTint: CGFloat = 0,
-        photoEffect: FilterPhotoEffect? = nil,
-        halftone: CGFloat = 0,
-        unsharpMask: CGFloat = 0
-    ) -> UIImage? {
         guard let inputImage = orientedCIImage() else { return nil }
 
         let sourceExtent = inputImage.extent.integral
-        let context = ImageFilterRendering.sharedContext
-        var ciImage = inputImage
+        return renderCIImage(
+            inputImage.applyingDesignFilters(settings, extent: sourceExtent),
+            toExtent: sourceExtent,
+            in: ImageFilterRendering.sharedContext
+        )
+    }
+}
 
-        if let photoEffect,
+extension CIImage {
+    func applyingGaussianBlur(_ blur: CGFloat, extent sourceExtent: CGRect) -> CIImage {
+        guard let filter = CIFilter(name: "CIGaussianBlur") else { return self }
+        filter.setValue(clampedToExtent(), forKey: kCIInputImageKey)
+        filter.setValue(blur, forKey: kCIInputRadiusKey)
+        guard let outputImage = filter.outputImage else { return self }
+        return outputImage.cropped(to: sourceExtent)
+    }
+
+    /// The full main-image adjustment chain, kept as a lazy CIImage graph so
+    /// callers can either read it back (export/cache) or render it straight to
+    /// a Metal drawable (live preview).
+    func applyingDesignFilters(_ settings: ImageFilterSettings, extent sourceExtent: CGRect) -> CIImage {
+        var ciImage = self
+
+        if let photoEffect = settings.photoEffect,
            let filter = CIFilter(name: photoEffect.ciFilterName) {
             filter.setValue(ciImage, forKey: kCIInputImageKey)
             if let output = filter.outputImage {
@@ -154,117 +114,117 @@ extension UIImage {
             }
         }
 
-        let needsColorControls = brightness != 0 || contrast != 1 || saturation != 1
+        let needsColorControls = settings.brightness != 0 || settings.contrast != 1 || settings.saturation != 1
         if needsColorControls, let filter = CIFilter(name: "CIColorControls") {
             filter.setValue(ciImage, forKey: kCIInputImageKey)
-            filter.setValue(brightness, forKey: kCIInputBrightnessKey)
-            filter.setValue(contrast, forKey: kCIInputContrastKey)
-            filter.setValue(saturation, forKey: kCIInputSaturationKey)
+            filter.setValue(settings.brightness, forKey: kCIInputBrightnessKey)
+            filter.setValue(settings.contrast, forKey: kCIInputContrastKey)
+            filter.setValue(settings.saturation, forKey: kCIInputSaturationKey)
             if let outputImage = filter.outputImage {
                 ciImage = outputImage
             }
         }
 
-        if vibrance != 0, let filter = CIFilter(name: "CIVibrance") {
+        if settings.vibrance != 0, let filter = CIFilter(name: "CIVibrance") {
             filter.setValue(ciImage, forKey: kCIInputImageKey)
-            filter.setValue(vibrance, forKey: "inputAmount")
+            filter.setValue(settings.vibrance, forKey: "inputAmount")
             if let outputImage = filter.outputImage {
                 ciImage = outputImage
             }
         }
 
-        if hue != 0, let filter = CIFilter(name: "CIHueAdjust") {
+        if settings.hue != 0, let filter = CIFilter(name: "CIHueAdjust") {
             filter.setValue(ciImage, forKey: kCIInputImageKey)
-            filter.setValue(hue * .pi / 180, forKey: kCIInputAngleKey)
+            filter.setValue(settings.hue * .pi / 180, forKey: kCIInputAngleKey)
             if let outputImage = filter.outputImage {
                 ciImage = outputImage
             }
         }
 
-        if exposure != 0, let filter = CIFilter(name: "CIExposureAdjust") {
+        if settings.exposure != 0, let filter = CIFilter(name: "CIExposureAdjust") {
             filter.setValue(ciImage, forKey: kCIInputImageKey)
-            filter.setValue(exposure, forKey: kCIInputEVKey)
+            filter.setValue(settings.exposure, forKey: kCIInputEVKey)
             if let outputImage = filter.outputImage {
                 ciImage = outputImage
             }
         }
 
-        if gamma != 1, let filter = CIFilter(name: "CIGammaAdjust") {
+        if settings.gamma != 1, let filter = CIFilter(name: "CIGammaAdjust") {
             filter.setValue(ciImage, forKey: kCIInputImageKey)
-            filter.setValue(gamma, forKey: "inputPower")
+            filter.setValue(settings.gamma, forKey: "inputPower")
             if let outputImage = filter.outputImage {
                 ciImage = outputImage
             }
         }
 
-        if colorTemperature != 6500 || colorTint != 0,
+        if settings.colorTemperature != 6500 || settings.colorTint != 0,
            let filter = CIFilter(name: "CITemperatureAndTint") {
             filter.setValue(ciImage, forKey: kCIInputImageKey)
             filter.setValue(CIVector(x: 6500, y: 0), forKey: "inputNeutral")
-            filter.setValue(CIVector(x: colorTemperature, y: colorTint), forKey: "inputTargetNeutral")
+            filter.setValue(CIVector(x: settings.colorTemperature, y: settings.colorTint), forKey: "inputTargetNeutral")
             if let outputImage = filter.outputImage {
                 ciImage = outputImage
             }
         }
 
-        if highlightAmount != 1 || shadowAmount != 0,
+        if settings.highlightAmount != 1 || settings.shadowAmount != 0,
            let filter = CIFilter(name: "CIHighlightShadowAdjust") {
             filter.setValue(ciImage, forKey: kCIInputImageKey)
-            filter.setValue(highlightAmount, forKey: "inputHighlightAmount")
-            filter.setValue(shadowAmount, forKey: "inputShadowAmount")
+            filter.setValue(settings.highlightAmount, forKey: "inputHighlightAmount")
+            filter.setValue(settings.shadowAmount, forKey: "inputShadowAmount")
             if let outputImage = filter.outputImage {
                 ciImage = outputImage
             }
         }
 
-        if sepia != 0, let filter = CIFilter(name: "CISepiaTone") {
+        if settings.sepia != 0, let filter = CIFilter(name: "CISepiaTone") {
             filter.setValue(ciImage, forKey: kCIInputImageKey)
-            filter.setValue(sepia, forKey: kCIInputIntensityKey)
+            filter.setValue(settings.sepia, forKey: kCIInputIntensityKey)
             if let outputImage = filter.outputImage {
                 ciImage = outputImage
             }
         }
 
-        if duotoneIntensity > 0, let filter = CIFilter(name: "CIColorMonochrome") {
+        if settings.duotoneIntensity > 0, let filter = CIFilter(name: "CIColorMonochrome") {
             filter.setValue(ciImage, forKey: kCIInputImageKey)
-            filter.setValue(CIColor(color: UIColor(hexString: duotoneColorHex)), forKey: kCIInputColorKey)
-            filter.setValue(duotoneIntensity, forKey: kCIInputIntensityKey)
+            filter.setValue(CIColor(color: UIColor(hexString: settings.duotoneColorHex)), forKey: kCIInputColorKey)
+            filter.setValue(settings.duotoneIntensity, forKey: kCIInputIntensityKey)
             if let outputImage = filter.outputImage {
                 ciImage = outputImage
             }
         }
 
-        if monochrome != 0, let filter = CIFilter(name: "CIColorMonochrome") {
+        if settings.monochrome != 0, let filter = CIFilter(name: "CIColorMonochrome") {
             filter.setValue(ciImage, forKey: kCIInputImageKey)
             filter.setValue(CIColor(color: UIColor.white), forKey: kCIInputColorKey)
-            filter.setValue(monochrome, forKey: kCIInputIntensityKey)
+            filter.setValue(settings.monochrome, forKey: kCIInputIntensityKey)
             if let outputImage = filter.outputImage {
                 ciImage = outputImage
             }
         }
 
-        if posterizeLevels >= 2,
+        if settings.posterizeLevels >= 2,
            let filter = CIFilter(name: "CIColorPosterize") {
             filter.setValue(ciImage, forKey: kCIInputImageKey)
-            filter.setValue(posterizeLevels, forKey: "inputLevels")
+            filter.setValue(settings.posterizeLevels, forKey: "inputLevels")
             if let outputImage = filter.outputImage {
                 ciImage = outputImage
             }
         }
 
-        if invert, let filter = CIFilter(name: "CIColorInvert") {
+        if settings.invert, let filter = CIFilter(name: "CIColorInvert") {
             filter.setValue(ciImage, forKey: kCIInputImageKey)
             if let outputImage = filter.outputImage {
                 ciImage = outputImage
             }
         }
 
-        if halftone > 0, let filter = CIFilter(name: "CIDotScreen") {
+        if settings.halftone > 0, let filter = CIFilter(name: "CIDotScreen") {
             filter.setValue(
-                clampedToSourceExtent(ciImage, extent: sourceExtent),
+                ciImage.clampedToSourceExtent(sourceExtent),
                 forKey: kCIInputImageKey
             )
-            filter.setValue(halftone, forKey: "inputWidth")
+            filter.setValue(settings.halftone, forKey: "inputWidth")
             filter.setValue(0.7, forKey: "inputSharpness")
             filter.setValue(
                 CIVector(x: sourceExtent.midX, y: sourceExtent.midY),
@@ -275,12 +235,12 @@ extension UIImage {
             }
         }
 
-        if pixelate != 0, let filter = CIFilter(name: "CIPixellate") {
+        if settings.pixelate != 0, let filter = CIFilter(name: "CIPixellate") {
             filter.setValue(
-                clampedToSourceExtent(ciImage, extent: sourceExtent),
+                ciImage.clampedToSourceExtent(sourceExtent),
                 forKey: kCIInputImageKey
             )
-            filter.setValue(pixelate, forKey: kCIInputScaleKey)
+            filter.setValue(settings.pixelate, forKey: kCIInputScaleKey)
             filter.setValue(
                 CIVector(x: sourceExtent.midX, y: sourceExtent.midY),
                 forKey: kCIInputCenterKey
@@ -290,64 +250,65 @@ extension UIImage {
             }
         }
 
-        if unsharpMask > 0, let filter = CIFilter(name: "CIUnsharpMask") {
+        if settings.unsharpMask > 0, let filter = CIFilter(name: "CIUnsharpMask") {
             filter.setValue(
-                clampedToSourceExtent(ciImage, extent: sourceExtent),
+                ciImage.clampedToSourceExtent(sourceExtent),
                 forKey: kCIInputImageKey
             )
-            filter.setValue(unsharpMask, forKey: kCIInputIntensityKey)
+            filter.setValue(settings.unsharpMask, forKey: kCIInputIntensityKey)
             filter.setValue(2.5, forKey: kCIInputRadiusKey)
             if let outputImage = filter.outputImage {
                 ciImage = outputImage.cropped(to: sourceExtent)
             }
         }
 
-        if sharpen != 0, let filter = CIFilter(name: "CISharpenLuminance") {
+        if settings.sharpen != 0, let filter = CIFilter(name: "CISharpenLuminance") {
             filter.setValue(
-                clampedToSourceExtent(ciImage, extent: sourceExtent),
+                ciImage.clampedToSourceExtent(sourceExtent),
                 forKey: kCIInputImageKey
             )
-            filter.setValue(sharpen, forKey: kCIInputSharpnessKey)
+            filter.setValue(settings.sharpen, forKey: kCIInputSharpnessKey)
             if let outputImage = filter.outputImage {
                 ciImage = outputImage.cropped(to: sourceExtent)
             }
         }
 
-        if bloom > 0, let filter = CIFilter(name: "CIBloom") {
+        if settings.bloom > 0, let filter = CIFilter(name: "CIBloom") {
             filter.setValue(
-                clampedToSourceExtent(ciImage, extent: sourceExtent),
+                ciImage.clampedToSourceExtent(sourceExtent),
                 forKey: kCIInputImageKey
             )
-            filter.setValue(bloom, forKey: kCIInputIntensityKey)
+            filter.setValue(settings.bloom, forKey: kCIInputIntensityKey)
             filter.setValue(12, forKey: kCIInputRadiusKey)
             if let outputImage = filter.outputImage {
                 ciImage = outputImage.cropped(to: sourceExtent)
             }
         }
 
-        if grain > 0 {
-            ciImage = applyGrain(to: ciImage, extent: sourceExtent, intensity: grain) ?? ciImage
+        if settings.grain > 0 {
+            ciImage = ciImage.applyingGrain(extent: sourceExtent, intensity: settings.grain) ?? ciImage
         }
 
-        if vignette != 0, let filter = CIFilter(name: "CIVignette") {
+        if settings.vignette != 0, let filter = CIFilter(name: "CIVignette") {
             filter.setValue(
-                clampedToSourceExtent(ciImage, extent: sourceExtent),
+                ciImage.clampedToSourceExtent(sourceExtent),
                 forKey: kCIInputImageKey
             )
-            filter.setValue(vignette, forKey: kCIInputIntensityKey)
+            filter.setValue(settings.vignette, forKey: kCIInputIntensityKey)
             if let outputImage = filter.outputImage {
                 ciImage = outputImage.cropped(to: sourceExtent)
             }
         }
 
-        return renderCIImage(
-            ciImage.cropped(to: sourceExtent),
-            toExtent: sourceExtent,
-            in: context
-        )
+        return ciImage.cropped(to: sourceExtent)
     }
 
-    private func applyGrain(to image: CIImage, extent: CGRect, intensity: CGFloat) -> CIImage? {
+    /// Replicates edge pixels so filters do not sample transparent/out-of-bounds values.
+    private func clampedToSourceExtent(_ extent: CGRect) -> CIImage {
+        clampedToExtent().cropped(to: extent)
+    }
+
+    private func applyingGrain(extent: CGRect, intensity: CGFloat) -> CIImage? {
         guard let noiseFilter = CIFilter(name: "CIRandomGenerator"),
               let noise = noiseFilter.outputImage else {
             return nil
@@ -363,7 +324,7 @@ extension UIImage {
             return nil
         }
         blend.setValue(grainImage, forKey: kCIInputImageKey)
-        blend.setValue(image, forKey: kCIInputBackgroundImageKey)
+        blend.setValue(self, forKey: kCIInputBackgroundImageKey)
         return blend.outputImage?.cropped(to: extent)
     }
 }

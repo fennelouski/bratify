@@ -112,6 +112,82 @@ final class DesignScratchTests: XCTestCase {
 }
 
 // Lives here rather than its own file to keep the test target's project wiring minimal.
+final class LiveDesignPreviewParityTests: XCTestCase {
+
+    /// The live GPU preview and the generateImage export path must agree:
+    /// same dimensions, and near-identical color in every horizontal band
+    /// (top/middle/bottom thirds — the middle band contains the text).
+    func testLivePreviewMatchesGenerateImage() throws {
+        var design = Design(
+            text: "brat",
+            backgroundColor: UIColor(hexString: "#8ACE00"),
+            usesAutomaticTextColor: false,
+            creationDate: Date(),
+            fontName: "Arial",
+            fontSize: 120,
+            pixelationScale: 2,
+            id: UUID(uuidString: "12345678-1234-1234-1234-123456789012")!
+        )
+        design.textColor = .black
+        design.width = 256
+        design.height = 256
+        design.scratchIntensity = 0.7
+        design.mainImageFilters.saturation = 1.2
+        design.mainImageFilters.vignette = 0.4
+
+        let imageService = ImageService()
+        let scale = UIScreen.main.scale
+
+        let exported = expectation(description: "generateImage")
+        var exportedImage: UIImage?
+        design.generateImage(with: imageService, userInterfaceStyle: .light, bypassCache: true) { image, _ in
+            exportedImage = image
+            exported.fulfill()
+        }
+        wait(for: [exported], timeout: 30)
+        let reference = try XCTUnwrap(exportedImage)
+
+        let liveView = try XCTUnwrap(LiveDesignPreviewView(imageService: imageService))
+        liveView.update(design: design, userInterfaceStyle: .light, displayScale: scale)
+        let live = try XCTUnwrap(liveView.composedImageForTesting())
+
+        XCTAssertEqual(live.size, reference.size, "Live preview and export must have the same pixel dimensions")
+
+        func bandAverages(_ image: UIImage) throws -> [[CGFloat]] {
+            let cgImage = try XCTUnwrap(image.cgImage)
+            let ciImage = CIImage(cgImage: cgImage)
+            let extent = ciImage.extent
+            let bandHeight = extent.height / 3
+            return (0..<3).map { band in
+                let rect = CGRect(x: extent.minX, y: extent.minY + CGFloat(band) * bandHeight,
+                                  width: extent.width, height: bandHeight)
+                let filter = CIFilter(name: "CIAreaAverage")!
+                filter.setValue(ciImage, forKey: kCIInputImageKey)
+                filter.setValue(CIVector(cgRect: rect), forKey: kCIInputExtentKey)
+                var bitmap = [UInt8](repeating: 0, count: 4)
+                ImageFilterRendering.sharedContext.render(
+                    filter.outputImage!, toBitmap: &bitmap, rowBytes: 4,
+                    bounds: CGRect(x: 0, y: 0, width: 1, height: 1),
+                    format: .RGBA8, colorSpace: CGColorSpaceCreateDeviceRGB()
+                )
+                return bitmap.map { CGFloat($0) / 255 }
+            }
+        }
+
+        let referenceBands = try bandAverages(reference)
+        let liveBands = try bandAverages(live)
+        for (band, (ref, liv)) in zip(referenceBands, liveBands).enumerated() {
+            for channel in 0..<3 {
+                XCTAssertEqual(
+                    liv[channel], ref[channel], accuracy: 0.04,
+                    "Band \(band) channel \(channel) diverged between live preview and export"
+                )
+            }
+        }
+    }
+}
+
+// Lives here rather than its own file to keep the test target's project wiring minimal.
 final class DesignVideoExporterTests: XCTestCase {
 
     func testExportProducesPlayableMP4() throws {

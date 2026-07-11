@@ -112,6 +112,7 @@
 		E3UNDO00000000006CAFECAFE /* DesignUndoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3UNDO00000000005CAFECAFE /* DesignUndoController.swift */; };
 		E4SEED00000000002CAFECAFE /* SeededRandom.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4SEED00000000001CAFECAFE /* SeededRandom.swift */; };
 		E4VIDX00000000002CAFECAFE /* DesignVideoExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4VIDX00000000001CAFECAFE /* DesignVideoExporter.swift */; };
+		E4LIVE00000000002CAFECAFE /* LiveDesignPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4LIVE00000000001CAFECAFE /* LiveDesignPreviewView.swift */; };
 		E4SCRT00000000002CAFECAFE /* DesignScratchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4SCRT00000000001CAFECAFE /* DesignScratchTests.swift */; };
 		E3UNDO00000000008CAFECAFE /* NonUndoableTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3UNDO00000000007CAFECAFE /* NonUndoableTextView.swift */; };
 		E3UNDO0000000000ACAFECAFE /* UndoControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3UNDO00000000009CAFECAFE /* UndoControllerTests.swift */; };
@@ -255,6 +256,7 @@
 		E3UNDO00000000005CAFECAFE /* DesignUndoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignUndoController.swift; sourceTree = "<group>"; };
 		E4SEED00000000001CAFECAFE /* SeededRandom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeededRandom.swift; sourceTree = "<group>"; };
 		E4VIDX00000000001CAFECAFE /* DesignVideoExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignVideoExporter.swift; sourceTree = "<group>"; };
+		E4LIVE00000000001CAFECAFE /* LiveDesignPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveDesignPreviewView.swift; sourceTree = "<group>"; };
 		E4SCRT00000000001CAFECAFE /* DesignScratchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignScratchTests.swift; sourceTree = "<group>"; };
 		E3UNDO00000000007CAFECAFE /* NonUndoableTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NonUndoableTextView.swift; sourceTree = "<group>"; };
 		E3UNDO00000000009CAFECAFE /* UndoControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UndoControllerTests.swift; sourceTree = "<group>"; };
@@ -402,6 +404,7 @@
 				E3UNDO00000000005CAFECAFE /* DesignUndoController.swift */,
 				E4SEED00000000001CAFECAFE /* SeededRandom.swift */,
 				E4VIDX00000000001CAFECAFE /* DesignVideoExporter.swift */,
+				E4LIVE00000000001CAFECAFE /* LiveDesignPreviewView.swift */,
 				E3UNDO00000000007CAFECAFE /* NonUndoableTextView.swift */,
 				807A4F422C52DAFD009ED2FD /* Main.storyboard */,
 				807A4F452C52DAFE009ED2FD /* Assets.xcassets */,
@@ -734,6 +737,7 @@
 				E3UNDO00000000006CAFECAFE /* DesignUndoController.swift in Sources */,
 				E4SEED00000000002CAFECAFE /* SeededRandom.swift in Sources */,
 				E4VIDX00000000002CAFECAFE /* DesignVideoExporter.swift in Sources */,
+				E4LIVE00000000002CAFECAFE /* LiveDesignPreviewView.swift in Sources */,
 				E3UNDO00000000008CAFECAFE /* NonUndoableTextView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

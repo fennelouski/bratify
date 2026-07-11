@@ -15,7 +15,14 @@ class EditDesignViewController: UIViewController {
         textView.smartInsertDeleteType = .no
         textView.alpha = 0
         textView.delegate = self
-        addTap(to: textView)
+        // On-canvas overlay: glyphs stay clear (the GPU preview draws the styled
+        // text underneath); the text view contributes native caret, selection,
+        // and touch handling only. Layout must match DesignView's UILabel.
+        textView.backgroundColor = .clear
+        textView.textColor = .clear
+        textView.isScrollEnabled = false
+        textView.textContainerInset = .zero
+        textView.textContainer.lineFragmentPadding = 0
         return textView
     }()
 
@@ -25,6 +32,10 @@ class EditDesignViewController: UIViewController {
         addTap(to: imageView)
         return imageView
     }()
+
+    /// GPU preview drawn over previewImageView; nil only if Metal is unavailable,
+    /// in which case the throttled bitmap path below keeps the canvas alive.
+    private lazy var livePreviewView: LiveDesignPreviewView? = LiveDesignPreviewView(imageService: imageService)
     private var originalText: String = ""
     private var originalBackgroundColor: UIColor = .white
     private var isPickingTextColor = false
@@ -1068,6 +1079,17 @@ class EditDesignViewController: UIViewController {
         // Setup preview image view
         view.addSubview(previewImageView)
         previewImageView.translatesAutoresizingMaskIntoConstraints = false
+        if let livePreviewView {
+            // Below scratchLoadingView, above the (now fallback) image content.
+            previewImageView.insertSubview(livePreviewView, at: 0)
+            livePreviewView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                livePreviewView.topAnchor.constraint(equalTo: previewImageView.topAnchor),
+                livePreviewView.leadingAnchor.constraint(equalTo: previewImageView.leadingAnchor),
+                livePreviewView.trailingAnchor.constraint(equalTo: previewImageView.trailingAnchor),
+                livePreviewView.bottomAnchor.constraint(equalTo: previewImageView.bottomAnchor),
+            ])
+        }
         previewImageView.addSubview(scratchLoadingView)
         NSLayoutConstraint.activate([
             scratchLoadingView.topAnchor.constraint(equalTo: previewImageView.topAnchor),
@@ -1228,6 +1250,73 @@ class EditDesignViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         updateEditorPanelLayoutMode()
+        updateTextOverlayLayout()
+    }
+
+    /// Positions the (clear-glyph) text view exactly over the rendered text so
+    /// the native caret/selection sit on the styled glyphs. Mirrors the layout
+    /// math in DesignView.configure: label rect insets, stretch transform, and
+    /// font scale, mapped through the preview's aspect-fit.
+    private func updateTextOverlayLayout() {
+        guard livePreviewView != nil else { return } // Metal fallback keeps the legacy off-screen text view
+
+        let design = currentDesign
+        let canvasWidth = design.width
+        let canvasHeight = design.height
+        let previewBounds = previewImageView.bounds
+        guard canvasWidth > 0, canvasHeight > 0,
+              previewBounds.width > 0, previewBounds.height > 0 else { return }
+
+        let fitScale = min(previewBounds.width / canvasWidth, previewBounds.height / canvasHeight)
+        let scaleX = design.stretch < 0 ? (1 - design.stretch * 2) : (1 - design.stretch)
+        var widthMultiplier: CGFloat = 0.1
+        if design.stretch < 0 {
+            widthMultiplier *= (1 - design.stretch * 2)
+        }
+
+        // Design-space label rect (DesignView lays out at size/pixelationScale,
+        // then upscales by pixelationScale — the two cancel out here).
+        let labelRect = CGRect(
+            x: canvasWidth * widthMultiplier,
+            y: canvasHeight * 0.1,
+            width: canvasWidth * (1 - 2 * widthMultiplier),
+            height: canvasHeight * 0.8
+        )
+        let displaySize = CGSize(width: canvasWidth * fitScale, height: canvasHeight * fitScale)
+        let displayOrigin = CGPoint(
+            x: (previewBounds.width - displaySize.width) / 2,
+            y: (previewBounds.height - displaySize.height) / 2
+        )
+        let screenRect = CGRect(
+            x: displayOrigin.x + labelRect.minX * fitScale,
+            y: displayOrigin.y + labelRect.minY * fitScale,
+            width: labelRect.width * fitScale,
+            height: labelRect.height * fitScale
+        )
+
+        // Set bounds/center (not frame) because of the non-identity transform.
+        // DesignView sets the label's frame *after* its transform, which makes
+        // UIKit solve for pre-transform bounds — dividing width by scaleX here
+        // reproduces that, so wrap width matches the label's.
+        textView.transform = .identity
+        textView.bounds = CGRect(x: 0, y: 0, width: screenRect.width / scaleX, height: screenRect.height)
+        textView.center = view.convert(CGPoint(x: screenRect.midX, y: screenRect.midY), from: previewImageView)
+        textView.transform = CGAffineTransform(scaleX: scaleX, y: 1)
+        let overlayFontSize = design.fontSize * fitScale
+        textView.font = UIFont(name: design.fontName, size: overlayFontSize) ?? .systemFont(ofSize: overlayFontSize)
+        textView.tintColor = resolvedEditingTextColor
+        textView.alpha = 1
+        centerTextOverlayVertically()
+    }
+
+    /// UILabel centers its text block vertically; UITextView top-aligns.
+    /// Compensate with a top inset recomputed on every text/font/frame change.
+    private func centerTextOverlayVertically() {
+        let fitted = textView.sizeThatFits(
+            CGSize(width: textView.bounds.width, height: .greatestFiniteMagnitude)
+        )
+        let topInset = max(0, (textView.bounds.height - fitted.height) / 2)
+        textView.textContainerInset = UIEdgeInsets(top: topInset, left: 0, bottom: 0, right: 0)
     }
 
     private func applyAppearanceSensitiveChrome() {
@@ -1690,6 +1779,14 @@ class EditDesignViewController: UIViewController {
     internal func updateDesignImage() {
         accurateRenderWorkItem?.cancel()
         accurateRenderWorkItem = nil
+        if livePreviewView != nil {
+            // GPU preview is cheap enough to update per keystroke; MTKView
+            // coalesces draws to vsync, so no throttle needed.
+            pendingImageUpdateWorkItem?.cancel()
+            pendingImageUpdateWorkItem = nil
+            performUpdateDesignImage()
+            return
+        }
         let timeLimit = blur > 1 ? 0.12 : 0.06
         if let lastUpdateDate,
            abs(lastUpdateDate.timeIntervalSinceNow) < timeLimit {
@@ -1711,6 +1808,9 @@ class EditDesignViewController: UIViewController {
         lastUpdateDate = Date()
         previewImageGenerationID += 1
         let generationID = previewImageGenerationID
+
+        // One hook covers every call site (font, stretch, canvas, undo, …).
+        updateTextOverlayLayout()
 
         let accurateID = generationID
         let accurateWork = DispatchWorkItem { [weak self] in
@@ -1734,6 +1834,18 @@ class EditDesignViewController: UIViewController {
         }
         accurateRenderWorkItem = accurateWork
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: accurateWork)
+
+        if let livePreviewView {
+            // Live GPU path draws the canvas; the deferred accurate render above
+            // still runs to refresh the cache, previewImageView fallback image,
+            // and the filter-style cards.
+            livePreviewView.update(
+                design: currentDesign,
+                userInterfaceStyle: resolvedInterfaceStyle,
+                displayScale: traitCollection.displayScale
+            )
+            return
+        }
 
         scratchLoadingWorkItem?.cancel()
         let showWork = DispatchWorkItem { [weak self] in
@@ -2269,11 +2381,24 @@ class EditDesignViewController: UIViewController {
 extension EditDesignViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         undoController?.willBeginContinuousEdit(currentDesign: currentDesign)
+        // Direct taps on the on-canvas text view bypass toggleKeyboard,
+        // so bring the editing chrome up here too.
+        setEditingChromeVisible(true, animated: true)
     }
 
     func textViewDidChange(_ textView: UITextView) {
         if settingsManager.forceLowercase {
-            textView.text = textView.text.localizedLowercase
+            let lowercased = textView.text.localizedLowercase
+            // Only reassign when needed, preserving the (now user-visible) caret.
+            if lowercased != textView.text {
+                let selection = textView.selectedRange
+                textView.text = lowercased
+                let length = (lowercased as NSString).length
+                textView.selectedRange = NSRange(
+                    location: min(selection.location, length),
+                    length: 0
+                )
+            }
         }
         updateDesignImage()
     }

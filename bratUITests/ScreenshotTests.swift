@@ -64,3 +64,53 @@ final class ScreenshotTests: XCTestCase {
         add(attachment)
     }
 }
+
+// Smoke test for the live GPU canvas + on-canvas caret: open a design, type
+// into the canvas, and capture screenshots proving the preview updates.
+final class LivePreviewUITests: XCTestCase {
+
+    private let app = XCUIApplication()
+
+    override func setUpWithError() throws {
+        continueAfterFailure = false
+    }
+
+    func testLiveCanvasTyping() {
+        app.launch()
+
+        let cells = app.collectionViews.cells
+        guard cells.firstMatch.waitForExistence(timeout: 5) else {
+            // Empty library: create a design instead.
+            app.navigationBars.buttons["Add"].tap()
+            XCTAssertTrue(app.navigationBars.buttons["designs"].waitForExistence(timeout: 5))
+            app.typeText("brat")
+            finishTypingAndSnap()
+            return
+        }
+        cells.firstMatch.tap()
+        XCTAssertTrue(app.navigationBars.buttons["designs"].waitForExistence(timeout: 5))
+        sleep(1)
+        snap("live_editor_opened")
+
+        // Tap the canvas text region to summon the keyboard + native caret.
+        app.windows.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.3)).tap()
+        sleep(1)
+        snap("live_editor_focused")
+
+        app.typeText(" live")
+        finishTypingAndSnap()
+    }
+
+    private func finishTypingAndSnap() {
+        sleep(1)
+        snap("live_editor_typed")
+    }
+
+    private func snap(_ name: String) {
+        let screenshot = app.screenshot()
+        let attachment = XCTAttachment(screenshot: screenshot)
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+}

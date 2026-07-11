@@ -67,30 +67,25 @@ extension Design {
                 imageName: backgroundImageKey,
                 design: self
             ) { updatedDesignView in
-                DispatchQueue.main.async {
-                    let renderer = UIGraphicsImageRenderer(size: updatedDesignView.bounds.size)
-                    let image = renderer.image { ctx in
-                        updatedDesignView.drawHierarchy(in: updatedDesignView.bounds, afterScreenUpdates: true)
-                    }
+                updatedDesignView.layoutIfNeeded()
+                let renderer = UIGraphicsImageRenderer(size: updatedDesignView.bounds.size)
+                let image = renderer.image { ctx in
+                    updatedDesignView.layer.render(in: ctx.cgContext)
+                }
 
+                DispatchQueue.global(qos: .userInitiated).async {
                     let scaledImage = image.scaled(by: self.pixelationScale)
-
-                    var finalImage: UIImage? = scaledImage ?? image
-                    if self.blur >= 1 {
-                        finalImage = finalImage?.applyBlur(self.blur)
-                    }
-
-                    finalImage = finalImage?.applyFilters(self.mainImageFilters)
-
-                    DispatchQueue.main.async {
-                        callback(finalImage, cacheKey)
-                    }
+                    let finalImage = (scaledImage ?? image).applyFilters(self.mainImageFilters)
 
                     if let finalImage = finalImage {
                         imageService.memoryCache.setObject(
                             finalImage,
                             forKey: cacheKey as NSString
                         )
+                    }
+
+                    DispatchQueue.main.async {
+                        callback(finalImage, cacheKey)
                     }
                 }
             }
