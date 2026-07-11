@@ -9,6 +9,14 @@ class DesignView: UIView {
     }()
     
     private let backgroundColorView: UIView = UIView(frame: .zero)
+
+    private let scratchLayer: CAShapeLayer = {
+        let layer = CAShapeLayer()
+        layer.fillColor = UIColor.clear.cgColor
+        layer.lineCap = .round
+        layer.zPosition = 1
+        return layer
+    }()
     
     private let backgroundImageView: UIImageView = {
         let imageView = UIImageView()
@@ -58,6 +66,54 @@ class DesignView: UIView {
         
         backgroundImageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         textLabel.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        layer.addSublayer(scratchLayer)
+    }
+
+    /// Draws a hand-drawn-style scribble over the text. Seeded from the design's
+    /// id so the same design always gets the same scribble. Drawn as a sublayer
+    /// so it goes through the same pixelation/blur/filter pipeline as the text.
+    private func updateScratchLayer(for design: Design, fontSize: CGFloat) {
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        defer { CATransaction.commit() }
+
+        scratchLayer.frame = bounds
+        guard design.scratchIntensity > 0 else {
+            scratchLayer.path = nil
+            return
+        }
+
+        let intensity = min(max(design.scratchIntensity, 0), 1)
+        var rng = SeededRandom(uuid: design.id)
+        let textFrame = textLabel.frame
+        let strokeCount = 3 + Int(intensity * 12)
+        let midY = textFrame.midY
+        let path = UIBezierPath()
+
+        for index in 0..<strokeCount {
+            let pairIndex = index / 2
+            let pairCount = max(strokeCount / 2, 1)
+            let t = pairCount > 1 ? CGFloat(pairIndex) / CGFloat(pairCount - 1) : 0
+            let spread = textFrame.height * 0.28 * intensity * t
+            let lineY = midY + (index.isMultiple(of: 2) ? -spread : spread)
+                + CGFloat.random(in: -textFrame.height * 0.02...textFrame.height * 0.02, using: &rng)
+
+            let leftPad = CGFloat.random(in: 0...textFrame.width * 0.08, using: &rng)
+            let rightPad = CGFloat.random(in: 0...textFrame.width * 0.08, using: &rng)
+            let waviness = CGFloat.random(in: -fontSize * 0.18...fontSize * 0.18, using: &rng)
+            let endYJitter = CGFloat.random(in: -fontSize * 0.08...fontSize * 0.08, using: &rng)
+
+            path.move(to: CGPoint(x: textFrame.minX + leftPad, y: lineY))
+            path.addQuadCurve(
+                to: CGPoint(x: textFrame.maxX - rightPad, y: lineY + endYJitter),
+                controlPoint: CGPoint(x: textFrame.midX, y: lineY + waviness)
+            )
+        }
+
+        scratchLayer.path = path.cgPath
+        scratchLayer.strokeColor = textLabel.textColor.cgColor
+        // Floor keeps strokes visible at high pixelation, where the view renders tiny.
+        scratchLayer.lineWidth = max(0.75, fontSize * 0.035 * (0.4 + 0.6 * intensity))
     }
     
     private func updateView() {
@@ -107,7 +163,9 @@ class DesignView: UIView {
                                  y: bounds.height * 0.1,
                                  width: bounds.width * (1 - 2 * widthMultiplier),
                                  height: bounds.height * 0.8)
-        
+
+        updateScratchLayer(for: design, fontSize: fontSize)
+
         applyBackgroundImageFilters(design) { filteredImage in
             if Thread.isMainThread {
                 self.backgroundImageView.image = filteredImage

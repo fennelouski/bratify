@@ -63,6 +63,7 @@ class EditDesignViewController: UIViewController {
     private var stylesPreviewWorkItem: DispatchWorkItem?
     private weak var settingsNavBarButton: UIBarButtonItem?
     private weak var shareNavBarButton: UIBarButtonItem?
+    private var videoExporter: DesignVideoExporter?
 
     private enum ColorSwatchMode { case tools, backgroundColor, textColor }
     private var colorSwatchMode: ColorSwatchMode = .tools { didSet { applySwatchMode() } }
@@ -558,6 +559,9 @@ class EditDesignViewController: UIViewController {
     private lazy var grain: CGFloat = design?.grain ?? 0 {
         didSet { updateKeyboardOptionsIfNeeded() }
     }
+    private lazy var scratchIntensity: CGFloat = design?.scratchIntensity ?? 0 {
+        didSet { updateKeyboardOptionsIfNeeded() }
+    }
     private lazy var bloom: CGFloat = design?.bloom ?? 0 {
         didSet { updateKeyboardOptionsIfNeeded() }
     }
@@ -835,6 +839,7 @@ class EditDesignViewController: UIViewController {
             blur: blur,
             width: canvasWidth,
             height: canvasHeight,
+            scratchIntensity: scratchIntensity,
             brightness: brightness,
             contrast: contrast,
             saturation: saturation,
@@ -1506,6 +1511,7 @@ class EditDesignViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        videoExporter?.cancel()
         saveDesignIfNeeded()
         if let ctrl = undoController {
             DesignUndoHistoryStore.shared.save(ctrl.history)
@@ -1881,17 +1887,68 @@ class EditDesignViewController: UIViewController {
                 return
             }
             if Thread.isMainThread {
-                share(image: imageToShare)
+                presentShareOptions(for: imageToShare)
             } else {
                 DispatchQueue.main.async { [weak self] in
                     guard let self else {
                         return
                     }
-                    share(image: imageToShare)
+                    presentShareOptions(for: imageToShare)
                 }
             }
         }
     }
+
+    private func presentShareOptions(for image: UIImage) {
+        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(
+            title: NSLocalizedString("share image", comment: "Share the design as a still image"),
+            style: .default
+        ) { [weak self] _ in
+            self?.share(image: image)
+        })
+        sheet.addAction(UIAlertAction(
+            title: NSLocalizedString("share video", comment: "Share the design as a short looping video"),
+            style: .default
+        ) { [weak self] _ in
+            self?.exportAndShareVideo(from: image)
+        })
+        sheet.addAction(UIAlertAction(
+            title: NSLocalizedString("Cancel", comment: "Cancel sharing"),
+            style: .cancel
+        ))
+        if let popover = sheet.popoverPresentationController {
+            configurePopover(popover)
+        }
+        present(sheet, animated: true)
+    }
+
+    private func exportAndShareVideo(from image: UIImage) {
+        scratchLoadingView.startAnimating()
+        shareNavBarButton?.isEnabled = false
+        let exporter = DesignVideoExporter()
+        videoExporter = exporter
+        exporter.export(baseImage: image, progress: { _ in }) { [weak self] result in
+            guard let self else { return }
+            scratchLoadingView.stopAnimating()
+            shareNavBarButton?.isEnabled = true
+            videoExporter = nil
+            switch result {
+            case .success(let url):
+                share(items: [url])
+            case .failure(let error):
+                guard !(error is CancellationError) else { return }
+                ToastView.show(
+                    message: NSLocalizedString(
+                        "video_export_failed",
+                        comment: "Toast shown when exporting the design video fails"
+                    ),
+                    in: view
+                )
+            }
+        }
+    }
+
     private func share(image imageToShare: UIImage) {
         share(items: [imageToShare])
     }
@@ -2704,6 +2761,7 @@ extension EditDesignViewController {
         highlightAmount = design.highlightAmount
         shadowAmount = design.shadowAmount
         grain = design.grain
+        scratchIntensity = design.scratchIntensity
         bloom = design.bloom
         duotoneIntensity = design.duotoneIntensity
         duotoneColorHex = design.duotoneColorHex
@@ -2990,6 +3048,11 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
 
     func didChangeGrain(_ grain: CGFloat) {
         self.grain = grain
+        updateDesignImage()
+    }
+
+    func didChangeScratch(_ intensity: CGFloat) {
+        scratchIntensity = intensity
         updateDesignImage()
     }
 

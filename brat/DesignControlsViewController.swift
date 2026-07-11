@@ -274,6 +274,11 @@ extension DesignControlsViewController: DesignControlsDelegate {
         delegate?.designControlsViewController(self, didUpdateDesign: design)
     }
 
+    func didChangeScratch(_ intensity: CGFloat) {
+        design.scratchIntensity = intensity
+        delegate?.designControlsViewController(self, didUpdateDesign: design)
+    }
+
     func didChangeBloom(_ bloom: CGFloat) {
         design.bloom = bloom
         delegate?.designControlsViewController(self, didUpdateDesign: design)

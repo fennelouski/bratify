@@ -34,6 +34,7 @@ protocol DesignControlsDelegate: AnyObject {
     func didChangeHighlightAmount(_ amount: CGFloat)
     func didChangeShadowAmount(_ amount: CGFloat)
     func didChangeGrain(_ grain: CGFloat)
+    func didChangeScratch(_ intensity: CGFloat)
     func didChangeBloom(_ bloom: CGFloat)
     func didChangeDuotoneIntensity(_ intensity: CGFloat)
     func didChangeVibrance(_ vibrance: CGFloat)
@@ -111,9 +112,10 @@ class DesignControlsView: UIView {
         case unsharpMask
         case monochrome
         case vignette
+        case scratch
         case invert
     }
-    
+
     enum BackgroundImageRow: Int, CaseIterable {
         case invert
         case flipHorizontal
@@ -436,11 +438,21 @@ extension DesignControlsView: UITableViewDelegate, UITableViewDataSource {
                 .alpha,
                 UIImage(systemName: "circle")
             )
+        case .scratch:
+            return (
+                NSLocalizedString("Scratch", comment: "Scribble over the text"),
+                Float(delegate?.currentDesign.scratchIntensity ?? design.scratchIntensity),
+                0,
+                1,
+                0,
+                .alpha,
+                UIImage(systemName: "scribble")
+            )
         case .invert:
             fatalError("Invert is a switch property, not a slider")
         }
     }
-    
+
     private func sliderProperties(for row: BackgroundImageRow) -> (String, Float, Float, Float, Float, ControlSliderTableViewCell.Mode, UIImage?) {
         switch row {
         case .scale:
@@ -654,6 +666,8 @@ extension DesignControlsView: UITableViewDelegate, UITableViewDataSource {
             delegate?.didChangeMonochrome(newValue)
         case .vignette:
             delegate?.didChangeVignette(newValue)
+        case .scratch:
+            delegate?.didChangeScratch(newValue)
         case .invert:
             fatalError("Invert is a switch property, not a slider")
         }

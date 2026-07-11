@@ -15,7 +15,9 @@ struct Design: Codable {
     var blur: CGFloat = 0.0
     var width: CGFloat = 512.0
     var height: CGFloat = 512.0
-    
+    /// 0 = off; >0 draws a seeded scribble over the text (0…1).
+    var scratchIntensity: CGFloat = 0.0
+
     // Core Image filters
     var brightness: CGFloat = 0.0
     var contrast: CGFloat = 1.0
@@ -91,6 +93,7 @@ struct Design: Codable {
         case blur
         case width
         case height
+        case scratchIntensity
         case brightness
         case contrast
         case saturation
@@ -166,6 +169,7 @@ struct Design: Codable {
         try container.encode(blur, forKey: .blur)
         try container.encode(width, forKey: .width)
         try container.encode(height, forKey: .height)
+        try container.encode(scratchIntensity, forKey: .scratchIntensity)
         try container.encode(brightness, forKey: .brightness)
         try container.encode(contrast, forKey: .contrast)
         try container.encode(saturation, forKey: .saturation)
@@ -238,6 +242,7 @@ struct Design: Codable {
         blur: CGFloat = 0.0,
         width: CGFloat = 512.0,
         height: CGFloat = 512.0,
+        scratchIntensity: CGFloat = 0.0,
         brightness: CGFloat = 0.0,
         contrast: CGFloat = 1.0,
         saturation: CGFloat = 1.0,
@@ -310,6 +315,7 @@ struct Design: Codable {
         self.blur = blur
         self.width = width
         self.height = height
+        self.scratchIntensity = scratchIntensity
         self.brightness = brightness
         self.contrast = contrast
         self.saturation = saturation
@@ -391,6 +397,7 @@ struct Design: Codable {
         blur = try container.decodeIfPresent(CGFloat.self, forKey: .blur) ?? 0.0
         width = try container.decodeIfPresent(CGFloat.self, forKey: .width) ?? 512.0
         height = try container.decodeIfPresent(CGFloat.self, forKey: .height) ?? 512.0
+        scratchIntensity = try container.decodeIfPresent(CGFloat.self, forKey: .scratchIntensity) ?? 0.0
         brightness = try container.decodeIfPresent(CGFloat.self, forKey: .brightness) ?? 0.0
         contrast = try container.decodeIfPresent(CGFloat.self, forKey: .contrast) ?? 1.0
         saturation = try container.decodeIfPresent(CGFloat.self, forKey: .saturation) ?? 1.0
@@ -476,7 +483,12 @@ struct Design: Codable {
 
     var description: String {
         var descriptionString = "\(text)\(backgroundColor.toHexString())\(textColor.toHexString())\(usesAutomaticTextColor ? 1 : 0)\(fontName)\(Int(fontSize))\(Int(pixelationScale))\(Int(stretch*25))\(Int(blur))\(Int(width))\(Int(height))\(mainImageFilters.cacheKeyFragment())\(backgroundImageKey ?? "")"
-        
+
+        // Conditional append keeps pre-scratch designs' cache keys unchanged.
+        if scratchIntensity > 0 {
+            descriptionString += "scratch\(Int(scratchIntensity * 100))"
+        }
+
         if let backgroundImageKey = backgroundImageKey {
             descriptionString += "\(backgroundImageKey)\(backgroundImageFilters.cacheKeyFragment())\(Int(backgroundScale*100))\(backgroundFlipHorizontal ? 1 : 0)\(backgroundFlipVertical ? 1 : 0)\(Int(backgroundBlur*100))\(Int(backgroundAlpha*100))"
         }

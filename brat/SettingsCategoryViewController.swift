@@ -715,6 +715,8 @@ enum ELI5Descriptions {
             return "simulates printed dot patterns"
         case "unsharp mask":
             return "sharpens edges with a controllable mask"
+        case "scratch":
+            return "scribbles over the text like it's been crossed out by hand — higher means more scratch lines"
         case "background scale":
             return "zooms the background image in or out to fill or fit the canvas"
         case "background blur":
