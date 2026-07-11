@@ -134,6 +134,7 @@ final class LiveDesignPreviewParityTests: XCTestCase {
         design.scratchIntensity = 0.7
         design.mainImageFilters.saturation = 1.2
         design.mainImageFilters.vignette = 0.4
+        design.mainImageFilters.pixelate = 12 // exercises the pixel-based param rescaling on the capped path
 
         let imageService = ImageService()
         let scale = UIScreen.main.scale
@@ -181,6 +182,26 @@ final class LiveDesignPreviewParityTests: XCTestCase {
                 XCTAssertEqual(
                     liv[channel], ref[channel], accuracy: 0.04,
                     "Band \(band) channel \(channel) diverged between live preview and export"
+                )
+            }
+        }
+
+        // Old-hardware path: once the view has a (small) drawable, the raster
+        // resolution is capped to it. Fewer pixels, same look.
+        liveView.frame = CGRect(x: 0, y: 0, width: 64, height: 64)
+        liveView.layoutIfNeeded()
+        liveView.update(design: design, userInterfaceStyle: .light, displayScale: scale)
+        let capped = try XCTUnwrap(liveView.composedImageForTesting())
+        let cappedPixelWidth = try XCTUnwrap(capped.cgImage).width
+        let referencePixelWidth = try XCTUnwrap(reference.cgImage).width
+        XCTAssertLessThan(cappedPixelWidth, referencePixelWidth, "Resolution cap should reduce rendered pixels")
+
+        let cappedBands = try bandAverages(capped)
+        for (band, (ref, liv)) in zip(referenceBands, cappedBands).enumerated() {
+            for channel in 0..<3 {
+                XCTAssertEqual(
+                    liv[channel], ref[channel], accuracy: 0.05,
+                    "Capped band \(band) channel \(channel) diverged from export"
                 )
             }
         }

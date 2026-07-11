@@ -19,10 +19,12 @@ final class LiveDesignPreviewView: MTKView {
     private var textImage: CIImage?
     private var backgroundImage: CIImage?
     private var backgroundKey: String?
+    private var textKey: String?
 
     private var design: Design?
     private var interfaceStyle: UIUserInterfaceStyle = .unspecified
     private var rasterScale: CGFloat = 2
+    private var requestedDisplayScale: CGFloat = 2
 
     private var composedImage: CIImage?
 
@@ -50,9 +52,13 @@ final class LiveDesignPreviewView: MTKView {
     func update(design: Design, userInterfaceStyle: UIUserInterfaceStyle, displayScale: CGFloat) {
         self.design = design
         self.interfaceStyle = userInterfaceStyle
-        // Match generateImage's raster density so filter radii (blur, bloom,
-        // halftone…) read identically in preview and export.
-        self.rasterScale = max(1, displayScale)
+        self.requestedDisplayScale = max(1, displayScale)
+        // Export rasters at displayScale; on screen we never need more pixels
+        // than the drawable shows, so cap — this is the main lever for older
+        // GPUs (a 1080pt canvas on a 3x device would otherwise push 3240px
+        // through the filter chain to fill a ~1100px drawable). Pixel-based
+        // filter params are rescaled in compose() to keep the export's look.
+        self.rasterScale = cappedRasterScale(for: design)
 
         let layerSize = CGSize(
             width: design.width / design.pixelationScale,
@@ -71,6 +77,26 @@ final class LiveDesignPreviewView: MTKView {
         compose()
     }
 
+    private func cappedRasterScale(for design: Design) -> CGFloat {
+        let full = requestedDisplayScale
+        guard design.width > 0, design.height > 0,
+              drawableSize.width > 0, drawableSize.height > 0 else { return full }
+        let fit = min(drawableSize.width / design.width, drawableSize.height / design.height)
+        return min(full, max(fit, 0.25))
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        // Drawable size just changed (rotation, keyboard, sidebars): re-raster
+        // if the resolution cap moved materially, so the canvas stays sharp
+        // after growing and stays cheap after shrinking.
+        guard let design else { return }
+        let capped = cappedRasterScale(for: design)
+        if abs(capped - rasterScale) > rasterScale * 0.1 {
+            update(design: design, userInterfaceStyle: interfaceStyle, displayScale: requestedDisplayScale)
+        }
+    }
+
     private func renderedText(for design: Design) -> String {
         // The export path lowercases on the blur/Catalyst branch only; mirror it.
         #if targetEnvironment(macCatalyst)
@@ -80,8 +106,22 @@ final class LiveDesignPreviewView: MTKView {
         #endif
     }
 
+    private func textCacheKey(for design: Design) -> String {
+        "\(renderedText(for: design))|\(design.fontName)|\(design.fontSize)|\(design.stretch)|"
+            + "\(design.textColor.toHexString())|\(design.usesAutomaticTextColor)|"
+            + "\(design.scratchIntensity)|\(design.id)|"
+            + "\(Int(design.width))x\(Int(design.height))|\(design.pixelationScale)|"
+            + "\(interfaceStyle.rawValue)|\(rasterScale)"
+    }
+
     private func updateTextLayer(for design: Design) {
         guard let textLayerView else { return }
+        // Slider drags hit this per tick; skip the CPU raster when nothing
+        // text-related changed (the ~90 update call sites mostly change
+        // filter/background params).
+        let key = textCacheKey(for: design)
+        guard key != textKey else { return }
+        textKey = key
         textLayerView.overrideUserInterfaceStyle = interfaceStyle
         // Clear background + no image: this layer is only text + scratch strokes.
         textLayerView.configure(
@@ -168,11 +208,20 @@ final class LiveDesignPreviewView: MTKView {
                 .transformed(by: CGAffineTransform(scaleX: pixelation, y: pixelation))
         }
 
+        // Pixel-based params are defined at export density (displayScale);
+        // shrink them with the capped raster so the look is preserved.
+        let paramScale = min(1, rasterScale / requestedDisplayScale)
+
         if design.blur >= 1 {
-            composed = composed.applyingGaussianBlur(design.blur, extent: composed.extent.integral)
+            composed = composed.applyingGaussianBlur(design.blur * paramScale, extent: composed.extent.integral)
         }
 
-        composed = composed.applyingDesignFilters(design.mainImageFilters, extent: composed.extent.integral)
+        var filters = design.mainImageFilters
+        if paramScale < 1 {
+            filters.pixelate *= paramScale
+            filters.halftone *= paramScale
+        }
+        composed = composed.applyingDesignFilters(filters, extent: composed.extent.integral)
 
         composedImage = composed
         setNeedsDisplay()
