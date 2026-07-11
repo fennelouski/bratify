@@ -59,6 +59,7 @@ final class DesignScratchTests: XCTestCase {
             XCTAssertEqual(a.next(), b.next())
         }
         var c = SeededRandom(uuid: UUID(uuidString: "00000000-0000-0000-0000-000000000009")!)
-        XCTAssertNotEqual(SeededRandom(uuid: uuid).next(), c.next())
+        var d = SeededRandom(uuid: uuid)
+        XCTAssertNotEqual(d.next(), c.next())
     }
 }
