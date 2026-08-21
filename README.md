@@ -11,6 +11,7 @@ An iOS and macOS (Mac Catalyst) app for creating stylized text designs inspired 
 - Background image support with its own independent filter stack (flip, scale, blur, alpha, and all of the above)
 - Aspect ratio picker for flexible output dimensions
 - Share designs directly from the app
+- The share button hides itself from screenshots and screen recordings, so a capture shows the artwork underneath instead of the chrome on top of it
 
 ## Requirements
 

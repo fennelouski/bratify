@@ -69,6 +69,7 @@
 		807A4FCD2C535C20009ED2FD /* KeyboardOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4FCC2C535C20009ED2FD /* KeyboardOptionsView.swift */; };
 		807A4FCF2C536515009ED2FD /* Design+ImageGeneration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4FCE2C536515009ED2FD /* Design+ImageGeneration.swift */; };
 		807A4FD12C536C12009ED2FD /* ShareButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4FD02C536C12009ED2FD /* ShareButton.swift */; };
+		E5MASK00000000002CAFECAFE /* ScreenshotMaskedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5MASK00000000001CAFECAFE /* ScreenshotMaskedView.swift */; };
 		807A4FD62C53F780009ED2FD /* MacColorPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4FD52C53F780009ED2FD /* MacColorPicker.swift */; };
 		807A4FD82C53F843009ED2FD /* CustomColorPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4FD72C53F843009ED2FD /* CustomColorPickerViewController.swift */; };
 		807A4FDA2C542AE1009ED2FD /* UILabel+DynamicType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4FD92C542AE1009ED2FD /* UILabel+DynamicType.swift */; };
@@ -114,6 +115,7 @@
 		E4VIDX00000000002CAFECAFE /* DesignVideoExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4VIDX00000000001CAFECAFE /* DesignVideoExporter.swift */; };
 		E4LIVE00000000002CAFECAFE /* LiveDesignPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4LIVE00000000001CAFECAFE /* LiveDesignPreviewView.swift */; };
 		E4SCRT00000000002CAFECAFE /* DesignScratchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4SCRT00000000001CAFECAFE /* DesignScratchTests.swift */; };
+		E5MASK00000000004CAFECAFE /* ScreenshotMaskedViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5MASK00000000003CAFECAFE /* ScreenshotMaskedViewTests.swift */; };
 		E3UNDO00000000008CAFECAFE /* NonUndoableTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3UNDO00000000007CAFECAFE /* NonUndoableTextView.swift */; };
 		E3UNDO0000000000ACAFECAFE /* UndoControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3UNDO00000000009CAFECAFE /* UndoControllerTests.swift */; };
 		E3UNDO0000000000CCAFECAFE /* DesignUndoHistoryStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3UNDO0000000000BCAFECAFE /* DesignUndoHistoryStoreTests.swift */; };
@@ -214,6 +216,7 @@
 		807A4FCC2C535C20009ED2FD /* KeyboardOptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardOptionsView.swift; sourceTree = "<group>"; };
 		807A4FCE2C536515009ED2FD /* Design+ImageGeneration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Design+ImageGeneration.swift"; sourceTree = "<group>"; };
 		807A4FD02C536C12009ED2FD /* ShareButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareButton.swift; sourceTree = "<group>"; };
+		E5MASK00000000001CAFECAFE /* ScreenshotMaskedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotMaskedView.swift; sourceTree = "<group>"; };
 		807A4FD22C53F417009ED2FD /* brat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = brat.entitlements; sourceTree = "<group>"; };
 		807A4FD52C53F780009ED2FD /* MacColorPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacColorPicker.swift; sourceTree = "<group>"; };
 		807A4FD72C53F843009ED2FD /* CustomColorPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColorPickerViewController.swift; sourceTree = "<group>"; };
@@ -258,6 +261,7 @@
 		E4VIDX00000000001CAFECAFE /* DesignVideoExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignVideoExporter.swift; sourceTree = "<group>"; };
 		E4LIVE00000000001CAFECAFE /* LiveDesignPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveDesignPreviewView.swift; sourceTree = "<group>"; };
 		E4SCRT00000000001CAFECAFE /* DesignScratchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignScratchTests.swift; sourceTree = "<group>"; };
+		E5MASK00000000003CAFECAFE /* ScreenshotMaskedViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotMaskedViewTests.swift; sourceTree = "<group>"; };
 		E3UNDO00000000007CAFECAFE /* NonUndoableTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NonUndoableTextView.swift; sourceTree = "<group>"; };
 		E3UNDO00000000009CAFECAFE /* UndoControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UndoControllerTests.swift; sourceTree = "<group>"; };
 		E3UNDO0000000000BCAFECAFE /* DesignUndoHistoryStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignUndoHistoryStoreTests.swift; sourceTree = "<group>"; };
@@ -323,6 +327,7 @@
 				807A4FD52C53F780009ED2FD /* MacColorPicker.swift */,
 				807A4FD72C53F843009ED2FD /* CustomColorPickerViewController.swift */,
 				807A4FD02C536C12009ED2FD /* ShareButton.swift */,
+				E5MASK00000000001CAFECAFE /* ScreenshotMaskedView.swift */,
 				807A4FCC2C535C20009ED2FD /* KeyboardOptionsView.swift */,
 				8084C0E22C5D7F3A00EA453C /* DesignControlsViewController.swift */,
 				807A4FC22C52F8F0009ED2FD /* DesignView.swift */,
@@ -421,6 +426,7 @@
 				E1BEE00000000001CAFECAFE /* DesignManagerMergeTests.swift */,
 				E2TEXT00000000003CAFECAFE /* DesignTextColorTests.swift */,
 				E4SCRT00000000001CAFECAFE /* DesignScratchTests.swift */,
+				E5MASK00000000003CAFECAFE /* ScreenshotMaskedViewTests.swift */,
 				E3FLT00000000009CAFECAFE /* ImageFilterSettingsTests.swift */,
 				E3AR000000000005CAFECAFE /* CanvasDimensionsTests.swift */,
 				E3TSID00000000001CAFECAFE /* TrailingSidebarLayoutTests.swift */,
@@ -690,6 +696,7 @@
 				807A4F712C52DBC2009ED2FD /* SettingsManager.swift in Sources */,
 				807A4F872C52DC09009ED2FD /* ThemeableViewController.swift in Sources */,
 				807A4FD12C536C12009ED2FD /* ShareButton.swift in Sources */,
+				E5MASK00000000002CAFECAFE /* ScreenshotMaskedView.swift in Sources */,
 				807A4FCB2C52FC11009ED2FD /* ImageFetchPriority.swift in Sources */,
 				807A4FCF2C536515009ED2FD /* Design+ImageGeneration.swift in Sources */,
 				807A4F932C52DC09009ED2FD /* UIView+Theme.swift in Sources */,
@@ -750,6 +757,7 @@
 				E1BEE00000000002CAFECAFE /* DesignManagerMergeTests.swift in Sources */,
 				E2TEXT00000000004CAFECAFE /* DesignTextColorTests.swift in Sources */,
 				E4SCRT00000000002CAFECAFE /* DesignScratchTests.swift in Sources */,
+				E5MASK00000000004CAFECAFE /* ScreenshotMaskedViewTests.swift in Sources */,
 				E3FLT0000000000ACAFECAFE /* ImageFilterSettingsTests.swift in Sources */,
 				E3AR000000000006CAFECAFE /* CanvasDimensionsTests.swift in Sources */,
 				E3TSID00000000002CAFECAFE /* TrailingSidebarLayoutTests.swift in Sources */,

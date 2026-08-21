@@ -269,6 +269,7 @@ class EditDesignViewController: UIViewController {
     private var focusImageView: UIImageView?
     private var focusCloseButton: UIButton?
     private var focusShareButton: UIButton?
+    private var focusShareButtonContainer: ScreenshotMaskedView?
 
     private static let presetColors: [UIColor] = [
         UIColor(hexString: "#36a241"),
@@ -965,7 +966,7 @@ class EditDesignViewController: UIViewController {
         )
 
         // Setup navigation bar
-        let shareBarButton = UIBarButtonItem.share { [weak self] in
+        let shareBarButton = UIBarButtonItem.screenshotMaskedShare { [weak self] in
             self?.shareButtonTouched()
         }
         shareNavBarButton = shareBarButton
@@ -2239,16 +2240,27 @@ class EditDesignViewController: UIViewController {
         shareButton.tintColor = .white
         shareButton.backgroundColor = UIColor.black.withAlphaComponent(0.55)
         shareButton.layer.cornerRadius = 22
-        shareButton.alpha = 0
         shareButton.translatesAutoresizingMaskIntoConstraints = false
         shareButton.addTarget(self, action: #selector(shareFocusedImage), for: .touchUpInside)
-        window.addSubview(shareButton)
+        // Hosted in a masking container so a screenshot of the full-screen design comes
+        // back as just the design, with the share button blanked out of the capture.
+        let shareButtonContainer = ScreenshotMaskedView(content: shareButton)
+        shareButtonContainer.alpha = 0
+        shareButtonContainer.translatesAutoresizingMaskIntoConstraints = false
+        window.addSubview(shareButtonContainer)
         focusShareButton = shareButton
+        focusShareButtonContainer = shareButtonContainer
         NSLayoutConstraint.activate([
-            shareButton.bottomAnchor.constraint(equalTo: window.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            shareButton.leadingAnchor.constraint(equalTo: window.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            shareButton.widthAnchor.constraint(equalToConstant: 44),
-            shareButton.heightAnchor.constraint(equalToConstant: 44),
+            shareButtonContainer.bottomAnchor.constraint(
+                equalTo: window.safeAreaLayoutGuide.bottomAnchor,
+                constant: -16
+            ),
+            shareButtonContainer.leadingAnchor.constraint(
+                equalTo: window.safeAreaLayoutGuide.leadingAnchor,
+                constant: 16
+            ),
+            shareButtonContainer.widthAnchor.constraint(equalToConstant: 44),
+            shareButtonContainer.heightAnchor.constraint(equalToConstant: 44),
         ])
 
         let pan = UIPanGestureRecognizer(target: self, action: #selector(handleFocusPan(_:)))
@@ -2279,11 +2291,12 @@ class EditDesignViewController: UIViewController {
         focusImageView?.removeFromSuperview()
         focusOverlayView?.removeFromSuperview()
         focusCloseButton?.removeFromSuperview()
-        focusShareButton?.removeFromSuperview()
+        focusShareButtonContainer?.removeFromSuperview()
         focusImageView = nil
         focusOverlayView = nil
         focusCloseButton = nil
         focusShareButton = nil
+        focusShareButtonContainer = nil
         focusState = .distractionFree
     }
 
@@ -2303,10 +2316,10 @@ class EditDesignViewController: UIViewController {
                 imageView.frame = interpolateFocusFrame(from: window.bounds, to: targetFrame, progress: progress)
                 overlay.alpha = 1 - progress * 0.9
                 focusCloseButton?.alpha = 1 - progress
-                focusShareButton?.alpha = 0
+                focusShareButtonContainer?.alpha = 0
             } else if translation.y < 0 {
                 let progress = min(-translation.y / (window.bounds.height * 0.25), 1.0)
-                focusShareButton?.alpha = progress
+                focusShareButtonContainer?.alpha = progress
                 imageView.frame = CGRect(
                     x: 0,
                     y: translation.y * 0.08,
@@ -2360,7 +2373,7 @@ class EditDesignViewController: UIViewController {
             imageView.frame = window.bounds
             self.focusOverlayView?.alpha = 1
             self.focusCloseButton?.alpha = 1
-            self.focusShareButton?.alpha = 0
+            self.focusShareButtonContainer?.alpha = 0
         }
     }
 
