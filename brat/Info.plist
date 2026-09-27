@@ -6,8 +6,6 @@
 	<false/>
 	<key>CFBundleGetInfoString</key>
 	<string></string>
-	<key>CFBundleIconFile</key>
-	<string>CFBundleVersion</string>
 	<key>CFBundleSignature</key>
 	<string></string>
 	<key>UIApplicationSceneManifest</key>
