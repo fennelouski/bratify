@@ -2,7 +2,7 @@ import SwiftUI
 import UIKit
 import WebImagePicker
 
-class EditDesignViewController: UIViewController {
+class EditDesignViewController: UIViewController, UIGestureRecognizerDelegate {
 
     private lazy var textView: NonUndoableTextView = {
         let textView = NonUndoableTextView(frame: CGRect(x: -500, y: -500, width: 0, height: 0))
@@ -833,6 +833,10 @@ class EditDesignViewController: UIViewController {
 
 
     private var creationDate = Date()
+    private let draftID = UUID()
+    private var lastSavedEditorContent: Data?
+    private weak var previousPopGestureDelegate: UIGestureRecognizerDelegate?
+    private weak var observedPopGesture: UIGestureRecognizer?
     private var canvasWidth: CGFloat
     private var canvasHeight: CGFloat
 
@@ -907,7 +911,7 @@ class EditDesignViewController: UIViewController {
             backgroundPhotoEffect: backgroundPhotoEffect,
             backgroundHalftone: backgroundHalftone,
             backgroundUnsharpMask: backgroundUnsharpMask,
-            id: design?.id ?? UUID()
+            id: design?.id ?? draftID
         )
     }
     
@@ -921,6 +925,7 @@ class EditDesignViewController: UIViewController {
         self.originalText = originalText
         self.originalBackgroundColor = originalBackgroundColor
         self.design = design
+        self.creationDate = design?.creationDate ?? Date()
         self.settingsManager = settingsManager
         self.imageService = imageService
         if let design {
@@ -963,6 +968,11 @@ class EditDesignViewController: UIViewController {
             name: .canvasDimensionsDidChange,
             object: settingsManager
         )
+
+        NotificationCenter.default.addObserver(self, selector: #selector(saveBeforeBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        navigationItem.backAction = UIAction(title: NSLocalizedString("Back", comment: "Back to gallery")) { [weak self] _ in
+            self?.backButtonPressed()
+        }
 
         // Setup navigation bar
         let shareBarButton = UIBarButtonItem.share { [weak self] in
@@ -1236,6 +1246,8 @@ class EditDesignViewController: UIViewController {
         }
 
         updateDesignImage()
+
+        lastSavedEditorContent = try? encodedEditorContent()
 
         registerForTraitChanges([
             UITraitUserInterfaceStyle.self,
@@ -1576,17 +1588,18 @@ class EditDesignViewController: UIViewController {
         applyAppearanceSensitiveChrome()
         updateKeyboardOptionsIfNeeded()
         updateAllToolbarButtonAppearances()
-        pixelationScale = pixelationScale + .random(in: 0...0.001)
         updateDesignImage()
-        pixelationScale = pixelationScale + .random(in: 0...0.001)
         textView.autocorrectionType = settingsManager.autocorrectionEnabled ? .yes : .no
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        pixelationScale = pixelationScale + .random(in: 0...0.001)
+        if let gesture = navigationController?.interactivePopGestureRecognizer, gesture.delegate !== self {
+            previousPopGestureDelegate = gesture.delegate
+            observedPopGesture = gesture
+            gesture.delegate = self
+        }
         updateDesignImage()
-        pixelationScale = pixelationScale + .random(in: 0...0.001)
         if usesMacCollapsibleBottomPanel {
             becomeFirstResponder()
         }
@@ -1601,10 +1614,27 @@ class EditDesignViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         videoExporter?.cancel()
-        saveDesignIfNeeded()
-        if let ctrl = undoController {
+        if saveDesignIfNeeded(), let ctrl = undoController {
             DesignUndoHistoryStore.shared.save(ctrl.history)
         }
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if let gesture = observedPopGesture, gesture.delegate === self {
+            gesture.delegate = previousPopGestureDelegate
+        }
+        observedPopGesture = nil
+    }
+
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        guard navigationController?.viewControllers.count ?? 0 > 1,
+              previousPopGestureDelegate?.gestureRecognizerShouldBegin?(gestureRecognizer) ?? true else { return false }
+        return saveDesignIfNeeded()
+    }
+
+    @objc private func saveBeforeBackground() {
+        if saveDesignIfNeeded(), let ctrl = undoController { DesignUndoHistoryStore.shared.save(ctrl.history) }
     }
     
     private func updateWithDesign() {
@@ -1619,6 +1649,7 @@ class EditDesignViewController: UIViewController {
     }
     
     @objc func backButtonPressed() {
+        guard saveDesignIfNeeded() else { return }
         navigationController?.popViewController(animated: true)
     }
     
@@ -1744,25 +1775,40 @@ class EditDesignViewController: UIViewController {
         #endif
     }
     
-    private func saveDesignIfNeeded() {
-        let text = textView.text
-        let somethingHasChanged = text != originalText || view.backgroundColor != originalBackgroundColor
-        guard let text,
-              !text.isEmpty,
-              somethingHasChanged else {
-            return
-        }
-        
-        let backgroundColor = self.backgroundColor
-        
-        DesignManager.shared.addDesign(currentDesign)
+    private func encodedEditorContent() throws -> Data {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.sortedKeys]
+        return try encoder.encode(currentDesign)
+    }
 
-        settingsManager.backgroundColorHex = backgroundColor.toHexString()
-        if !usesAutomaticTextColor {
-            settingsManager.textColorHex = customTextColor.toHexString()
+    @discardableResult private func saveDesignIfNeeded() -> Bool {
+        do {
+            let content = try encodedEditorContent()
+            guard content != lastSavedEditorContent else { return true }
+            guard DesignManager.shared.addDesign(currentDesign) else {
+                showDesignSaveError(DesignManager.shared.lastPersistenceError ?? NSLocalizedString("Your edits could not be saved. Keep this editor open and retry.", comment: "Design save error"))
+                return false
+            }
+            lastSavedEditorContent = content
+            settingsManager.backgroundColorHex = backgroundColor.toHexString()
+            if !usesAutomaticTextColor { settingsManager.textColorHex = customTextColor.toHexString() }
+            return true
+        } catch {
+            showDesignSaveError(error.localizedDescription)
+            return false
         }
     }
-    
+
+    private func showDesignSaveError(_ message: String) {
+        guard presentedViewController == nil else { return }
+        let alert = UIAlertController(title: NSLocalizedString("Could Not Save Design", comment: "Save failure title"), message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Retry", comment: "Retry save"), style: .default) { [weak self] _ in
+            self?.saveDesignIfNeeded()
+        })
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Keep Editing", comment: "Keep unsaved edits open"), style: .cancel))
+        present(alert, animated: true)
+    }
+
     private var lastUpdateDate: Date?
     private var pendingImageUpdateWorkItem: DispatchWorkItem?
     private var accurateRenderWorkItem: DispatchWorkItem?
@@ -3446,6 +3492,7 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
         if shouldUseSettingsLeadingSidebar {
             toggleLeadingSidebar(.settings)
         } else {
+            guard saveDesignIfNeeded() else { return }
             openSettings()
         }
     }
@@ -4181,15 +4228,18 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
     }
 
     private func applyPickedBackgroundImage(_ image: UIImage) {
-        undoController?.record(currentDesign)
-        refreshUndoRedoButtons()
         let imageName = UUID().uuidString
-        imageService.saveImageToDisk(
+        guard imageService.saveImageToDisk(
             image,
             addToInMemoryCache: true,
             withName: imageName,
             compressionQuality: 0.7
-        )
+        ) else {
+            ToastView.show(message: NSLocalizedString("The image could not be saved. Your current background is unchanged.", comment: "Image import save failure"), in: view)
+            return
+        }
+        undoController?.record(currentDesign)
+        refreshUndoRedoButtons()
         self.imageName = imageName
         updateDesignImage()
         updateAllToolbarButtonAppearances()

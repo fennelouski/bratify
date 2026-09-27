@@ -75,18 +75,21 @@ enum WebImageImportPresenter {
         onImagePicked: @escaping (String) -> Void
     ) -> UIHostingController<WebImagePicker> {
         let configuration = makeConfiguration(initialURLString: initialURLString)
+        weak var errorHost: UIHostingController<WebImagePicker>?
         let rootView = WebImagePicker(
             configuration: configuration,
             onCancel: onCancel,
             onPick: { selections in
                 guard let imageName = saveFirstImage(from: selections, imageService: imageService) else {
-                    onCancel()
+                    showImportError(in: errorHost?.view)
                     return
                 }
                 onImagePicked(imageName)
             }
         )
-        return UIHostingController(rootView: rootView)
+        let host = UIHostingController(rootView: rootView)
+        errorHost = host
+        return host
     }
 
     /// Refreshes callbacks on a reused hosting controller (compact panel / sidebar re-present).
@@ -101,9 +104,9 @@ enum WebImageImportPresenter {
         host.rootView = WebImagePicker(
             configuration: makeConfiguration(initialURLString: initialURLString),
             onCancel: onCancel,
-            onPick: { selections in
+            onPick: { [weak host] selections in
                 guard let imageName = saveFirstImage(from: selections, imageService: imageService) else {
-                    onCancel()
+                    showImportError(in: host?.view)
                     return
                 }
                 onImagePicked(imageName)
@@ -119,7 +122,8 @@ enum WebImageImportPresenter {
             initialURLString: initialURLString,
             automaticallyLoadOnAppear: initialURLString.map {
                 !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-            } ?? false
+            } ?? false,
+            isSmartURLFallbackEnabled: false
         )
     }
 
@@ -130,13 +134,22 @@ enum WebImageImportPresenter {
     ) -> String? {
         guard let image = firstUIImage(from: selections) else { return nil }
         let imageName = UUID().uuidString
-        imageService.saveImageToDisk(
+        guard imageService.saveImageToDisk(
             image,
             addToInMemoryCache: true,
             withName: imageName,
             compressionQuality: 0.7
-        )
+        ) else { return nil }
         return imageName
+    }
+
+    @MainActor
+    private static func showImportError(in view: UIView?) {
+        guard let view else { return }
+        ToastView.show(
+            message: NSLocalizedString("Could not save this image. Check available storage or choose another image.", comment: "Web image import failure"),
+            in: view.window ?? view
+        )
     }
 
     private static func firstUIImage(from selections: [WebImageSelection]) -> UIImage? {

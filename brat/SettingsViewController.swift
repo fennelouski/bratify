@@ -1,179 +1,186 @@
 import UIKit
+import SwiftUI
 
-class SettingsViewController: UITableViewController {
-
-    enum PresentationStyle {
-        case navigation
-        case sidebar
-    }
-
+final class SettingsViewController: UIViewController {
+    enum PresentationStyle { case navigation, sidebar }
     var presentationStyle: PresentationStyle = .navigation
     var onDone: (() -> Void)?
-
     private let settingsManager: SettingsManager
-
-    private enum CategorySection: Int, CaseIterable {
-        case appearance
-        case typography
-        case canvas
-        case behavior
-        case gallery
-
-        var displayName: String {
-            switch self {
-            case .appearance: return NSLocalizedString("Appearance", comment: "Settings category for visual appearance.").localizedLowercase
-            case .typography: return NSLocalizedString("Typography", comment: "Settings category for font and text.").localizedLowercase
-            case .canvas:     return NSLocalizedString("Canvas", comment: "Settings category for canvas and output.").localizedLowercase
-            case .behavior:   return NSLocalizedString("Behavior", comment: "Settings category for app behavior.").localizedLowercase
-            case .gallery:    return NSLocalizedString("Gallery", comment: "Settings category for gallery options.").localizedLowercase
-            }
-        }
-
-        var items: [SettingItem] {
-            switch self {
-            case .appearance: return [.themingEnabled, .themeSelection, .defaultTextColor, .defaultBackgroundColor]
-            case .typography: return [.preferredFontName, .preferredFontSize]
-            case .canvas:     return [.aspectRatio, .pixelationScale, .extendedRange]
-            case .behavior:   return [.autocorrectionEnabled, .forceLowercase, .saveWithoutTitle, .confirmBeforeDeleting, .showLabels, .eli5Mode, .undoStepCount, .removeUndoHistory]
-            case .gallery:    return [.gallerySortOrder, .galleryLayout, .galleryLabel, .doubleTapToShare]
-            }
-        }
-    }
+    private var hostingController: UIHostingController<BratSettingsView>?
 
     init(settingsManager: SettingsManager) {
         self.settingsManager = settingsManager
         super.init(nibName: nil, bundle: nil)
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = NSLocalizedString("Settings", comment: "The name of the settings menu.").localizedLowercase
+        navigationItem.title = NSLocalizedString("Settings", comment: "Settings screen title")
         navigationItem.largeTitleDisplayMode = presentationStyle == .sidebar ? .never : .always
-        configureSidebarDoneButtonIfNeeded()
-        apply(settingsManager.selectedTheme)
-    }
-
-    private func configureSidebarDoneButtonIfNeeded() {
-        guard presentationStyle == .sidebar, onDone != nil else { return }
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            barButtonSystemItem: .done,
-            target: self,
-            action: #selector(sidebarDoneTapped)
-        )
-    }
-
-    @objc private func sidebarDoneTapped() {
-        onDone?()
+        if presentationStyle == .sidebar {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(close))
+        }
+        let host = UIHostingController(rootView: settingsView())
+        addChild(host)
+        view.addSubview(host.view)
+        host.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            host.view.topAnchor.constraint(equalTo: view.topAnchor),
+            host.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            host.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            host.view.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+        host.didMove(toParent: self)
+        hostingController = host
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        apply(settingsManager.selectedTheme)
-        tableView.reloadData()
+        // The existing font, theme and canvas pickers keep using this same manager.
+        hostingController?.rootView = settingsView()
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        apply(settingsManager.selectedTheme)
+    private func settingsView() -> BratSettingsView {
+        BratSettingsView(settings: settingsManager) { [weak self] category in
+            guard let self else { return }
+            let destination: UIViewController
+            if category == .acknowledgments {
+                let notices = Bundle.main.url(forResource: "ThirdPartyNotices", withExtension: "txt")
+                    .flatMap { try? String(contentsOf: $0, encoding: .utf8) } ?? NSLocalizedString("Notices could not be opened.", comment: "Missing bundled notices")
+                destination = UIHostingController(rootView: ScrollView {
+                    Text(notices).font(.body).textSelection(.enabled).frame(maxWidth: .infinity, alignment: .leading).padding()
+                })
+                destination.navigationItem.title = category.title
+            } else if category == .typography {
+                destination = TypographyViewController(settingsManager: settingsManager)
+            } else {
+                destination = SettingsCategoryViewController(title: category.title, items: category.items, settingsManager: settingsManager)
+            }
+            navigationController?.pushViewController(destination, animated: true)
+        }
     }
 
     override var keyCommands: [UIKeyCommand]? {
-        return [
-            UIKeyCommand(
-                title: NSLocalizedString("Close", comment: "Title for close key command"),
-                action: #selector(close),
-                input: UIKeyCommand.inputEscape,
-                modifierFlags: [.shift],
-                propertyList: nil
-            )
-        ]
-    }
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return CategorySection.allCases.count
-    }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
-    }
-
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let category = CategorySection(rawValue: indexPath.section) else {
-            return UITableViewCell()
-        }
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell")
-            ?? UITableViewCell(style: .value1, reuseIdentifier: "CategoryCell")
-        cell.textLabel?.text = category.displayName
-        cell.detailTextLabel?.text = subtitle(for: category)
-        cell.accessoryType = .disclosureIndicator
-        cell.apply(settingsManager.selectedTheme)
-        return cell
-    }
-
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let category = CategorySection(rawValue: indexPath.section) else { return }
-        let vc: UIViewController
-        if category == .typography {
-            vc = TypographyViewController(settingsManager: settingsManager)
-        } else {
-            vc = SettingsCategoryViewController(
-                title: category.displayName,
-                items: category.items,
-                settingsManager: settingsManager
-            )
-        }
-        navigationController?.pushViewController(vc, animated: true)
-        tableView.deselectRow(at: indexPath, animated: true)
+        [UIKeyCommand(title: NSLocalizedString("Close", comment: "Close settings"), action: #selector(close), input: UIKeyCommand.inputEscape, modifierFlags: [.shift])]
     }
 
     @objc private func close() {
-        if presentationStyle == .sidebar {
-            onDone?()
-        } else {
-            dismiss()
+        if presentationStyle == .sidebar { onDone?() }
+        else if let navigationController, navigationController.viewControllers.first !== self {
+            navigationController.popViewController(animated: true)
+        } else { dismiss() }
+    }
+}
+
+private enum SettingsDetail {
+    case appearance, typography, canvas, acknowledgments
+    var title: String {
+        switch self {
+        case .appearance: return NSLocalizedString("Appearance", comment: "Settings section")
+        case .typography: return NSLocalizedString("Typography", comment: "Settings section")
+        case .canvas: return NSLocalizedString("Canvas", comment: "Settings section")
+        case .acknowledgments: return NSLocalizedString("Acknowledgments", comment: "Third-party notices")
+        }
+    }
+    var items: [SettingItem] {
+        switch self {
+        case .appearance: return [.themingEnabled, .themeSelection, .defaultTextColor, .defaultBackgroundColor]
+        case .typography: return [.preferredFontName, .preferredFontSize]
+        case .canvas: return [.aspectRatio, .pixelationScale, .extendedRange]
+        case .acknowledgments: return []
+        }
+    }
+}
+
+private struct BratSettingsView: View {
+    let settings: SettingsManager
+    let openDetail: (SettingsDetail) -> Void
+    // SettingsManager is also used by UIKit; its persisted values remain authoritative.
+    @State private var revision = 0
+    @State private var confirmsHistoryRemoval = false
+
+    var body: some View {
+        let _ = revision
+        Form {
+            Section("Design Defaults") {
+                detail(.appearance, summary: settings.selectedTheme?.name ?? "Default")
+                detail(.typography, summary: "\(settings.preferredFontName) · \(Int(settings.preferredFontSize))")
+                detail(.canvas, summary: "\(min(Int(settings.xDimension), 40)):\(min(Int(settings.yDimension), 40)) · \(Int(settings.pixelationScale))px")
+            }
+            Section("Behavior") {
+                toggle("Autocorrection Enabled", keyPath: \.autocorrectionEnabled, item: .autocorrectionEnabled)
+                toggle("Force Lowercase", keyPath: \.forceLowercase, item: .forceLowercase)
+                toggle("Save Without Title", keyPath: \.saveWithoutTitle, item: .saveWithoutTitle)
+                toggle("Confirm Before Deleting", keyPath: \.confirmBeforeDeleting, item: .confirmBeforeDeleting)
+                toggle("Show Labels", keyPath: \.showLabels, item: .showLabels)
+                toggle("ELI5 Mode", keyPath: \.eli5Mode, item: .eli5Mode)
+                Stepper("Undo Steps: \(settings.undoStepCount)", value: binding(\.undoStepCount), in: 5...200, step: 5)
+                Button("Remove Undo History", role: .destructive) { confirmsHistoryRemoval = true }
+            }
+            Section("Gallery") {
+                Picker("Sort Order", selection: binding(\.gallerySortOrder)) {
+                    ForEach(GallerySortOrder.allCases, id: \.self) { Text($0.displayName).tag($0) }
+                }
+                Picker("Layout", selection: binding(\.galleryLayout)) {
+                    ForEach(GalleryLayout.allCases, id: \.self) { Text($0.displayName).tag($0) }
+                }
+                Picker("Cell Label", selection: binding(\.galleryLabel)) {
+                    ForEach(GalleryLabel.allCases, id: \.self) { Text($0.displayName).tag($0) }
+                }
+                toggle("Double Tap to Share", keyPath: \.doubleTapToShare, item: .doubleTapToShare)
+            }
+            Section("Help") {
+                detail(.acknowledgments, summary: "WebImagePicker · SwiftSoup")
+                Link("Privacy Policy", destination: URL(string: "https://nathanfennel.com/bratify/privacy.html")!)
+                Link("Contact Support", destination: URL(string: "https://nathanfennel.com/contact")!)
+            }
+        }
+        .tint(accent)
+        .alert("Remove Undo History?", isPresented: $confirmsHistoryRemoval) {
+            Button("Remove", role: .destructive) { DesignUndoHistoryStore.shared.purgeAll() }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("This will permanently delete undo history for all designs. Your designs are not affected.")
         }
     }
 
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        apply(settingsManager.selectedTheme)
-        tableView.reloadData()
+    private var accent: Color {
+        guard settings.themingEnabled, let theme = settings.selectedTheme else { return .accentColor }
+        return Color(uiColor: UIColor { traits in
+            let colors = traits.userInterfaceStyle == .dark ? theme.darkModeColors : theme.lightModeColors
+            return colors.tintColor.readable(on: .systemBackground.resolvedColor(with: traits))
+        })
     }
 
-    // MARK: - Subtitles
-
-    private func subtitle(for category: CategorySection) -> String {
-        switch category {
-        case .appearance:
-            return settingsManager.selectedTheme?.name ?? NSLocalizedString("default", comment: "Default theme subtitle.")
-        case .typography:
-            let size = Int(settingsManager.preferredFontSize)
-            return "\(settingsManager.preferredFontName) · \(size)"
-        case .canvas:
-            let x = min(Int(settingsManager.xDimension), 40)
-            let y = min(Int(settingsManager.yDimension), 40)
-            let scale = Int(settingsManager.pixelationScale)
-            return "\(x):\(y) · \(scale)px"
-        case .behavior:
-            var active: [String] = []
-            if settingsManager.autocorrectionEnabled { active.append(NSLocalizedString("autocorrect", comment: "Short label for autocorrection.")) }
-            if settingsManager.forceLowercase { active.append(NSLocalizedString("lowercase", comment: "Short label for force lowercase.")) }
-            if settingsManager.saveWithoutTitle { active.append(NSLocalizedString("no title", comment: "Short label for save without title.")) }
-            if !settingsManager.confirmBeforeDeleting { active.append(NSLocalizedString("no confirm", comment: "Short label for skip delete confirmation.")) }
-            if settingsManager.showLabels { active.append(NSLocalizedString("labels", comment: "Short label for show labels.")) }
-            if settingsManager.eli5Mode { active.append(NSLocalizedString("eli5", comment: "Short label for eli5 mode.")) }
-            let undoSteps = settingsManager.undoStepCount
-            if undoSteps != 50 { active.append("\(undoSteps) undo") }
-            return active.isEmpty ? NSLocalizedString("default", comment: "Default behavior subtitle.") : active.joined(separator: ", ")
-        case .gallery:
-            var parts = [settingsManager.gallerySortOrder.displayName.localizedLowercase,
-                         settingsManager.galleryLayout.displayName.localizedLowercase,
-                         settingsManager.galleryLabel.displayName.localizedLowercase]
-            if settingsManager.doubleTapToShare { parts.append(NSLocalizedString("share", comment: "Short label indicating double-tap-to-share is on.")) }
-            return parts.joined(separator: " · ")
+    private func detail(_ category: SettingsDetail, summary: String) -> some View {
+        Button { openDetail(category) } label: {
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(category.title).foregroundStyle(.primary)
+                    Text(summary).font(.subheadline).foregroundStyle(.secondary)
+                }
+                Spacer()
+                Image(systemName: "chevron.right").foregroundStyle(.secondary).accessibilityHidden(true)
+            }
         }
+        .accessibilityElement(children: .combine)
+    }
+
+    private func toggle(_ title: LocalizedStringKey, keyPath: ReferenceWritableKeyPath<SettingsManager, Bool>, item: SettingItem) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Toggle(title, isOn: binding(keyPath))
+            if settings.eli5Mode {
+                Text(ELI5Descriptions.forSetting(item)).font(.footnote).foregroundStyle(.secondary)
+            }
+        }
+    }
+
+    private func binding<Value>(_ keyPath: ReferenceWritableKeyPath<SettingsManager, Value>) -> Binding<Value> {
+        Binding(get: { settings[keyPath: keyPath] }, set: {
+            settings[keyPath: keyPath] = $0
+            revision += 1
+        })
     }
 }

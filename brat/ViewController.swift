@@ -243,7 +243,7 @@ class ViewController: UIViewController {
         
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(handleDesignSaveFailed),
+            selector: #selector(handleDesignSaveFailed(_:)),
             name: .designSaveFailed,
             object: nil
         )
@@ -308,11 +308,12 @@ class ViewController: UIViewController {
         }
     }
 
-    @objc private func handleDesignSaveFailed() {
+    @objc private func handleDesignSaveFailed(_ notification: Notification) {
+        let message = notification.userInfo?[NSLocalizedDescriptionKey] as? String ?? DesignManager.shared.lastPersistenceError
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             ToastView.show(
-                message: NSLocalizedString(
+                message: message ?? NSLocalizedString(
                     "failed_to_save_design",
                     comment: "Toast shown when a design fails to save to disk"
                 ),
@@ -322,19 +323,20 @@ class ViewController: UIViewController {
     }
 
     @objc private func handleDesignsInitialSyncDidComplete() {
-        refreshGalleryAfterSync()
+        refreshGalleryAfterSync(showCloudMessage: false)
     }
 
     @objc private func handleDesignsDidSync() {
         refreshGalleryAfterSync()
     }
 
-    private func refreshGalleryAfterSync() {
+    private func refreshGalleryAfterSync(showCloudMessage: Bool = true) {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             designs = sorted(DesignManager.shared.getAllDesigns())
             collectionView.reloadData()
             updateEmptyState()
+            guard showCloudMessage, DesignManager.shared.lastPersistenceError == nil else { return }
             ToastView.show(
                 message: NSLocalizedString(
                     "synced_from_icloud",
@@ -347,6 +349,12 @@ class ViewController: UIViewController {
         }
     }
     
+    private func reloadPersistedGallery() {
+        designs = sorted(DesignManager.shared.getAllDesigns())
+        collectionView.reloadData()
+        updateEmptyState()
+    }
+
     private func confirmDeleteDesign(_ design: Design, at indexPath: IndexPath) {
         let confirmation = UIAlertController(
             title: NSLocalizedString("delete_design_title", comment: "Title of the delete confirmation alert"),
@@ -358,9 +366,8 @@ class ViewController: UIViewController {
             style: .destructive
         ) { [weak self] _ in
             guard let self else { return }
-            DesignManager.shared.deleteDesign(design)
-            designs.remove(at: indexPath.item)
-            collectionView.deleteItems(at: [indexPath])
+            guard DesignManager.shared.deleteDesign(design) else { return }
+            reloadPersistedGallery()
         })
         confirmation.addAction(UIAlertAction(
             title: NSLocalizedString("Cancel", comment: "Cancel action"),
@@ -414,10 +421,8 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
                 image: UIImage(systemName: "doc.on.doc")
             ) { [weak self] _ in
                 guard let self else { return }
-                let copy = DesignManager.shared.duplicateDesign(design)
-                let newIndex = indexPath.item + 1
-                designs.insert(copy, at: newIndex)
-                collectionView.insertItems(at: [IndexPath(item: newIndex, section: 0)])
+                guard DesignManager.shared.duplicateDesign(design) != nil else { return }
+                reloadPersistedGallery()
             }
             let delete = UIAction(
                 title: NSLocalizedString("delete", comment: "Action to delete a design"),
@@ -428,9 +433,8 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
                 if settingsManager.confirmBeforeDeleting {
                     confirmDeleteDesign(design, at: indexPath)
                 } else {
-                    DesignManager.shared.deleteDesign(design)
-                    designs.remove(at: indexPath.item)
-                    collectionView.deleteItems(at: [indexPath])
+                    guard DesignManager.shared.deleteDesign(design) else { return }
+                    reloadPersistedGallery()
                 }
             }
             return UIMenu(title: "", children: [duplicate, delete])

@@ -2,7 +2,6 @@ import UIKit
 
 class ImageService {
     private let cacheQueue = DispatchQueue(label: "com.pictureGrid.imageCacheQueue", attributes: .concurrent)
-    private let diskManagementQueue = DispatchQueue(label: "com.pictureGrid.diskManagementQueue")
     
     private(set) var memoryCache: NSCache<NSString, UIImage> = {
         let cache = NSCache<NSString, UIImage>()
@@ -11,9 +10,7 @@ class ImageService {
     }()
     private var ongoingRequests: [AnyHashable: [String: URLSessionDownloadTask]] = [:]
     private var requestContexts: [String: AnyHashable] = [:]
-    private var currentDiskCacheSize: UInt64 = 0
-    private let maxDiskCacheSize: UInt64 = 1024 * 1024 * 1024 // 1 GB
-    private var lastCacheManagementDate = Date.distantPast
+    private let memoryCacheByteLimit: UInt64 = 1024 * 1024 * 1024 // 1 GB
     
     private var isUnderMemoryPressure = false
     private let useDecompression = false
@@ -25,7 +22,7 @@ class ImageService {
                                                selector: #selector(memoryPressureDetected),
                                                name: UIApplication.didReceiveMemoryWarningNotification,
                                                object: nil)
-        memoryCache.totalCostLimit = Int(maxDiskCacheSize) // Set an approximate cost limit
+        memoryCache.totalCostLimit = Int(memoryCacheByteLimit) // Set an approximate cost limit
         migrateLegacyImageCacheIfNeeded()
     }
     
@@ -185,10 +182,13 @@ class ImageService {
                         guard let self else {
                             return
                         }
-                        saveImageToDisk(image,
+                        guard saveImageToDisk(image,
                                         addToInMemoryCache: true,
                                         withName: imageURLString,
-                                        compressionQuality: 0.7)
+                                        compressionQuality: 0.7) else {
+                            completion(.failure(error: imageServiceError("Could not save image"), url: imageURLString))
+                            return
+                        }
                         completion(.success(image: image,
                                             url: imageURLString))
                     }
@@ -290,11 +290,13 @@ class ImageService {
                     guard let self else {
                         return
                     }
-                    addImageToMemoryCache(processedImage,
-                                          forKey: imageURLString)
-                    saveImageToDisk(processedImage,
+                    guard saveImageToDisk(processedImage,
                                     withName: imageName(fromURL: imageURLString),
-                                    compressionQuality: compressionQuality)
+                                    compressionQuality: compressionQuality) else {
+                        completion(.failure(error: imageServiceError("Could not save image"), url: imageURLString))
+                        return
+                    }
+                    addImageToMemoryCache(processedImage, forKey: imageURLString)
                     completion(.success(image: processedImage,
                                         url: imageURLString))
                 }
@@ -365,11 +367,13 @@ class ImageService {
                         return
                     }
                     
-                    addImageToMemoryCache(processedImage,
-                                          forKey: imageURLString)
-                    saveImageToDisk(processedImage,
+                    guard saveImageToDisk(processedImage,
                                     withName: imageName(fromURL: imageURLString),
-                                    compressionQuality: compressionQuality)
+                                    compressionQuality: compressionQuality) else {
+                        completion(.failure(error: imageServiceError("Could not save image"), url: imageURLString))
+                        return
+                    }
+                    addImageToMemoryCache(processedImage, forKey: imageURLString)
                     completion(.success(image: processedImage,
                                         url: imageURLString))
                 }
@@ -435,45 +439,6 @@ class ImageService {
         }
     }
     
-    // Reduce the size of the disk cache
-    func reduceDiskCache(to megabytes: Int) {
-        let targetSize = UInt64(megabytes) * 1024 * 1024 // Convert megabytes to bytes
-        cacheQueue.async(flags: .barrier) { [weak self] in
-            guard let self = self else {
-                return
-            }
-            let cacheDirectory = getLocalImageDirectory()
-            let fileManager = FileManager.default
-            
-            // Attempt to get the directory contents
-            guard let fileURLs = try? fileManager.contentsOfDirectory(at: cacheDirectory, includingPropertiesForKeys: [.fileSizeKey], options: .skipsHiddenFiles) else { return }
-            
-            // Map files to their sizes and sort by file size in descending order
-            let files = fileURLs.compactMap { url -> (URL, UInt64)? in
-                guard let fileSize = try? url.resourceValues(forKeys: [.fileSizeKey]).fileSize else { return nil }
-                return (url, UInt64(fileSize))
-            }.sorted { $0.1 > $1.1 }
-            
-            var accumulatedSize: UInt64 = 0
-            
-            // Iterate through files, removing them until the target size is met
-            for file in files {
-                accumulatedSize += file.1
-                if accumulatedSize > targetSize {
-                    do {
-                        try fileManager.removeItem(at: file.0)
-                        currentDiskCacheSize -= file.1
-                        if currentDiskCacheSize <= targetSize {
-                            break
-                        }
-                    } catch {
-                        print("Failed to remove item: \(error.localizedDescription)")
-                    }
-                }
-            }
-        }
-    }
-    
     @objc private func memoryPressureDetected() {
         isUnderMemoryPressure = true
         clearInMemoryCache() // Optional: clear cache under memory pressure
@@ -497,43 +462,30 @@ class ImageService {
     
     
     
+    @discardableResult
     func saveImageToDisk(_ image: UIImage,
                          addToInMemoryCache: Bool = false,
                          withName name: String,
-                         compressionQuality: CGFloat) {
-        defer {
-            if addToInMemoryCache {
-                memoryCache.setObject(image,
-                                      forKey: name.key as NSString)
-            }
-        }
+                         compressionQuality: CGFloat) -> Bool {
         guard let data = image.jpegData(compressionQuality: compressionQuality) ?? image.pngData() else {
-            return
+            return false
         }
         let filePath = getFilePath(forImageName: name)
-        
         do {
             try data.write(to: filePath, options: .atomic)
-            let attributes = try FileManager.default.attributesOfItem(atPath: filePath.path)
-            let fileSize = attributes[FileAttributeKey.size] as? UInt64 ?? 0
-
-            cacheQueue.async(flags: .barrier) { [weak self] in
-                guard let self else { return }
-                currentDiskCacheSize += fileSize
-                manageDiskCache()
-            }
-
-            if let iCloudDir = ImageService.sharedICloudImagesDirectory {
-                let iCloudPath = iCloudDir.appendingPathComponent(name.key)
-                try? data.write(to: iCloudPath, options: .atomic)
-            }
         } catch {
             print("Error saving file to disk: \(error.localizedDescription)")
+            return false
         }
-
-        assert(fileExists(for: name))
+        if addToInMemoryCache {
+            memoryCache.setObject(image, forKey: name.key as NSString)
+        }
+        if let iCloudDir = ImageService.sharedICloudImagesDirectory {
+            try? data.write(to: iCloudDir.appendingPathComponent(name.key), options: .atomic)
+        }
+        return true
     }
-    
+
     func loadImageFromDisk(with name: String?) -> UIImage? {
         guard let imageName = name?.key else { return nil }
 
@@ -566,12 +518,6 @@ class ImageService {
         }
 
         guard let image else { return nil }
-
-        // Update file's modification date to support LRU eviction
-        try? FileManager.default.setAttributes(
-            [FileAttributeKey.modificationDate: Date()],
-            ofItemAtPath: localPathString
-        )
 
         if memoryCache.object(forKey: imageName as NSString) == nil {
             memoryCache.setObject(image, forKey: imageName as NSString)
@@ -606,46 +552,8 @@ class ImageService {
         return FileManager.default.fileExists(atPath: filePath)
     }
     
-    func manageDiskCache() {
-        let now = Date()
-        guard lastCacheManagementDate.addingTimeInterval(5) < now else {
-            return
-        }
-        
-        diskManagementQueue.async { [weak self] in
-            guard let self = self else {
-                return
-            }
-            lastCacheManagementDate = now
-            performDiskCacheManagement()
-        }
-    }
-    
-    private func performDiskCacheManagement() {
-        let fileManager = FileManager.default
-        let cacheDirectory = getLocalImageDirectory()
-        do {
-            let fileURLs = try fileManager.contentsOfDirectory(at: cacheDirectory, includingPropertiesForKeys: nil)
-            
-            let filesAttributes = fileURLs.map { url -> (URL, UInt64, Date) in
-                let attributes = try? fileManager.attributesOfItem(atPath: url.path)
-                let size = attributes?[.size] as? UInt64 ?? 0
-                let modificationDate = attributes?[.modificationDate] as? Date ?? Date.distantPast
-                return (url, size, modificationDate)
-            }
-            
-            let sortedFiles = filesAttributes.sorted { $0.2 < $1.2 } // Sort by modification date for LRU
-            
-            for (url, size, _) in sortedFiles {
-                guard currentDiskCacheSize > maxDiskCacheSize else { break }
-                try fileManager.removeItem(at: url)
-                currentDiskCacheSize -= size
-            }
-        } catch {
-            print("Error managing disk cache: \(error.localizedDescription)")
-        }
-    }
-    
+    // The existing directory name is retained for compatibility. These are user assets.
+    // ponytail: retain imported files; reclaim only with a future explicit, reference-aware delete.
     private func getLocalImageDirectory() -> URL {
         let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
         let dir = appSupport.appendingPathComponent("ImageCache")
@@ -658,17 +566,23 @@ class ImageService {
     private func migrateLegacyImageCacheIfNeeded() {
         let legacy = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
             .appendingPathComponent("ImageCache")
-        guard FileManager.default.fileExists(atPath: legacy.path) else { return }
-        let destination = getLocalImageDirectory()
+        Self.migrateLegacyImages(from: legacy, to: getLocalImageDirectory())
+    }
+
+    static func migrateLegacyImages(from legacy: URL, to destination: URL) {
         let fm = FileManager.default
         let files = (try? fm.contentsOfDirectory(at: legacy, includingPropertiesForKeys: nil)) ?? []
         for file in files {
             let dest = destination.appendingPathComponent(file.lastPathComponent)
-            if !fm.fileExists(atPath: dest.path) {
-                try? fm.copyItem(at: file, to: dest)
+            guard !fm.fileExists(atPath: dest.path) else { continue }
+            do {
+                try fm.copyItem(at: file, to: dest)
+                // Remove only a successfully copied item. Keep conflicts and failed copies recoverable.
+                try fm.removeItem(at: file)
+            } catch {
+                continue
             }
         }
-        try? fm.removeItem(at: legacy)
     }
 
     private func getFilePath(forImageName name: String) -> URL {

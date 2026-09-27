@@ -80,6 +80,7 @@ struct Design: Codable {
 
     enum CodingKeys: String, CodingKey {
         case text
+        case blankText
         case backgroundColor
         case textColor
         case usesAutomaticTextColor
@@ -155,7 +156,12 @@ struct Design: Codable {
     // Encoding the UIColor as a hex string
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(text, forKey: .text)
+        // Older installed versions reject a blank text field and then replace
+        // the whole library with samples. Keep their array decoder compatible.
+        // The marker restores the user's exact blank/whitespace text on new clients.
+        let isBlank = text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        try container.encode(isBlank ? "\u{2060}" + text : text, forKey: .text)
+        if isBlank { try container.encode(true, forKey: .blankText) }
         try container.encode(backgroundColor.toHexString(), forKey: .backgroundColor)
         try container.encode(textColor.toHexString(), forKey: .textColor)
         try container.encode(usesAutomaticTextColor, forKey: .usesAutomaticTextColor)
@@ -378,10 +384,9 @@ struct Design: Codable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let decodedText = try container.decode(String.self, forKey: .text)
-        if decodedText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            throw DecodingError.dataCorruptedError(forKey: .text, in: container, debugDescription: "Text cannot be empty or whitespace.")
-        }
-        text = decodedText
+        let blankText = try container.decodeIfPresent(Bool.self, forKey: .blankText) ?? false
+        // Never strip a user-entered zero-width character without our explicit marker.
+        text = blankText && decodedText.hasPrefix("\u{2060}") ? String(decodedText.dropFirst()) : decodedText
         let colorHex = try container.decode(String.self, forKey: .backgroundColor)
         backgroundColor = UIColor(hexString: colorHex)
         let textColorHex = try container.decodeIfPresent(String.self, forKey: .textColor)

@@ -7,359 +7,348 @@ extension Notification.Name {
 }
 
 class DesignManager {
-
     static let shared = DesignManager()
 
     private let designsFileName = "designs.json"
+    private let deletedIDsFileName = "deleted-design-ids.json"
     private let initialSyncTimeout: TimeInterval = 20
-
+    private let localDirectory: URL
+    private let usesIsolatedDirectories: Bool
     private var designs: [Design] = []
+    private var deletedIDs = Set<UUID>()
     private var metadataQuery: NSMetadataQuery?
     private var iCloudDocumentsURL: URL?
     private var hasCompletedInitialSync = false
+    private var hasGatheredCloudMetadata = false
     private var initialSyncTimeoutWorkItem: DispatchWorkItem?
+    private(set) var lastPersistenceError: String?
+    private lazy var undoHistoryStore = usesIsolatedDirectories
+        ? DesignUndoHistoryStore(directory: activeDirectory) : DesignUndoHistoryStore.shared
 
-    init() {
-        designs = loadFromDisk(at: localFileURL)
-
+    // Explicit directories keep development checks out of real Documents/iCloud.
+    init(localDirectory: URL? = nil, cloudDirectory: URL? = nil) {
+        self.localDirectory = localDirectory ?? FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        usesIsolatedDirectories = localDirectory != nil
+        do {
+            let local = try readFromDisk(at: localFileURL)
+            deletedIDs = local.deletedIDs
+            designs = merge(local: local.designs, remote: [])
+        } catch {
+            reportFailure(error, operation: "Could not read saved designs. The existing files were left unchanged.")
+        }
+        if usesIsolatedDirectories {
+            iCloudDocumentsURL = cloudDirectory
+            finishInitialSyncIfNeeded()
+            return
+        }
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            guard let self else { return }
             let containerURL = FileManager.default
                 .url(forUbiquityContainerIdentifier: "iCloud.com.nathanfennel.brat")?
                 .appendingPathComponent("Documents")
-
-            if let containerURL {
-                try? FileManager.default.createDirectory(at: containerURL, withIntermediateDirectories: true)
-            }
-
             DispatchQueue.main.async {
+                guard let self else { return }
                 self.iCloudDocumentsURL = containerURL
-                if let imagesDir = containerURL?.appendingPathComponent("Images") {
-                    try? FileManager.default.createDirectory(at: imagesDir, withIntermediateDirectories: true)
-                    ImageService.sharedICloudImagesDirectory = imagesDir
+                if let containerURL {
+                    do {
+                        try FileManager.default.createDirectory(at: containerURL, withIntermediateDirectories: true)
+                        let imagesDir = containerURL.appendingPathComponent("Images")
+                        try FileManager.default.createDirectory(at: imagesDir, withIntermediateDirectories: true)
+                        ImageService.sharedICloudImagesDirectory = imagesDir
+                    } catch {
+                        self.reportFailure(error, operation: "Could not prepare iCloud storage. Local designs are preserved.")
+                    }
                 }
-                self.migrateLocalToiCloudIfNeeded()
                 self.setupiCloudObserver()
                 self.beginInitialSyncCheck()
             }
         }
     }
 
-    // MARK: - URLs
-
-    private var localFileURL: URL {
-        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent(designsFileName)
-    }
-
-    private var iCloudFileURL: URL? {
-        iCloudDocumentsURL?.appendingPathComponent(designsFileName)
-    }
-
-    private var activeFileURL: URL {
-        iCloudFileURL ?? localFileURL
-    }
-
-    var activeDirectory: URL {
-        activeFileURL.deletingLastPathComponent()
-    }
-
-    // MARK: - Migration
-
-    private func migrateLocalToiCloudIfNeeded() {
-        guard let iCloudURL = iCloudFileURL else { return }
-        let local = localFileURL
-        guard !FileManager.default.fileExists(atPath: iCloudURL.path),
-              FileManager.default.fileExists(atPath: local.path) else { return }
-
-        let coordinator = NSFileCoordinator()
-        var error: NSError?
-        coordinator.coordinate(
-            writingItemAt: local, options: .forMoving,
-            writingItemAt: iCloudURL, options: .forReplacing,
-            error: &error
-        ) { srcURL, dstURL in
-            try? FileManager.default.moveItem(at: srcURL, to: dstURL)
-        }
-    }
+    private var localFileURL: URL { localDirectory.appendingPathComponent(designsFileName) }
+    private var iCloudFileURL: URL? { iCloudDocumentsURL?.appendingPathComponent(designsFileName) }
+    var activeDirectory: URL { iCloudDocumentsURL ?? localDirectory }
 
     // MARK: - Initial Sync
 
     private func beginInitialSyncCheck() {
-        scheduleInitialSyncTimeout()
-
-        guard iCloudDocumentsURL != nil, let iCloudURL = iCloudFileURL else {
-            finishInitialSyncIfNeeded()
-            return
-        }
-
-        guard FileManager.default.fileExists(atPath: iCloudURL.path) else {
-            finishInitialSyncIfNeeded()
-            return
-        }
-
-        try? FileManager.default.startDownloadingUbiquitousItem(at: iCloudURL)
-
-        if isRemoteFileReadyForRead() {
-            _ = attemptMergeFromiCloud()
-            finishInitialSyncIfNeeded()
-        }
-    }
-
-    private func scheduleInitialSyncTimeout() {
-        initialSyncTimeoutWorkItem?.cancel()
-        let workItem = DispatchWorkItem { [weak self] in
-            self?.finishInitialSyncIfNeeded()
-        }
+        let workItem = DispatchWorkItem { [weak self] in self?.finishInitialSyncIfNeeded() }
         initialSyncTimeoutWorkItem = workItem
         DispatchQueue.main.asyncAfter(deadline: .now() + initialSyncTimeout, execute: workItem)
-    }
-
-    private func cancelInitialSyncTimeout() {
-        initialSyncTimeoutWorkItem?.cancel()
-        initialSyncTimeoutWorkItem = nil
+        if iCloudDocumentsURL == nil || isRemoteFileReadyForRead() {
+            finishInitialSyncIfNeeded()
+        } else {
+            requestCloudDownloads()
+        }
     }
 
     private func finishInitialSyncIfNeeded() {
         guard !hasCompletedInitialSync else { return }
         hasCompletedInitialSync = true
-        cancelInitialSyncTimeout()
-
-        if let iCloudURL = iCloudFileURL,
-           FileManager.default.fileExists(atPath: iCloudURL.path),
-           isRemoteFileReadyForRead() {
-            _ = attemptMergeFromiCloud()
-        }
-
-        let loaded = loadFromDisk(at: activeFileURL)
-        if !loaded.isEmpty {
-            designs = loaded
-        } else if designs.isEmpty {
-            designs = generateRandomDesigns(count: .random(in: 4...5))
-            saveDesigns(designs)
-        }
-
-        NotificationCenter.default.post(name: .designsInitialSyncDidComplete, object: nil)
-
-        let knownIDs = Set(designs.map(\.id))
-        DesignUndoHistoryStore.shared.purgeOrphans(keeping: knownIDs)
+        initialSyncTimeoutWorkItem?.cancel()
+        initialSyncTimeoutWorkItem = nil
+        _ = loadDesigns()
+        NotificationCenter.default.post(name: .designsInitialSyncDidComplete, object: self)
+        // A timed-out cloud download is not evidence that its undo files are orphans.
+        // Only an explicitly committed deletion may remove an undo history.
     }
 
-    private func ubiquitousDownloadStatus() -> String? {
-        guard let results = metadataQuery?.results as? [NSMetadataItem] else { return nil }
-        let item = results.first { metadataItem in
-            (metadataItem.value(forAttribute: NSMetadataItemFSNameKey) as? String) == designsFileName
+    private func requestCloudDownloads() {
+        guard let directory = iCloudDocumentsURL else { return }
+        for name in [designsFileName, deletedIDsFileName] {
+            let url = directory.appendingPathComponent(name)
+            if FileManager.default.fileExists(atPath: url.path) {
+                do { try FileManager.default.startDownloadingUbiquitousItem(at: url) }
+                catch { reportFailure(error, operation: "Could not download iCloud designs. Local designs are preserved.") }
+            }
         }
-        return item?.value(forAttribute: NSMetadataUbiquitousItemDownloadingStatusKey) as? String
     }
 
     private func isRemoteFileReadyForRead() -> Bool {
-        if let status = ubiquitousDownloadStatus() {
-            return status == NSMetadataUbiquitousItemDownloadingStatusCurrent
-                || status == NSMetadataUbiquitousItemDownloadingStatusDownloaded
+        guard let directory = iCloudDocumentsURL else { return false }
+        // A missing local URL before the initial metadata query finishes is not
+        // proof that the account has no remote document. Never publish over it.
+        guard usesIsolatedDirectories || hasGatheredCloudMetadata else { return false }
+        for name in [designsFileName, deletedIDsFileName] {
+            if let items = metadataQuery?.results as? [NSMetadataItem],
+               let item = items.first(where: { ($0.value(forAttribute: NSMetadataItemFSNameKey) as? String) == name }),
+               let status = item.value(forAttribute: NSMetadataUbiquitousItemDownloadingStatusKey) as? String,
+               status != NSMetadataUbiquitousItemDownloadingStatusCurrent,
+               status != NSMetadataUbiquitousItemDownloadingStatusDownloaded { return false }
+            let url = directory.appendingPathComponent(name)
+            // An iCloud placeholder is not a missing, empty document.
+            let placeholder = directory.appendingPathComponent(".\(name).icloud")
+            if FileManager.default.fileExists(atPath: placeholder.path) { return false }
+            if let status = try? url.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey]).ubiquitousItemDownloadingStatus,
+               status != .current && status != .downloaded { return false }
         }
-        guard let iCloudURL = iCloudFileURL else { return false }
-        return FileManager.default.fileExists(atPath: iCloudURL.path)
+        return true
     }
 
     @discardableResult
     private func attemptMergeFromiCloud() -> Bool {
-        guard let iCloudURL = iCloudFileURL else { return false }
-        let remoteDesigns = loadFromDisk(at: iCloudURL)
-        guard !remoteDesigns.isEmpty else { return false }
-
-        let merged = merge(local: designs, remote: remoteDesigns)
-        guard designsChanged(from: designs, to: merged) else { return false }
-
-        designs = merged
-        writeToDisk(merged, at: iCloudURL)
-        return true
-    }
-
-    private func designsChanged(from current: [Design], to merged: [Design]) -> Bool {
-        merged.count != current.count ||
-            merged.contains { design in
-                current.first(where: { $0.id == design.id })?.modifiedDate != design.modifiedDate
-            }
+        guard let cloudURL = iCloudFileURL, isRemoteFileReadyForRead() else { return false }
+        do {
+            let remote = try readFromDisk(at: cloudURL)
+            let ids = deletedIDs.union(remote.deletedIDs)
+            // Preserve remote data locally before publishing the merged cloud library.
+            let local = try writeToDisk(designs + remote.designs, deletedIDs: ids, at: localFileURL)
+            let changed = try encoded(designs) != encoded(local.designs) || deletedIDs != local.deletedIDs
+            designs = local.designs
+            deletedIDs = local.deletedIDs
+            let published = try writeToDisk(designs, deletedIDs: deletedIDs, at: cloudURL)
+            // Include a concurrent cloud edit encountered inside the write boundary.
+            let mirrored = try writeToDisk(published.designs, deletedIDs: published.deletedIDs, at: localFileURL)
+            designs = mirrored.designs
+            deletedIDs = mirrored.deletedIDs
+            lastPersistenceError = nil
+            for id in deletedIDs { undoHistoryStore.delete(for: id) }
+            return try changed || (encoded(local.designs) != encoded(mirrored.designs))
+        } catch {
+            reportFailure(error, operation: "iCloud sync could not finish. Saved local designs and undo history are preserved; retry when storage is available.")
+            return false
+        }
     }
 
     // MARK: - iCloud Observer
 
     private func setupiCloudObserver() {
         guard iCloudDocumentsURL != nil else { return }
-
         let query = NSMetadataQuery()
         query.searchScopes = [NSMetadataQueryUbiquitousDocumentsScope]
-        query.predicate = NSPredicate(format: "%K == %@", NSMetadataItemFSNameKey, designsFileName)
-
-        NotificationCenter.default.addObserver(
-            self, selector: #selector(handleMetadataUpdate),
-            name: .NSMetadataQueryDidFinishGathering, object: query
-        )
-        NotificationCenter.default.addObserver(
-            self, selector: #selector(handleMetadataUpdate),
-            name: .NSMetadataQueryDidUpdate, object: query
-        )
-
-        query.start()
-        self.metadataQuery = query
+        query.predicate = NSPredicate(format: "%K IN %@", NSMetadataItemFSNameKey, [designsFileName, deletedIDsFileName])
+        NotificationCenter.default.addObserver(self, selector: #selector(handleMetadataUpdate), name: .NSMetadataQueryDidFinishGathering, object: query)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleMetadataUpdate), name: .NSMetadataQueryDidUpdate, object: query)
+        metadataQuery = query
+        if !query.start() {
+            reportFailure(CocoaError(.ubiquitousFileUnavailable), operation: "iCloud discovery could not start. Changes remain saved on this device.")
+        }
     }
 
     @objc private func handleMetadataUpdate(_ notification: Notification) {
+        if notification.name == .NSMetadataQueryDidFinishGathering { hasGatheredCloudMetadata = true }
         metadataQuery?.disableUpdates()
         defer { metadataQuery?.enableUpdates() }
-
-        if !hasCompletedInitialSync {
-            processInitialSyncMetadataUpdate()
-            return
-        }
-
-        guard let iCloudURL = iCloudFileURL else { return }
         guard isRemoteFileReadyForRead() else {
-            try? FileManager.default.startDownloadingUbiquitousItem(at: iCloudURL)
+            requestCloudDownloads()
             return
         }
-
-        guard attemptMergeFromiCloud() else { return }
-        NotificationCenter.default.post(name: .designsDidSync, object: nil)
-    }
-
-    private func processInitialSyncMetadataUpdate() {
-        guard let iCloudURL = iCloudFileURL else {
+        if !hasCompletedInitialSync {
             finishInitialSyncIfNeeded()
-            return
+        } else if attemptMergeFromiCloud() {
+            NotificationCenter.default.post(name: .designsDidSync, object: self)
         }
-
-        guard FileManager.default.fileExists(atPath: iCloudURL.path) else {
-            finishInitialSyncIfNeeded()
-            return
-        }
-
-        if !isRemoteFileReadyForRead() {
-            try? FileManager.default.startDownloadingUbiquitousItem(at: iCloudURL)
-            return
-        }
-
-        _ = attemptMergeFromiCloud()
-        finishInitialSyncIfNeeded()
     }
 
     func merge(local: [Design], remote: [Design]) -> [Design] {
-        var byID = Dictionary(uniqueKeysWithValues: local.map { ($0.id, $0) })
-        for design in remote {
-            if let existing = byID[design.id] {
-                if design.modifiedDate > existing.modifiedDate {
-                    byID[design.id] = design
-                }
-            } else {
-                byID[design.id] = design
-            }
+        merged(local: local, remote: remote, deleting: deletedIDs)
+    }
+
+    private func merged(local: [Design], remote: [Design], deleting ids: Set<UUID>) -> [Design] {
+        var byID: [UUID: Design] = [:]
+        for design in local + remote where !ids.contains(design.id) {
+            if let existing = byID[design.id], existing.modifiedDate >= design.modifiedDate { continue }
+            byID[design.id] = design
         }
-        return byID.values.sorted { $0.creationDate < $1.creationDate }
+        return byID.values.sorted {
+            $0.creationDate == $1.creationDate ? $0.id.uuidString < $1.id.uuidString : $0.creationDate < $1.creationDate
+        }
     }
 
     // MARK: - CRUD
 
-    func addDesign(_ design: Design) {
-        if let index = designs.firstIndex(where: { $0.id == design.id }) {
-            var updated = design
-            updated.modifiedDate = Date()
-            designs[index] = updated
-        } else if !design.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            designs.append(design)
+    @discardableResult
+    func addDesign(_ design: Design) -> Bool {
+        guard !deletedIDs.contains(design.id) else {
+            reportFailure(CocoaError(.fileNoSuchFile), operation: "This design was deleted. Duplicate it to save a new copy.")
+            return false
         }
-        saveDesigns(designs)
-    }
-
-    func deleteDesign(_ design: Design) {
-        if let index = designs.firstIndex(where: { $0.id == design.id }) {
-            designs.remove(at: index)
-            saveDesigns(designs)
-            DesignUndoHistoryStore.shared.delete(for: design.id)
+        var updated = design
+        // The legacy ISO-8601 format stores whole seconds. Advance past a known
+        // revision so rapid edits (or a clock correction) cannot lose a tie.
+        let previous = designs.first(where: { $0.id == design.id })?.modifiedDate ?? .distantPast
+        updated.modifiedDate = max(Date(), previous.addingTimeInterval(1))
+        guard saveDesigns([updated] + designs.filter { $0.id != design.id }, deleting: deletedIDs) else { return false }
+        guard designs.contains(where: { $0.id == design.id }) else {
+            reportFailure(CocoaError(.fileNoSuchFile), operation: "This design was deleted on another device. Duplicate it to save a new copy.")
+            return false
         }
+        return true
     }
 
     @discardableResult
-    func duplicateDesign(_ design: Design) -> Design {
+    func deleteDesign(_ design: Design) -> Bool {
+        let saved = saveDesigns(designs.filter { $0.id != design.id }, deleting: deletedIDs.union([design.id]))
+        if saved && lastPersistenceError == nil { undoHistoryStore.delete(for: design.id) }
+        return saved
+    }
+
+    @discardableResult
+    func duplicateDesign(_ design: Design) -> Design? {
         var duplicate = design
         duplicate.id = UUID()
         duplicate.creationDate = Date()
-        if let index = designs.firstIndex(where: { $0.id == design.id }) {
-            designs.insert(duplicate, at: index + 1)
-        } else {
-            designs.append(duplicate)
-        }
-        saveDesigns(designs)
-        return duplicate
+        duplicate.modifiedDate = duplicate.creationDate
+        return saveDesigns(designs + [duplicate], deleting: deletedIDs) ? duplicate : nil
     }
 
-    func getAllDesigns() -> [Design] {
-        return designs
-    }
+    func getAllDesigns() -> [Design] { designs }
 
     func loadDesigns(allowSampleGeneration: Bool = true) -> [Design] {
-        let loaded = loadFromDisk(at: activeFileURL)
-        if loaded.isEmpty {
-            if allowSampleGeneration {
-                designs = generateRandomDesigns(count: .random(in: 4...5))
-                saveDesigns(designs)
+        do {
+            let local = try readFromDisk(at: localFileURL)
+            deletedIDs.formUnion(local.deletedIDs)
+            designs = merge(local: designs, remote: local.designs)
+            if iCloudDocumentsURL != nil {
+                if isRemoteFileReadyForRead() { _ = attemptMergeFromiCloud() }
+                else { requestCloudDownloads() }
+            } else if hasCompletedInitialSync && !local.designFileExists && deletedIDs.isEmpty && designs.isEmpty && allowSampleGeneration {
+                // A successfully decoded [] is an intentionally empty library.
+                _ = saveDesigns(generateRandomDesigns(count: .random(in: 4...5)), deleting: [])
             } else {
-                designs = []
+                lastPersistenceError = nil
             }
-        } else {
-            designs = loaded
+        } catch {
+            reportFailure(error, operation: "Could not read saved designs. No files or undo history were replaced.")
         }
         return designs
     }
 
     // MARK: - Persistence
 
-    private func loadFromDisk(at url: URL) -> [Design] {
-        guard FileManager.default.fileExists(atPath: url.path) else { return [] }
-
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        var result: [Design] = []
-        let coordinator = NSFileCoordinator()
-        var coordinatorError: NSError?
-        coordinator.coordinate(readingItemAt: url, options: [], error: &coordinatorError) { readURL in
-            guard let data = try? Data(contentsOf: readURL),
-                  let decoded = try? decoder.decode([Design].self, from: data) else { return }
-            result = decoded
-        }
-        return result
+    private struct StoredDesigns {
+        var designs: [Design]
+        var deletedIDs: Set<UUID>
+        var designFileExists: Bool
     }
 
-    private func saveDesigns(_ designs: [Design]) {
-        if let url = iCloudFileURL {
-            writeToDisk(designs, at: url)
-        } else {
-            writeToDisk(designs, at: localFileURL)
-        }
+    private func reportFailure(_ error: Error, operation: String) {
+        lastPersistenceError = "\(operation) \(error.localizedDescription)"
+        NotificationCenter.default.post(name: .designSaveFailed, object: self,
+                                        userInfo: [NSLocalizedDescriptionKey: lastPersistenceError!])
     }
 
-    private func writeToDisk(_ designs: [Design], at url: URL) {
+    private func encoded<T: Encodable>(_ value: T) throws -> Data {
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
-        guard let data = try? encoder.encode(designs) else {
-            NotificationCenter.default.post(name: .designSaveFailed, object: nil)
-            return
-        }
+        encoder.outputFormatting = [.sortedKeys]
+        return try encoder.encode(value)
+    }
+
+    private func readIfPresent(at url: URL) throws -> Data? {
+        do { return try Data(contentsOf: url) }
+        catch CocoaError.fileReadNoSuchFile { return nil }
+    }
+
+    private func readUncoordinated(designsURL: URL, deletedURL: URL) throws -> StoredDesigns {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        let data = try readIfPresent(at: designsURL)
+        let deletionData = try readIfPresent(at: deletedURL)
+        return StoredDesigns(designs: try data.map { try decoder.decode([Design].self, from: $0) } ?? [],
+                             deletedIDs: try deletionData.map { try decoder.decode(Set<UUID>.self, from: $0) } ?? [],
+                             designFileExists: data != nil)
+    }
+
+    private func coordinate<T>(at url: URL, _ action: (URL, URL) throws -> T) throws -> T {
+        let deletedURL = url.deletingLastPathComponent().appendingPathComponent(deletedIDsFileName)
         let coordinator = NSFileCoordinator()
         var coordinatorError: NSError?
-        coordinator.coordinate(writingItemAt: url, options: .forReplacing, error: &coordinatorError) { writeURL in
-            do {
-                try data.write(to: writeURL, options: .atomic)
-            } catch {
-                DispatchQueue.main.async {
-                    NotificationCenter.default.post(name: .designSaveFailed, object: nil)
-                }
+        var result: Result<T, Error>?
+        // Both files are read/merged under one claim, including read-only loads.
+        coordinator.coordinate(writingItemAt: url, options: .forMerging,
+                               writingItemAt: deletedURL, options: .forMerging,
+                               error: &coordinatorError) { designsURL, tombstonesURL in
+            result = Result { try action(designsURL, tombstonesURL) }
+        }
+        if let coordinatorError { throw coordinatorError }
+        guard let result else { throw CocoaError(.fileReadUnknown) }
+        return try result.get()
+    }
+
+    private func readFromDisk(at url: URL) throws -> StoredDesigns {
+        try coordinate(at: url) { try readUncoordinated(designsURL: $0, deletedURL: $1) }
+    }
+
+    /// The original designs.json array stays readable by older installed versions.
+    /// Tombstones contain UUIDs only and always win over stale edits from any device.
+    private func writeToDisk(_ candidates: [Design], deletedIDs ids: Set<UUID>, at url: URL) throws -> StoredDesigns {
+        try coordinate(at: url) { designsURL, deletedURL in
+            let disk = try readUncoordinated(designsURL: designsURL, deletedURL: deletedURL)
+            let allDeletedIDs = ids.union(disk.deletedIDs)
+            let mergedDesigns = merged(local: candidates, remote: disk.designs, deleting: allDeletedIDs)
+            let data = try encoded(mergedDesigns)
+            let deletionData = try encoded(allDeletedIDs.sorted { $0.uuidString < $1.uuidString })
+            // Write deletions first. A failure must never remove an array entry
+            // without a durable tombstone; a later array failure is safe to retry.
+            if !allDeletedIDs.isEmpty, try readIfPresent(at: deletedURL) != deletionData {
+                try deletionData.write(to: deletedURL, options: .atomic)
+            }
+            if try readIfPresent(at: designsURL) != data {
+                try data.write(to: designsURL, options: .atomic)
+            }
+            return StoredDesigns(designs: mergedDesigns, deletedIDs: allDeletedIDs, designFileExists: true)
+        }
+    }
+
+    @discardableResult
+    private func saveDesigns(_ candidates: [Design], deleting ids: Set<UUID>) -> Bool {
+        do {
+            let local = try writeToDisk(candidates, deletedIDs: ids, at: localFileURL)
+            designs = local.designs
+            deletedIDs = local.deletedIDs
+            lastPersistenceError = nil
+        } catch {
+            reportFailure(error, operation: "Could not finish saving this device's designs. Existing design and undo files are preserved; please retry.")
+            return false
+        }
+        if iCloudDocumentsURL != nil {
+            if isRemoteFileReadyForRead() { _ = attemptMergeFromiCloud() }
+            else {
+                reportFailure(CocoaError(.ubiquitousFileUnavailable), operation: "Saved on this device. iCloud is still downloading; changes will merge when it is ready.")
+                requestCloudDownloads()
             }
         }
-        if let coordinatorError {
-            print("File coordination error: \(coordinatorError.localizedDescription)")
-            NotificationCenter.default.post(name: .designSaveFailed, object: nil)
-        }
+        return true
     }
 
     // MARK: - Sample Data

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B45E2C97107A43E7B1EEB005 /* ThirdPartyNotices.txt in Resources */ = {isa = PBXBuildFile; fileRef = 22AF2D36683D4365BC072EED /* ThirdPartyNotices.txt */; };
+		8A9028A1993E42BA86F6FA1F /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = B247385548A4487FBCBA61B4 /* PrivacyInfo.xcprivacy */; };
 		70E9CFDFB9C249F8B216EE30 /* TypographyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5543FD1CDB104D3281CAC569 /* TypographyViewController.swift */; };
 		805368BF2D2C804400E78CEF /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 805368BE2D2C804400E78CEF /* Localizable.xcstrings */; };
 		807A4F3D2C52DAFD009ED2FD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807A4F3C2C52DAFD009ED2FD /* AppDelegate.swift */; };
@@ -137,6 +139,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		22AF2D36683D4365BC072EED /* ThirdPartyNotices.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ThirdPartyNotices.txt; sourceTree = "<group>"; };
+		B247385548A4487FBCBA61B4 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		5543FD1CDB104D3281CAC569 /* TypographyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypographyViewController.swift; sourceTree = "<group>"; };
 		5E82833F48124901B68E8882 /* UIColor+Contrast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Contrast.swift"; sourceTree = "<group>"; };
 		805368BE2D2C804400E78CEF /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
@@ -314,6 +318,8 @@
 			children = (
 				807A4FD22C53F417009ED2FD /* brat.entitlements */,
 				805368BE2D2C804400E78CEF /* Localizable.xcstrings */,
+				22AF2D36683D4365BC072EED /* ThirdPartyNotices.txt */,
+				B247385548A4487FBCBA61B4 /* PrivacyInfo.xcprivacy */,
 				807A4F3C2C52DAFD009ED2FD /* AppDelegate.swift */,
 				807A4F3E2C52DAFD009ED2FD /* SceneDelegate.swift */,
 				807A4F402C52DAFD009ED2FD /* ViewController.swift */,
@@ -623,6 +629,8 @@
 				807A4F482C52DAFE009ED2FD /* LaunchScreen.storyboard in Resources */,
 				807A4F462C52DAFE009ED2FD /* Assets.xcassets in Resources */,
 				805368BF2D2C804400E78CEF /* Localizable.xcstrings in Resources */,
+				B45E2C97107A43E7B1EEB005 /* ThirdPartyNotices.txt in Resources */,
+				8A9028A1993E42BA86F6FA1F /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -942,7 +950,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = brat/brat.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 25;
+				CURRENT_PROJECT_VERSION = 26;
 				DEVELOPMENT_TEAM = EJLR2RPSV2;
 				GENERATE_APP_INTENTS_METADATA = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -980,7 +988,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = brat/brat.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 25;
+				CURRENT_PROJECT_VERSION = 26;
 				DEVELOPMENT_TEAM = EJLR2RPSV2;
 				GENERATE_APP_INTENTS_METADATA = NO;
 				GENERATE_INFOPLIST_FILE = YES;
