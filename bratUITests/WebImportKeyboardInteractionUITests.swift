@@ -18,16 +18,17 @@ final class WebImportKeyboardInteractionUITests: XCTestCase {
         XCTAssertTrue(importFromWebButton.waitForExistence(timeout: 5), "Expected Import from web button.")
         importFromWebButton.tap()
 
-        let changeURLButton = app.webImagePickerChangeURLButton
-        XCTAssertTrue(changeURLButton.waitForExistence(timeout: 8), "Expected web import UI to be visible.")
-        changeURLButton.tap()
+        let loadPageButton = app.webImagePickerLoadPageButton
+        XCTAssertTrue(loadPageButton.waitForExistence(timeout: 8), "Expected web import URL entry to be visible.")
+        let urlField = app.textFields.firstMatch
+        XCTAssertTrue(urlField.waitForExistence(timeout: 5))
+        urlField.tap()
 
-        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 5), "Expected keyboard after tapping Change URL.")
+        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 5), "Expected keyboard after tapping the URL field.")
 
         // Regression check: keyboard appearance should not dismiss web import on iPhone.
-        XCTAssertTrue(app.webImagePickerDoneButton.waitForExistence(timeout: 5))
+        XCTAssertTrue(loadPageButton.waitForExistence(timeout: 5))
         XCTAssertTrue(app.webImagePickerCancelButton.exists)
-        XCTAssertTrue(app.webImagePickerChangeURLButton.exists)
     }
 
     private func openEditorFromDesignsList() {

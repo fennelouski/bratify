@@ -9,12 +9,13 @@ import XCTest
 final class DesignTextColorTests: XCTestCase {
 
     private func makeDesign(
+        backgroundColor: UIColor = .green,
         textColor: UIColor = .white,
         usesAutomaticTextColor: Bool = false
     ) -> Design {
         Design(
             text: "test",
-            backgroundColor: .green,
+            backgroundColor: backgroundColor,
             textColor: textColor,
             usesAutomaticTextColor: usesAutomaticTextColor,
             creationDate: Date(),
@@ -36,6 +37,19 @@ final class DesignTextColorTests: XCTestCase {
 
     func testResolvedUsesAutomaticWhenFlagSet() {
         let design = makeDesign(textColor: .red, usesAutomaticTextColor: true)
+        XCTAssertEqual(design.resolvedTextColor(for: .dark), .black)
+        XCTAssertEqual(design.resolvedTextColor(for: .light), .black)
+    }
+
+    func testSaturatedBlueUsesReadableWhiteText() {
+        let design = makeDesign(backgroundColor: .blue, usesAutomaticTextColor: true)
+        XCTAssertEqual(design.resolvedTextColor(for: .light), .white)
+        XCTAssertEqual(design.resolvedTextColor(for: .dark), .white)
+    }
+
+    func testImageBackgroundKeepsAppearanceBasedAutomaticColor() {
+        var design = makeDesign(usesAutomaticTextColor: true)
+        design.backgroundImageKey = "photo"
         XCTAssertEqual(design.resolvedTextColor(for: .dark), .white)
         XCTAssertEqual(design.resolvedTextColor(for: .light), .black)
     }
@@ -86,6 +100,6 @@ final class DesignTextColorTests: XCTestCase {
     func testAutomaticTextColorWithUnspecifiedStyleAndDarkTraits() {
         let design = makeDesign(textColor: .red, usesAutomaticTextColor: true)
         let traits = UITraitCollection(userInterfaceStyle: .dark)
-        XCTAssertEqual(design.resolvedTextColor(for: traits), .white)
+        XCTAssertEqual(design.resolvedTextColor(for: traits), .black)
     }
 }

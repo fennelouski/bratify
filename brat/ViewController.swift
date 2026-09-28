@@ -277,11 +277,11 @@ class ViewController: UIViewController {
     }
 
     @objc func addNewDesign() {
-        let newDesign: Design = .empty
+        let defaultBackground = UIColor(hex: settingsManager.backgroundColorHex) ?? .systemBackground
         let newDesignVC = EditDesignViewController(
-            originalText: newDesign.text,
-            originalBackgroundColor: newDesign.backgroundColor,
-            design: newDesign,
+            originalText: "",
+            originalBackgroundColor: defaultBackground,
+            design: nil,
             settingsManager: settingsManager,
             imageService: imageService
         )

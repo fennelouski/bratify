@@ -30,6 +30,29 @@ final class bratUITests: XCTestCase {
         // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
 
+    func testNewDesignSurvivesRelaunch() throws {
+        let app = XCUIApplication()
+        app.launch()
+
+        let cells = app.collectionViews.cells
+        let originalCount = cells.count
+        let addButton = app.navigationBars.buttons["Add"]
+        XCTAssertTrue(addButton.waitForExistence(timeout: 5))
+        addButton.tap()
+
+        let backButton = app.navigationBars.buttons["designs"]
+        XCTAssertTrue(backButton.waitForExistence(timeout: 5))
+        app.windows.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.3)).tap()
+        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 5))
+        app.typeText("release qa design")
+        backButton.tap()
+        XCTAssertTrue(cells.element(boundBy: originalCount).waitForExistence(timeout: 10))
+
+        app.terminate()
+        app.launch()
+        XCTAssertTrue(cells.element(boundBy: originalCount).waitForExistence(timeout: 10))
+    }
+
     func testLaunchPerformance() throws {
         if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
             // This measures how long it takes to launch your application.

@@ -90,6 +90,7 @@
 		E45C8A0000000002CAFECAFE /* BratScratchLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E45C8A0000000001CAFECAFE /* BratScratchLoadingView.swift */; };
 		E1BEE00000000002CAFECAFE /* DesignManagerMergeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BEE00000000001CAFECAFE /* DesignManagerMergeTests.swift */; };
 		E1FACADE00000002CAFECAFE /* ScreenshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1FACADE00000001CAFECAFE /* ScreenshotTests.swift */; };
+		B45E2C97107A43E7B1EEB006 /* WebImportKeyboardInteractionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45E2C97107A43E7B1EEB007 /* WebImportKeyboardInteractionUITests.swift */; };
 		E1FACADE00000004CAFECAFE /* WebImagePickerUIAccessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1FACADE00000003CAFECAFE /* WebImagePickerUIAccessibility.swift */; };
 		E2TEXT00000000002CAFECAFE /* DesignTextColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2TEXT00000000001CAFECAFE /* DesignTextColor.swift */; };
 		E2TEXT00000000004CAFECAFE /* DesignTextColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2TEXT00000000003CAFECAFE /* DesignTextColorTests.swift */; };
@@ -236,6 +237,7 @@
 		E45C8A0000000001CAFECAFE /* BratScratchLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BratScratchLoadingView.swift; sourceTree = "<group>"; };
 		E1BEE00000000001CAFECAFE /* DesignManagerMergeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignManagerMergeTests.swift; sourceTree = "<group>"; };
 		E1FACADE00000001CAFECAFE /* ScreenshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotTests.swift; sourceTree = "<group>"; };
+		B45E2C97107A43E7B1EEB007 /* WebImportKeyboardInteractionUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImportKeyboardInteractionUITests.swift; sourceTree = "<group>"; };
 		E1FACADE00000003CAFECAFE /* WebImagePickerUIAccessibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImagePickerUIAccessibility.swift; sourceTree = "<group>"; };
 		E2TEXT00000000001CAFECAFE /* DesignTextColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignTextColor.swift; sourceTree = "<group>"; };
 		E2TEXT00000000003CAFECAFE /* DesignTextColorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignTextColorTests.swift; sourceTree = "<group>"; };
@@ -442,6 +444,7 @@
 				807A4F5D2C52DAFE009ED2FD /* bratUITests.swift */,
 				807A4F5F2C52DAFE009ED2FD /* bratUITestsLaunchTests.swift */,
 				E1FACADE00000001CAFECAFE /* ScreenshotTests.swift */,
+				B45E2C97107A43E7B1EEB007 /* WebImportKeyboardInteractionUITests.swift */,
 				E1FACADE00000003CAFECAFE /* WebImagePickerUIAccessibility.swift */,
 			);
 			path = bratUITests;
@@ -773,6 +776,7 @@
 				807A4F5E2C52DAFE009ED2FD /* bratUITests.swift in Sources */,
 				807A4F602C52DAFE009ED2FD /* bratUITestsLaunchTests.swift in Sources */,
 				E1FACADE00000002CAFECAFE /* ScreenshotTests.swift in Sources */,
+				B45E2C97107A43E7B1EEB006 /* WebImportKeyboardInteractionUITests.swift in Sources */,
 				E1FACADE00000004CAFECAFE /* WebImagePickerUIAccessibility.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

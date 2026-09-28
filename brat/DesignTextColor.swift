@@ -82,8 +82,24 @@ enum DesignTextColor {
 
   static func resolved(_ design: Design, userInterfaceStyle: UIUserInterfaceStyle) -> UIColor {
     if design.usesAutomaticTextColor {
+      if design.backgroundImageKey == nil,
+         let contrastingColor = contrastingColor(for: design.backgroundColor) {
+        return contrastingColor
+      }
       return automatic(for: userInterfaceStyle)
     }
     return design.textColor
+  }
+
+  private static func contrastingColor(for background: UIColor) -> UIColor? {
+    var red: CGFloat = 0
+    var green: CGFloat = 0
+    var blue: CGFloat = 0
+    var alpha: CGFloat = 0
+    guard background.getRed(&red, green: &green, blue: &blue, alpha: &alpha), alpha >= 0.999 else {
+      return nil
+    }
+
+    return background.relativeLuminance >= 0.17913 ? .black : .white
   }
 }
