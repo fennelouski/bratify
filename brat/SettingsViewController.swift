@@ -46,14 +46,7 @@ final class SettingsViewController: UIViewController {
         BratSettingsView(settings: settingsManager) { [weak self] category in
             guard let self else { return }
             let destination: UIViewController
-            if category == .acknowledgments {
-                let notices = Bundle.main.url(forResource: "ThirdPartyNotices", withExtension: "txt")
-                    .flatMap { try? String(contentsOf: $0, encoding: .utf8) } ?? NSLocalizedString("Notices could not be opened.", comment: "Missing bundled notices")
-                destination = UIHostingController(rootView: ScrollView {
-                    Text(notices).font(.body).textSelection(.enabled).frame(maxWidth: .infinity, alignment: .leading).padding()
-                })
-                destination.navigationItem.title = category.title
-            } else if category == .typography {
+            if category == .typography {
                 destination = TypographyViewController(settingsManager: settingsManager)
             } else {
                 destination = SettingsCategoryViewController(title: category.title, items: category.items, settingsManager: settingsManager)
@@ -75,13 +68,12 @@ final class SettingsViewController: UIViewController {
 }
 
 private enum SettingsDetail {
-    case appearance, typography, canvas, acknowledgments
+    case appearance, typography, canvas
     var title: String {
         switch self {
         case .appearance: return NSLocalizedString("Appearance", comment: "Settings section")
         case .typography: return NSLocalizedString("Typography", comment: "Settings section")
         case .canvas: return NSLocalizedString("Canvas", comment: "Settings section")
-        case .acknowledgments: return NSLocalizedString("Acknowledgments", comment: "Third-party notices")
         }
     }
     var items: [SettingItem] {
@@ -89,7 +81,6 @@ private enum SettingsDetail {
         case .appearance: return [.themingEnabled, .themeSelection, .defaultTextColor, .defaultBackgroundColor]
         case .typography: return [.preferredFontName, .preferredFontSize]
         case .canvas: return [.aspectRatio, .pixelationScale, .extendedRange]
-        case .acknowledgments: return []
         }
     }
 }
@@ -132,7 +123,6 @@ private struct BratSettingsView: View {
                 toggle("Double Tap to Share", keyPath: \.doubleTapToShare, item: .doubleTapToShare)
             }
             Section("Help") {
-                detail(.acknowledgments, summary: "WebImagePicker · SwiftSoup")
                 Link("Privacy Policy", destination: URL(string: "https://nathanfennel.com/bratify/privacy.html")!)
                 Link("Contact Support", destination: URL(string: "https://nathanfennel.com/contact")!)
             }

@@ -1,6 +1,5 @@
 import SwiftUI
 import UIKit
-import WebImagePicker
 
 class EditDesignViewController: UIViewController, UIGestureRecognizerDelegate {
 
@@ -142,15 +141,12 @@ class EditDesignViewController: UIViewController, UIGestureRecognizerDelegate {
     private var previewImageViewTrailingToViewConstraint: NSLayoutConstraint?
     private var previewImageViewTrailingToSidebarConstraint: NSLayoutConstraint?
     private var embeddedFontPickerViewController: FontsViewController?
-    private var embeddedWebImagePickerHostingController: UIHostingController<WebImagePicker>?
     private var embeddedAspectRatioPickerViewController: AspectRatioPickerViewController?
     private weak var fontPickerToolbarButton: UIButton?
-    private weak var webImportToolbarButton: UIButton?
     private weak var aspectRatioToolbarButton: UIButton?
 
     private enum TrailingSidebarContent {
         case fontPicker
-        case webImages
         case aspectRatio
     }
 
@@ -162,10 +158,6 @@ class EditDesignViewController: UIViewController, UIGestureRecognizerDelegate {
 
     private var isFontPickerSidebarVisible: Bool {
         activeTrailingSidebar == .fontPicker
-    }
-
-    private var isWebImageSidebarVisible: Bool {
-        activeTrailingSidebar == .webImages
     }
 
     private var isAspectRatioSidebarVisible: Bool {
@@ -1382,7 +1374,6 @@ class EditDesignViewController: UIViewController, UIGestureRecognizerDelegate {
             #selector(showControlsFromToolbar),
             #selector(toggleAspectRatioSidebar),
             #selector(selectFont),
-            #selector(importBackgroundFromWeb),
         ])
         return actions
     }
@@ -1405,7 +1396,6 @@ class EditDesignViewController: UIViewController, UIGestureRecognizerDelegate {
             NSLocalizedString("Controls", comment: ""),
             NSLocalizedString("Aspect Ratio", comment: ""),
             NSLocalizedString("Font Picker", comment: ""),
-            NSLocalizedString("Import from web", comment: ""),
         ])
         return titles
     }
@@ -2008,8 +1998,6 @@ class EditDesignViewController: UIViewController, UIGestureRecognizerDelegate {
 
     @objc private func keyboardWillShow(_ notification: NSNotification) {
         guard !isDesignControlsModeActive else { return }
-        // iPhone web import uses URL/search text fields; dismissing the compact panel on
-        // keyboard show would immediately hide the web picker.
         if isEditorBottomPanelVisible,
            shouldUseCompactBottomPanel,
            TrailingSidebarLayout.shouldDismissCompactPanelOnKeyboardShow(activePanel: activeEditorPanel) {
@@ -2628,7 +2616,6 @@ extension EditDesignViewController {
             ("slider.horizontal.3", "Controls",          #selector(showControlsFromToolbar)),
             ("aspectratio",         "Aspect Ratio",      #selector(toggleAspectRatioSidebar)),
             ("textformat",          "Font Picker",       #selector(selectFont)),
-            ("globe",               "Import from web",   #selector(importBackgroundFromWeb)),
         ])
         for (icon, label, action) in items {
             let button = UIButton(type: .system)
@@ -2645,8 +2632,6 @@ extension EditDesignViewController {
             switch action {
             case #selector(selectFont):
                 fontPickerToolbarButton = button
-            case #selector(importBackgroundFromWeb):
-                webImportToolbarButton = button
             case #selector(togglePrimarySlidersFromToolbar):
                 primarySlidersToggleButton = button
             case #selector(showControlsFromToolbar):
@@ -2756,10 +2741,6 @@ extension EditDesignViewController {
         applyToolbarButtonSelectedAppearance(
             stylesToolbarButton,
             isSelected: isFilterStylesVisible
-        )
-        applyToolbarButtonSelectedAppearance(
-            webImportToolbarButton,
-            isSelected: usesCompact ? activeEditorPanel == .webImport : isWebImageSidebarVisible
         )
         applyToolbarButtonSelectedAppearance(
             aspectRatioToolbarButton,
@@ -3592,8 +3573,6 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
         switch content {
         case .fontPicker:
             embedFontPickerInTrailingSidebar()
-        case .webImages:
-            embedWebImagePickerInTrailingSidebar()
         case .aspectRatio:
             embedAspectRatioInTrailingSidebar()
         }
@@ -3712,63 +3691,6 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
         )
     }
 
-    private func embedWebImagePickerInTrailingSidebar() {
-        embedWebImagePicker(
-            in: fontPickerSidebarContainer,
-            leadingAnchor: fontPickerSidebarSeparator.trailingAnchor,
-            onDone: { [weak self] in self?.dismissTrailingSidebar(animated: true) }
-        )
-    }
-
-    private func embedWebImagePicker(
-        in container: UIView,
-        leadingAnchor: NSLayoutXAxisAnchor,
-        onDone: @escaping () -> Void
-    ) {
-        let host: UIHostingController<WebImagePicker>
-        if let existing = embeddedWebImagePickerHostingController {
-            host = existing
-            WebImageImportPresenter.updateHostingController(
-                host,
-                imageService: imageService,
-                onCancel: onDone,
-                onImagePicked: { [weak self] imageName in
-                    guard let self else { return }
-                    undoController?.record(currentDesign)
-                    refreshUndoRedoButtons()
-                    self.imageName = imageName
-                    self.updateDesignImage()
-                    self.updateAllToolbarButtonAppearances()
-                }
-            )
-        } else {
-            host = WebImageImportPresenter.makeHostingController(
-                imageService: imageService,
-                onCancel: onDone,
-                onImagePicked: { [weak self] imageName in
-                    guard let self else { return }
-                    undoController?.record(currentDesign)
-                    refreshUndoRedoButtons()
-                    self.imageName = imageName
-                    self.updateDesignImage()
-                    self.updateAllToolbarButtonAppearances()
-                }
-            )
-            embeddedWebImagePickerHostingController = host
-        }
-
-        if leadingAnchor === container.leadingAnchor {
-            WebImageImportPresenter.embed(host, in: self, container: container)
-        } else {
-            WebImageImportPresenter.embed(
-                host,
-                in: self,
-                container: container,
-                contentLeadingAnchor: leadingAnchor
-            )
-        }
-    }
-
     private func dismissTrailingSidebar(animated: Bool) {
         guard let content = activeTrailingSidebar else { return }
 
@@ -3786,11 +3708,6 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
                 fontVC.willMove(toParent: nil)
                 fontVC.view.removeFromSuperview()
                 fontVC.removeFromParent()
-            case .webImages:
-                guard let host = self.embeddedWebImagePickerHostingController else { return }
-                host.willMove(toParent: nil)
-                host.view.removeFromSuperview()
-                host.removeFromParent()
             case .aspectRatio:
                 guard let aspectVC = self.embeddedAspectRatioPickerViewController else { return }
                 aspectVC.willMove(toParent: nil)
@@ -3887,12 +3804,6 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
                 leadingAnchor: editorBottomPanelContainer.leadingAnchor,
                 onDone: onDone
             )
-        case .webImport:
-            embedWebImagePicker(
-                in: editorBottomPanelContainer,
-                leadingAnchor: editorBottomPanelContainer.leadingAnchor,
-                onDone: onDone
-            )
         case .aspectRatio:
             embedAspectRatioPicker(
                 in: editorBottomPanelContainer,
@@ -3942,11 +3853,6 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
                 fontVC.willMove(toParent: nil)
                 fontVC.view.removeFromSuperview()
                 fontVC.removeFromParent()
-            case .webImport:
-                guard let host = self.embeddedWebImagePickerHostingController else { return }
-                host.willMove(toParent: nil)
-                host.view.removeFromSuperview()
-                host.removeFromParent()
             case .aspectRatio:
                 guard let aspectVC = self.embeddedAspectRatioPickerViewController else { return }
                 aspectVC.willMove(toParent: nil)
@@ -4243,14 +4149,6 @@ extension EditDesignViewController: KeyboardOptionsViewDelegate {
         self.imageName = imageName
         updateDesignImage()
         updateAllToolbarButtonAppearances()
-    }
-
-    @objc private func importBackgroundFromWeb() {
-        if shouldUseEditorSidebars {
-            toggleTrailingSidebar(.webImages)
-        } else if shouldUseCompactBottomPanel {
-            toggleEditorPanel(.webImport)
-        }
     }
 
     func didSelectBackgroundColor(_ color: UIColor) {

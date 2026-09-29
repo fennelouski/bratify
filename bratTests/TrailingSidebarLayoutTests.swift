@@ -159,16 +159,15 @@ final class TrailingSidebarLayoutTests: XCTestCase {
         )
     }
 
-    /// Compact editor exposes five bottom panels; settings uses navigation push, not ``EditorPanel``.
+    /// Compact editor exposes four bottom panels; settings uses navigation push, not ``EditorPanel``.
     func testCompactBottomPanelCount() {
         let panels: [EditorPanel] = [
             .backgroundImage,
             .filterStyles,
             .fontPicker,
-            .webImport,
             .aspectRatio,
         ]
-        XCTAssertEqual(panels.count, 5)
+        XCTAssertEqual(panels.count, 4)
         for panel in panels {
             let height = TrailingSidebarLayout.compactPanelHeight(
                 for: panel,
@@ -197,13 +196,7 @@ final class TrailingSidebarLayoutTests: XCTestCase {
         )
     }
 
-    func testCompactKeyboardShowDoesNotDismissWebImportPanel() {
-        XCTAssertFalse(
-            TrailingSidebarLayout.shouldDismissCompactPanelOnKeyboardShow(activePanel: .webImport)
-        )
-    }
-
-    func testCompactKeyboardShowDismissesOtherPanels() {
+    func testCompactKeyboardShowDismissesPanels() {
         XCTAssertTrue(
             TrailingSidebarLayout.shouldDismissCompactPanelOnKeyboardShow(activePanel: .fontPicker)
         )

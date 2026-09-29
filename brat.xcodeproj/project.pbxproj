@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B45E2C97107A43E7B1EEB005 /* ThirdPartyNotices.txt in Resources */ = {isa = PBXBuildFile; fileRef = 22AF2D36683D4365BC072EED /* ThirdPartyNotices.txt */; };
 		8A9028A1993E42BA86F6FA1F /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = B247385548A4487FBCBA61B4 /* PrivacyInfo.xcprivacy */; };
 		70E9CFDFB9C249F8B216EE30 /* TypographyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5543FD1CDB104D3281CAC569 /* TypographyViewController.swift */; };
 		805368BF2D2C804400E78CEF /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 805368BE2D2C804400E78CEF /* Localizable.xcstrings */; };
@@ -90,8 +89,6 @@
 		E45C8A0000000002CAFECAFE /* BratScratchLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E45C8A0000000001CAFECAFE /* BratScratchLoadingView.swift */; };
 		E1BEE00000000002CAFECAFE /* DesignManagerMergeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BEE00000000001CAFECAFE /* DesignManagerMergeTests.swift */; };
 		E1FACADE00000002CAFECAFE /* ScreenshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1FACADE00000001CAFECAFE /* ScreenshotTests.swift */; };
-		B45E2C97107A43E7B1EEB006 /* WebImportKeyboardInteractionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45E2C97107A43E7B1EEB007 /* WebImportKeyboardInteractionUITests.swift */; };
-		E1FACADE00000004CAFECAFE /* WebImagePickerUIAccessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1FACADE00000003CAFECAFE /* WebImagePickerUIAccessibility.swift */; };
 		E2TEXT00000000002CAFECAFE /* DesignTextColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2TEXT00000000001CAFECAFE /* DesignTextColor.swift */; };
 		E2TEXT00000000004CAFECAFE /* DesignTextColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2TEXT00000000003CAFECAFE /* DesignTextColorTests.swift */; };
 		E3AR000000000002CAFECAFE /* CanvasDimensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AR000000000001CAFECAFE /* CanvasDimensions.swift */; };
@@ -108,8 +105,6 @@
 		E3FLT0000000000FCAFECAFE /* FilterPresetPreviewProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FLT0000000000FCAFECAFE2 /* FilterPresetPreviewProvider.swift */; };
 		E3PLAT00000000002CAFECAFE /* PlatformBrandIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3PLAT00000000001CAFECAFE /* PlatformBrandIcon.swift */; };
 		E3TSID00000000002CAFECAFE /* TrailingSidebarLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3TSID00000000001CAFECAFE /* TrailingSidebarLayoutTests.swift */; };
-		E8F1A1002E5B100012340002 /* WebImageImportPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F1A1002E5B100012340001 /* WebImageImportPresenter.swift */; };
-		E8F1A1002E5B100012340003 /* WebImagePicker in Frameworks */ = {isa = PBXBuildFile; productRef = E8F1A1002E5B100012340005 /* WebImagePicker */; };
 		E3UNDO00000000002CAFECAFE /* DesignUndoHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3UNDO00000000001CAFECAFE /* DesignUndoHistory.swift */; };
 		E3UNDO00000000004CAFECAFE /* DesignUndoHistoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3UNDO00000000003CAFECAFE /* DesignUndoHistoryStore.swift */; };
 		E3UNDO00000000006CAFECAFE /* DesignUndoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3UNDO00000000005CAFECAFE /* DesignUndoController.swift */; };
@@ -140,7 +135,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		22AF2D36683D4365BC072EED /* ThirdPartyNotices.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ThirdPartyNotices.txt; sourceTree = "<group>"; };
 		B247385548A4487FBCBA61B4 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		5543FD1CDB104D3281CAC569 /* TypographyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypographyViewController.swift; sourceTree = "<group>"; };
 		5E82833F48124901B68E8882 /* UIColor+Contrast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Contrast.swift"; sourceTree = "<group>"; };
@@ -237,8 +231,6 @@
 		E45C8A0000000001CAFECAFE /* BratScratchLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BratScratchLoadingView.swift; sourceTree = "<group>"; };
 		E1BEE00000000001CAFECAFE /* DesignManagerMergeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignManagerMergeTests.swift; sourceTree = "<group>"; };
 		E1FACADE00000001CAFECAFE /* ScreenshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotTests.swift; sourceTree = "<group>"; };
-		B45E2C97107A43E7B1EEB007 /* WebImportKeyboardInteractionUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImportKeyboardInteractionUITests.swift; sourceTree = "<group>"; };
-		E1FACADE00000003CAFECAFE /* WebImagePickerUIAccessibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImagePickerUIAccessibility.swift; sourceTree = "<group>"; };
 		E2TEXT00000000001CAFECAFE /* DesignTextColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignTextColor.swift; sourceTree = "<group>"; };
 		E2TEXT00000000003CAFECAFE /* DesignTextColorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignTextColorTests.swift; sourceTree = "<group>"; };
 		E3AR000000000001CAFECAFE /* CanvasDimensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasDimensions.swift; sourceTree = "<group>"; };
@@ -255,7 +247,6 @@
 		E3FLT0000000000FCAFECAFE2 /* FilterPresetPreviewProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterPresetPreviewProvider.swift; sourceTree = "<group>"; };
 		E3PLAT00000000001CAFECAFE /* PlatformBrandIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformBrandIcon.swift; sourceTree = "<group>"; };
 		E3TSID00000000001CAFECAFE /* TrailingSidebarLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailingSidebarLayoutTests.swift; sourceTree = "<group>"; };
-		E8F1A1002E5B100012340001 /* WebImageImportPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageImportPresenter.swift; sourceTree = "<group>"; };
 		FEE14DE7D5E14A4DBE2A0D54 /* SettingsCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCategoryViewController.swift; sourceTree = "<group>"; };
 		E3UNDO00000000001CAFECAFE /* DesignUndoHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignUndoHistory.swift; sourceTree = "<group>"; };
 		E3UNDO00000000003CAFECAFE /* DesignUndoHistoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignUndoHistoryStore.swift; sourceTree = "<group>"; };
@@ -274,7 +265,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E8F1A1002E5B100012340003 /* WebImagePicker in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -320,7 +310,6 @@
 			children = (
 				807A4FD22C53F417009ED2FD /* brat.entitlements */,
 				805368BE2D2C804400E78CEF /* Localizable.xcstrings */,
-				22AF2D36683D4365BC072EED /* ThirdPartyNotices.txt */,
 				B247385548A4487FBCBA61B4 /* PrivacyInfo.xcprivacy */,
 				807A4F3C2C52DAFD009ED2FD /* AppDelegate.swift */,
 				807A4F3E2C52DAFD009ED2FD /* SceneDelegate.swift */,
@@ -406,7 +395,6 @@
 				807A4FC72C52FC10009ED2FD /* ImageFetchResult.swift */,
 				807A4FC42C52FC10009ED2FD /* ImageService.swift */,
 				807A4FC62C52FC10009ED2FD /* ImageURLs.swift */,
-				E8F1A1002E5B100012340001 /* WebImageImportPresenter.swift */,
 				E3UNDO00000000001CAFECAFE /* DesignUndoHistory.swift */,
 				E3UNDO00000000003CAFECAFE /* DesignUndoHistoryStore.swift */,
 				E3UNDO00000000005CAFECAFE /* DesignUndoController.swift */,
@@ -444,8 +432,6 @@
 				807A4F5D2C52DAFE009ED2FD /* bratUITests.swift */,
 				807A4F5F2C52DAFE009ED2FD /* bratUITestsLaunchTests.swift */,
 				E1FACADE00000001CAFECAFE /* ScreenshotTests.swift */,
-				B45E2C97107A43E7B1EEB007 /* WebImportKeyboardInteractionUITests.swift */,
-				E1FACADE00000003CAFECAFE /* WebImagePickerUIAccessibility.swift */,
 			);
 			path = bratUITests;
 			sourceTree = "<group>";
@@ -467,7 +453,6 @@
 			);
 			name = brat;
 			packageProductDependencies = (
-				E8F1A1002E5B100012340005 /* WebImagePicker */,
 			);
 			productName = brat;
 			productReference = 807A4F392C52DAFD009ED2FD /* bratify.app */;
@@ -632,7 +617,6 @@
 				807A4F482C52DAFE009ED2FD /* LaunchScreen.storyboard in Resources */,
 				807A4F462C52DAFE009ED2FD /* Assets.xcassets in Resources */,
 				805368BF2D2C804400E78CEF /* Localizable.xcstrings in Resources */,
-				B45E2C97107A43E7B1EEB005 /* ThirdPartyNotices.txt in Resources */,
 				8A9028A1993E42BA86F6FA1F /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -742,7 +726,6 @@
 				E3PLAT00000000002CAFECAFE /* PlatformBrandIcon.swift in Sources */,
 				80F4589D2C61E2EB0039C385 /* AspectRatioPickerViewController.swift in Sources */,
 				807A4FD82C53F843009ED2FD /* CustomColorPickerViewController.swift in Sources */,
-				E8F1A1002E5B100012340002 /* WebImageImportPresenter.swift in Sources */,
 				E3UNDO00000000002CAFECAFE /* DesignUndoHistory.swift in Sources */,
 				E3UNDO00000000004CAFECAFE /* DesignUndoHistoryStore.swift in Sources */,
 				E3UNDO00000000006CAFECAFE /* DesignUndoController.swift in Sources */,
@@ -776,8 +759,6 @@
 				807A4F5E2C52DAFE009ED2FD /* bratUITests.swift in Sources */,
 				807A4F602C52DAFE009ED2FD /* bratUITestsLaunchTests.swift in Sources */,
 				E1FACADE00000002CAFECAFE /* ScreenshotTests.swift in Sources */,
-				B45E2C97107A43E7B1EEB006 /* WebImportKeyboardInteractionUITests.swift in Sources */,
-				E1FACADE00000004CAFECAFE /* WebImagePickerUIAccessibility.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -954,7 +935,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = brat/brat.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 27;
 				DEVELOPMENT_TEAM = EJLR2RPSV2;
 				GENERATE_APP_INTENTS_METADATA = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -992,7 +973,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = brat/brat.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 27;
 				DEVELOPMENT_TEAM = EJLR2RPSV2;
 				GENERATE_APP_INTENTS_METADATA = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1136,24 +1117,7 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		E8F1A1002E5B100012340004 /* XCRemoteSwiftPackageReference "SwiftUI-Web-Image-Picker" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/fennelouski/SwiftUI-Web-Image-Picker.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.5.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
 
-/* Begin XCSwiftPackageProductDependency section */
-		E8F1A1002E5B100012340005 /* WebImagePicker */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E8F1A1002E5B100012340004 /* XCRemoteSwiftPackageReference "SwiftUI-Web-Image-Picker" */;
-			productName = WebImagePicker;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 807A4F312C52DAFD009ED2FD /* Project object */;
 }

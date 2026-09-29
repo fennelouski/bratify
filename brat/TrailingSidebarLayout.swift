@@ -19,7 +19,6 @@ enum TrailingSidebarLayout {
     static let compactPanelHeightFontPicker: CGFloat = 280
     static let compactPanelHeightAspectRatio: CGFloat = 300
     static let compactPanelHeightBackgroundImage: CGFloat = 320
-    static let compactPanelHeightWebImport: CGFloat = 340
 
     static func isEligible(width: CGFloat) -> Bool {
         width >= minimumWindowWidth
@@ -145,15 +144,11 @@ enum TrailingSidebarLayout {
             return compactPanelHeightAspectRatio
         case .backgroundImage:
             return compactPanelHeightBackgroundImage
-        case .webImport:
-            return compactPanelHeightWebImport
         }
     }
 
-    /// Compact panels usually dismiss on keyboard show to preserve editing space.
-    /// Web import is excluded because it requires keyboard input in its URL/search controls.
     static func shouldDismissCompactPanelOnKeyboardShow(activePanel: EditorPanel?) -> Bool {
-        activePanel != .webImport
+        true
     }
 }
 
@@ -161,6 +156,5 @@ enum EditorPanel: Equatable {
     case backgroundImage
     case filterStyles
     case fontPicker
-    case webImport
     case aspectRatio
 }
