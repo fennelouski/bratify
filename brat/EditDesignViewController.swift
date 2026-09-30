@@ -51,6 +51,7 @@ class EditDesignViewController: UIViewController, UIGestureRecognizerDelegate {
     private var isEditingChromeVisible = false
     private lazy var keyboardOptionsView = KeyboardOptionsView(settingsManager: settingsManager)
     private var keyboardOptionsHeightConstraint: NSLayoutConstraint?
+    private var keyboardOptionsCollapsedHeightConstraint: NSLayoutConstraint?
     private let macKeyboardOptionsExpandedHeight: CGFloat = 300
 
     private var usesMacCollapsibleBottomPanel: Bool {
@@ -230,13 +231,20 @@ class EditDesignViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
 
-    /// Keeps primary sliders hidden while a compact bottom panel is open so they do not stack on the panel.
+    /// Give the canvas and picker panels the space occupied by inactive sliders.
     private func syncCompactBottomPanelSlidersVisibility() {
         guard isViewLoaded, !usesMacCollapsibleBottomPanel else { return }
-        let suppress = shouldUseCompactBottomPanel && isEditorBottomPanelVisible
-        keyboardOptionsView.setPrimaryControlsSuppressedByBottomPanel(suppress)
+        let suppress = textView.isFirstResponder || (shouldUseCompactBottomPanel && isEditorBottomPanelVisible)
+        keyboardOptionsView.setPrimaryControlsSuppressed(suppress)
         keyboardOptionsView.isHidden = suppress
-        keyboardOptionsHeightConstraint?.constant = suppress ? 0 : compactKeyboardOptionsMinHeight
+        keyboardOptionsHeightConstraint?.constant = compactKeyboardOptionsMinHeight
+        if suppress {
+            keyboardOptionsHeightConstraint?.isActive = false
+            keyboardOptionsCollapsedHeightConstraint?.isActive = true
+        } else {
+            keyboardOptionsCollapsedHeightConstraint?.isActive = false
+            keyboardOptionsHeightConstraint?.isActive = true
+        }
     }
 
     /// Saved open-panel state while ⌘0 has collapsed the editor chrome for a larger preview.
@@ -950,12 +958,6 @@ class EditDesignViewController: UIViewController, UIGestureRecognizerDelegate {
         )
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(keyboardWillHide(_:)),
-            name: UIResponder.keyboardWillHideNotification,
-            object: nil
-        )
-        NotificationCenter.default.addObserver(
-            self,
             selector: #selector(canvasDimensionsDidChange),
             name: .canvasDimensionsDidChange,
             object: settingsManager
@@ -1162,6 +1164,7 @@ class EditDesignViewController: UIViewController, UIGestureRecognizerDelegate {
             keyboardOptionsHeightConstraint = keyboardOptionsView.heightAnchor.constraint(
                 greaterThanOrEqualToConstant: keyboardOptionsViewHeight
             )
+            keyboardOptionsCollapsedHeightConstraint = keyboardOptionsView.heightAnchor.constraint(equalToConstant: 0)
         }
 
         if usesMacCollapsibleBottomPanel {
@@ -1170,7 +1173,7 @@ class EditDesignViewController: UIViewController, UIGestureRecognizerDelegate {
                 constant: -.su2
             )
             previewImageViewBottomCanvasConstraint = previewImageView.bottomAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.bottomAnchor,
+                equalTo: view.keyboardLayoutGuide.topAnchor,
                 constant: -.su2
             )
             previewImageViewBottomCanvasConstraint?.isActive = false
@@ -1179,7 +1182,7 @@ class EditDesignViewController: UIViewController, UIGestureRecognizerDelegate {
                 keyboardOptionsView.topAnchor.constraint(lessThanOrEqualTo: previewImageView.bottomAnchor, constant: .su2),
                 keyboardOptionsView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
                 keyboardOptionsView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-                keyboardOptionsView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+                keyboardOptionsView.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor),
                 keyboardOptionsHeightConstraint!,
                 previewImageViewBottomConstraint!,
             ])
@@ -1192,7 +1195,7 @@ class EditDesignViewController: UIViewController, UIGestureRecognizerDelegate {
                 constant: -.su2
             )
             previewImageViewBottomCanvasConstraint = previewImageView.bottomAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.bottomAnchor,
+                equalTo: view.keyboardLayoutGuide.topAnchor,
                 constant: -.su2
             )
             previewImageViewBottomCanvasConstraint?.isActive = false
@@ -1203,12 +1206,11 @@ class EditDesignViewController: UIViewController, UIGestureRecognizerDelegate {
                 editorBottomPanelHeightConstraint!,
 
                 keyboardOptionsView.topAnchor.constraint(
-                    equalTo: editorBottomPanelContainer.bottomAnchor,
-                    constant: .su2
+                    equalTo: editorBottomPanelContainer.bottomAnchor
                 ),
                 keyboardOptionsView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
                 keyboardOptionsView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-                keyboardOptionsView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+                keyboardOptionsView.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor),
                 keyboardOptionsHeightConstraint!,
                 previewImageViewBottomConstraint!,
             ])
@@ -1949,78 +1951,16 @@ class EditDesignViewController: UIViewController, UIGestureRecognizerDelegate {
         updateDesignImage()
     }
     
-    private static let previewImageViewBottomSpacing: CGFloat = .su2
-
-    /// Keyboard frame in this view's coordinate space.
-    private func keyboardFrameInView(from notification: NSNotification) -> CGRect? {
-        guard
-            let frame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
-            isViewLoaded
-        else {
-            return nil
-        }
-        return view.convert(frame, from: nil)
-    }
-
-    /// Height of the keyboard intersecting this view (0 when hidden or external keyboard accessory bar only).
-    private func keyboardOverlapHeight(from notification: NSNotification) -> CGFloat {
-        guard let keyboardFrame = keyboardFrameInView(from: notification) else { return 0 }
-        return max(0, view.bounds.intersection(keyboardFrame).height)
-    }
-
-    /// Extra preview bottom inset beyond what safe-area layout already applied for the keyboard.
-    private func additionalPreviewBottomInsetForKeyboard(from notification: NSNotification) -> CGFloat {
-        let overlap = keyboardOverlapHeight(from: notification)
-        guard overlap > 0 else { return 0 }
-        view.layoutIfNeeded()
-        let handledBySafeArea = view.safeAreaInsets.bottom
-        return max(0, overlap - handledBySafeArea)
-    }
-
-    private func animatePreviewBottomConstraintForKeyboard(
-        notification: NSNotification,
-        additionalInset: CGFloat
-    ) {
-        guard previewImageViewBottomConstraint?.isActive == true else { return }
-
-        previewImageViewBottomConstraint?.constant = Self.previewImageViewBottomSpacing - additionalInset
-
-        let duration = (notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?
-            .doubleValue ?? 0.3
-        let curveValue = (notification.userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber)?
-            .uintValue ?? UInt(UIView.AnimationCurve.easeInOut.rawValue)
-        let options = UIView.AnimationOptions(rawValue: curveValue << 16)
-
-        UIView.animate(withDuration: duration, delay: 0, options: options) {
-            self.view.layoutIfNeeded()
-        }
-    }
-
     @objc private func keyboardWillShow(_ notification: NSNotification) {
-        guard !isDesignControlsModeActive else { return }
+        guard textView.isFirstResponder, !isDesignControlsModeActive else { return }
         if isEditorBottomPanelVisible,
            shouldUseCompactBottomPanel,
            TrailingSidebarLayout.shouldDismissCompactPanelOnKeyboardShow(activePanel: activeEditorPanel) {
             dismissEditorPanel(animated: true)
         }
-        guard previewImageViewBottomConstraint?.isActive == true else { return }
-
-        // iPhone/iPad: preview is already pinned above keyboardOptions via the safe area; only
-        // apply a manual inset when the keyboard overlaps beyond what safe-area layout handled.
-        if usesMacCollapsibleBottomPanel {
-            let overlap = keyboardOverlapHeight(from: notification)
-            animatePreviewBottomConstraintForKeyboard(notification: notification, additionalInset: overlap)
-        } else {
-            let extra = additionalPreviewBottomInsetForKeyboard(from: notification)
-            animatePreviewBottomConstraintForKeyboard(notification: notification, additionalInset: extra)
-        }
+        syncCompactBottomPanelSlidersVisibility()
     }
 
-    @objc private func keyboardWillHide(_ notification: NSNotification) {
-        guard !isDesignControlsModeActive else { return }
-        animatePreviewBottomConstraintForKeyboard(notification: notification, additionalInset: 0)
-    }
-    
     @objc private func shareButtonTouched() {
         currentDesign.generateImage(
             with: imageService,
@@ -2218,8 +2158,8 @@ class EditDesignViewController: UIViewController, UIGestureRecognizerDelegate {
 
         previewImageViewBottomConstraint?.isActive = false
         previewImageViewBottomConstraint = previewImageView.bottomAnchor.constraint(
-            equalTo: view.bottomAnchor,
-            constant: -300
+            equalTo: usesMacCollapsibleBottomPanel ? keyboardOptionsView.topAnchor : editorBottomPanelContainer.topAnchor,
+            constant: -.su2
         )
         previewImageViewBottomConstraint?.isActive = true
 
@@ -2417,6 +2357,7 @@ extension EditDesignViewController: UITextViewDelegate {
         undoController?.willBeginContinuousEdit(currentDesign: currentDesign)
         // Direct taps on the on-canvas text view bypass toggleKeyboard,
         // so bring the editing chrome up here too.
+        syncCompactBottomPanelSlidersVisibility()
         setEditingChromeVisible(true, animated: true)
     }
 
@@ -2438,6 +2379,7 @@ extension EditDesignViewController: UITextViewDelegate {
     }
 
     func textViewDidEndEditing(_ textView: UITextView) {
+        syncCompactBottomPanelSlidersVisibility()
         undoController?.didEndContinuousEdit()
         refreshUndoRedoButtons()
     }

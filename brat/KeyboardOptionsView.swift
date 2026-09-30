@@ -21,7 +21,8 @@ class KeyboardOptionsView: UIView {
     private let settingsManager: SettingsManager
     private var designControlsView: DesignControlsView?
     private var isMacPrimarySlidersVisible = false
-    private var isPrimaryControlsSuppressedByBottomPanel = false
+    private var isPrimaryControlsSuppressed = false
+    private var primaryControlsBottomConstraint: NSLayoutConstraint?
 
     var isMacPrimarySlidersShowing: Bool {
         isMacPrimarySlidersVisible
@@ -57,11 +58,11 @@ class KeyboardOptionsView: UIView {
         updateMacBottomPanelLayout()
     }
 
-    /// Hides font/pixelation/stretch/blur sliders while a compact bottom editor panel is open (iPhone, iPad portrait).
-    func setPrimaryControlsSuppressedByBottomPanel(_ suppressed: Bool) {
+    /// Release slider space while typing or browsing a compact picker panel.
+    func setPrimaryControlsSuppressed(_ suppressed: Bool) {
         guard !usesInlineMacDesignControls else { return }
-        guard isPrimaryControlsSuppressedByBottomPanel != suppressed else { return }
-        isPrimaryControlsSuppressedByBottomPanel = suppressed
+        guard isPrimaryControlsSuppressed != suppressed else { return }
+        isPrimaryControlsSuppressed = suppressed
         updateCompactPrimaryControlsVisibility()
     }
 
@@ -237,9 +238,11 @@ class KeyboardOptionsView: UIView {
                 blurSlider.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
                 blurSlider.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
                 blurSlider.heightAnchor.constraint(equalTo: fontSizeSlider.heightAnchor),
-                blurSlider.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20),
             ])
         }
+
+        primaryControlsBottomConstraint = blurSlider.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20)
+        primaryControlsBottomConstraint?.isActive = true
 
         NSLayoutConstraint.activate([
             fontSizeInfoButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -4),
@@ -301,6 +304,7 @@ class KeyboardOptionsView: UIView {
         guard usesInlineMacDesignControls else { return }
 
         macPrimaryControlViews.forEach { $0.isHidden = !isMacPrimarySlidersVisible }
+        primaryControlsBottomConstraint?.isActive = isMacPrimarySlidersVisible
         updateInfoButtonVisibility()
 
         let needsExpandedHeight = isMacPrimarySlidersVisible || designControlsView != nil
@@ -311,8 +315,9 @@ class KeyboardOptionsView: UIView {
 
     private func updateCompactPrimaryControlsVisibility() {
         guard !usesInlineMacDesignControls else { return }
-        let visible = !isPrimaryControlsSuppressedByBottomPanel
+        let visible = !isPrimaryControlsSuppressed
         macPrimaryControlViews.forEach { $0.isHidden = !visible }
+        primaryControlsBottomConstraint?.isActive = visible
         updateInfoButtonVisibility()
     }
 
@@ -435,7 +440,6 @@ class KeyboardOptionsView: UIView {
             infoButton: blurInfoButton,
             below: stretchSlider.bottomAnchor
         )
-        constraints.append(blurSlider.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -margin))
         constraints.append(pixelationSlider.heightAnchor.constraint(equalTo: fontSizeSlider.heightAnchor))
         constraints.append(stretchSlider.heightAnchor.constraint(equalTo: fontSizeSlider.heightAnchor))
         constraints.append(blurSlider.heightAnchor.constraint(equalTo: fontSizeSlider.heightAnchor))
@@ -479,7 +483,7 @@ class KeyboardOptionsView: UIView {
     func updateInfoButtonVisibility() {
         let show = settingsManager.eli5Mode
         let hiddenByMacPanel = usesInlineMacDesignControls && !isMacPrimarySlidersVisible
-        let hiddenByBottomPanel = !usesInlineMacDesignControls && isPrimaryControlsSuppressedByBottomPanel
+        let hiddenByBottomPanel = !usesInlineMacDesignControls && isPrimaryControlsSuppressed
         let hiddenByPanel = hiddenByMacPanel || hiddenByBottomPanel
         fontSizeInfoButton.isHidden = hiddenByPanel || !show
         pixelationInfoButton.isHidden = hiddenByPanel || !show

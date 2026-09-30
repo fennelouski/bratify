@@ -935,7 +935,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = brat/brat.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 27;
+				CURRENT_PROJECT_VERSION = 28;
 				DEVELOPMENT_TEAM = EJLR2RPSV2;
 				GENERATE_APP_INTENTS_METADATA = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -953,7 +953,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.3;
+				MARKETING_VERSION = 3.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nathanfennel.brat;
 				PRODUCT_MODULE_NAME = brat;
 				PRODUCT_NAME = bratify;
@@ -973,7 +973,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = brat/brat.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 27;
+				CURRENT_PROJECT_VERSION = 28;
 				DEVELOPMENT_TEAM = EJLR2RPSV2;
 				GENERATE_APP_INTENTS_METADATA = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -991,7 +991,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.3;
+				MARKETING_VERSION = 3.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nathanfennel.brat;
 				PRODUCT_MODULE_NAME = brat;
 				PRODUCT_NAME = bratify;
