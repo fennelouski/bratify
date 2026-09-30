@@ -87,6 +87,9 @@ final class LiveDesignPreviewView: MTKView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
+        // Even when raster resolution is unchanged, aspect-fit positioning must
+        // be redrawn for the new drawable size (keyboard and editor panels).
+        setNeedsDisplay()
         // Drawable size just changed (rotation, keyboard, sidebars): re-raster
         // if the resolution cap moved materially, so the canvas stays sharp
         // after growing and stays cheap after shrinking.
