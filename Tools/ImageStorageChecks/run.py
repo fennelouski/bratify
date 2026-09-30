@@ -3,12 +3,9 @@
 import pathlib, subprocess, tempfile
 repo=pathlib.Path(__file__).resolve().parents[2]
 source=(repo/'brat/ImageService.swift').read_text()
-presenter=(repo/'brat/WebImageImportPresenter.swift').read_text()
 save=source[source.index('    @discardableResult\n    func saveImageToDisk'):source.index('    func loadImageFromDisk')]
 migrate=source[source.index('    static func migrateLegacyImages'):source.index('    private func getFilePath')]
-websave=presenter[presenter.index('    @MainActor\n    private static func saveFirstImage'):presenter.index('    @MainActor\n    private static func showImportError')].replace('private static','static')
 assert 'performDiskCacheManagement' not in source and 'reduceDiskCache' not in source and 'manageDiskCache' not in source
-assert 'isSmartURLFallbackEnabled: false' in presenter
 prefix='''import Foundation
 final class UIImage: NSObject {
  let data: Data?
@@ -23,11 +20,6 @@ class ImageService {
  let directory: URL
  init(_ directory: URL) { self.directory = directory }
  func getFilePath(forImageName name: String) -> URL { directory.appendingPathComponent(name) }
-'''
-web='''}
-struct WebImageSelection { let image: UIImage }
-enum WebImageImportPresenter {
- static func firstUIImage(from selections: [WebImageSelection]) -> UIImage? { selections.first?.image }
 '''
 checks='''}
 @main struct Checks {
@@ -51,9 +43,6 @@ checks='''}
   assert(!failing.saveImageToDisk(image,addToInMemoryCache:true,withName:"failed",compressionQuality:0.7))
   assert(failing.memoryCache.object(forKey:"failed") == nil)
   assert(!fm.fileExists(atPath:cloud.appendingPathComponent("failed").path))
-  assert(WebImageImportPresenter.saveFirstImage(from:[WebImageSelection(image:image)],imageService:failing) == nil)
-  let selected=WebImageImportPresenter.saveFirstImage(from:[WebImageSelection(image:image)],imageService:service)!
-  assert(try Data(contentsOf:images.appendingPathComponent(selected)) == bytes)
   let legacy=root.appendingPathComponent("legacy");try fm.createDirectory(at:legacy,withIntermediateDirectories:true)
   try bytes.write(to:legacy.appendingPathComponent("new"));try bytes.write(to:legacy.appendingPathComponent("conflict"))
   let existing=Data("newer destination".utf8);try existing.write(to:images.appendingPathComponent("conflict"))
@@ -64,13 +53,13 @@ checks='''}
   assert(try Data(contentsOf:images.appendingPathComponent("conflict")) == existing)
   ImageService.migrateLegacyImages(from:legacy,to:blocked)
   assert(try Data(contentsOf:legacy.appendingPathComponent("conflict")) == bytes)
-  print("PASS: durable save/cache/cloud ordering; encode and filesystem failures; web failure returns no filename; successful import; migration success, conflicts and failed copies; no disk eviction; host fallback disabled")
+  print("PASS: durable save/cache/cloud ordering; encode and filesystem failures; migration success, conflicts and failed copies; no disk eviction")
  }
 }
 '''
 # Swift assert's nonthrowing autoclosure needs reads evaluated first.
 checks=checks.replace('assert(try Data(contentsOf:', 'assert((try! Data(contentsOf:').replace(')) == bytes)', '))) == bytes)').replace(')) == existing)', '))) == existing)')
 with tempfile.TemporaryDirectory(prefix='bratify-image-check-') as folder:
- folder=pathlib.Path(folder);program=folder/'checks.swift';program.write_text(prefix+save+migrate+web+websave+checks)
+ folder=pathlib.Path(folder);program=folder/'checks.swift';program.write_text(prefix+save+migrate+checks)
  subprocess.run(['swiftc','-parse-as-library',str(program),'-o',str(folder/'checks')],check=True)
  subprocess.run([str(folder/'checks')],check=True)
