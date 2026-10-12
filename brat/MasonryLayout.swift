@@ -2,11 +2,19 @@ import UIKit
 
 protocol MasonryLayoutDelegate: AnyObject {
     func collectionView(_ collectionView: UICollectionView, aspectRatioForItemAt indexPath: IndexPath) -> CGFloat
+    func collectionView(_ collectionView: UICollectionView, captionHeightForItemAt indexPath: IndexPath, width: CGFloat) -> CGFloat
 }
 
 class MasonryLayout: UICollectionViewLayout {
     /// Footer band height as a fraction of column inner width (symbol + title).
     static let labelHeightFraction: CGFloat = 0.25
+
+    static func captionHeight(_ text: String, width: CGFloat, traits: UITraitCollection) -> CGFloat {
+        let font = UIFont.preferredFont(forTextStyle: .caption2, compatibleWith: traits)
+        let textHeight = (text as NSString).boundingRect(with: CGSize(width: max(1, width - 30), height: .greatestFiniteMagnitude),
+            options: [.usesLineFragmentOrigin, .usesFontLeading], attributes: [.font: font], context: nil).height
+        return max(width * labelHeightFraction, ceil(textHeight))
+    }
 
     weak var delegate: MasonryLayoutDelegate?
     var numberOfColumns: Int = 2
@@ -39,7 +47,7 @@ class MasonryLayout: UICollectionViewLayout {
             let shortestColumn = yOffsets.enumerated().min(by: { $0.element < $1.element })?.offset ?? 0
             let innerWidth = columnWidth - cellPadding * 2
             let imageHeight = innerWidth / aspectRatio
-            let labelHeight = innerWidth * Self.labelHeightFraction
+            let labelHeight = delegate?.collectionView(collectionView, captionHeightForItemAt: indexPath, width: innerWidth) ?? innerWidth * Self.labelHeightFraction
             let height = imageHeight + labelHeight + cellPadding * 2
 
             let frame = CGRect(

@@ -49,6 +49,9 @@ final class FilterPresetPickerView: UIView {
     }
 
     private func setup() {
+        registerForTraitChanges([UITraitPreferredContentSizeCategory.self]) { (view: FilterPresetPickerView, _: UITraitCollection) in
+            view.masonryLayout.invalidateLayout()
+        }
         addSubview(collectionView)
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: topAnchor),
@@ -130,6 +133,11 @@ extension FilterPresetPickerView: UICollectionViewDataSource, UICollectionViewDe
 }
 
 extension FilterPresetPickerView: MasonryLayoutDelegate {
+    func collectionView(_ collectionView: UICollectionView, captionHeightForItemAt indexPath: IndexPath, width: CGFloat) -> CGFloat {
+        guard FilterPreset.builtIn.indices.contains(indexPath.item) else { return width * MasonryLayout.labelHeightFraction }
+        return MasonryLayout.captionHeight(FilterPreset.builtIn[indexPath.item].name.localizedLowercase, width: width, traits: collectionView.traitCollection)
+    }
+
     func collectionView(
         _ collectionView: UICollectionView,
         aspectRatioForItemAt indexPath: IndexPath

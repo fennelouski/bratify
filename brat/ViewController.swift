@@ -443,6 +443,10 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
 }
 
 extension ViewController: MasonryLayoutDelegate {
+    func collectionView(_ collectionView: UICollectionView, captionHeightForItemAt indexPath: IndexPath, width: CGFloat) -> CGFloat {
+        width * MasonryLayout.labelHeightFraction
+    }
+
     func collectionView(_ collectionView: UICollectionView, aspectRatioForItemAt indexPath: IndexPath) -> CGFloat {
         guard designs.indices.contains(indexPath.item) else { return 1.0 }
         let design = designs[indexPath.item]

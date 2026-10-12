@@ -4,6 +4,23 @@ import XCTest
 
 final class TrailingSidebarLayoutTests: XCTestCase {
 
+    @MainActor func testFilterPresetCaptionsHaveRoomForCompleteAccessibleText() {
+        for category in [UIContentSizeCategory.large, .accessibilityExtraExtraExtraLarge] {
+            let traits = UITraitCollection(preferredContentSizeCategory: category)
+            for width: CGFloat in [120, 220] {
+                for preset in FilterPreset.builtIn {
+                    let label = UILabel()
+                    label.font = UIFont.preferredFont(forTextStyle: .caption2, compatibleWith: traits)
+                    label.text = preset.name.localizedLowercase
+                    label.numberOfLines = 0
+                    let needed = label.sizeThatFits(CGSize(width: width - 30, height: .greatestFiniteMagnitude)).height
+                    XCTAssertGreaterThanOrEqual(MasonryLayout.captionHeight(label.text!, width: width, traits: traits), needed,
+                        "The \(preset.name) caption must fit at \(category.rawValue).")
+                }
+            }
+        }
+    }
+
     func testIsEnabledForPadAndMac() {
         XCTAssertTrue(TrailingSidebarLayout.isEnabled(for: UITraitCollection(userInterfaceIdiom: .pad)))
         XCTAssertTrue(TrailingSidebarLayout.isEnabled(for: UITraitCollection(userInterfaceIdiom: .mac)))

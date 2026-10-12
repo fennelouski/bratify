@@ -31,7 +31,8 @@ final class FilterPresetCardCell: UICollectionViewCell {
         let label = UILabel()
         label.font = UIFont.preferredFont(forTextStyle: .caption2)
         label.adjustsFontForContentSizeCategory = true
-        label.lineBreakMode = .byTruncatingTail
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -66,7 +67,7 @@ final class FilterPresetCardCell: UICollectionViewCell {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        let footerHeight = bounds.width * MasonryLayout.labelHeightFraction
+        let footerHeight = MasonryLayout.captionHeight(nameLabel.text ?? "", width: bounds.width, traits: traitCollection)
         if footerHeightConstraint?.constant != footerHeight {
             footerHeightConstraint?.constant = footerHeight
         }
@@ -85,10 +86,7 @@ final class FilterPresetCardCell: UICollectionViewCell {
         let symbolConfig = UIImage.SymbolConfiguration(pointSize: 11, weight: .medium)
         symbolImageView.preferredSymbolConfiguration = symbolConfig
 
-        footerHeightConstraint = footerStack.heightAnchor.constraint(
-            equalTo: contentView.widthAnchor,
-            multiplier: MasonryLayout.labelHeightFraction
-        )
+        footerHeightConstraint = footerStack.heightAnchor.constraint(equalToConstant: 0)
 
         NSLayoutConstraint.activate([
             previewImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
